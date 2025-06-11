@@ -4,7 +4,7 @@
     "email": "sidhartha2182000@gmail.com",
     "phone": "",
     "website": "https://sidwat.github.io",
-    "summary": "Currently employed at Red Brick University. Short biography for the left-hand sidebar",
+    "summary": "Currently employed at Samsung RnD Bangalore. Video Compressor",
     "location": {
       "address": "",
       "postalCode": "",
@@ -33,13 +33,13 @@
   "work": [],
   "education": [
     {
-      "institution": "GitHub University",
-      "area": "Ph.D in Version Control Theory",
-      "studyType": "",
-      "startDate": "",
-      "endDate": "2018",
-      "gpa": null,
-      "courses": []
+      "institution": "Indian Institute of Technology, Kanpur",
+      "area": "Majors in Electrical and Mechanical Engineering",
+      "studyType": "Bachelor of Technology",
+      "startDate": "2019",
+      "endDate": "2024",
+      "gpa": 9.0,
+      "courses": ["Image Processing", "Robot Motion Planning", "Signals and Systems"]
     },
     {
       "institution": "GitHub University",

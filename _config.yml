@@ -26,9 +26,9 @@ author:
   name             : "Sidhartha Watsa" # Name of the author
   short_name       : "Sidhartha" # Short name of the author, used in the footer
   pronouns         : "He/Him" # Pronouns of the author, used in the footer
-  bio              : "Short biography for the left-hand sidebar"
-  location         : "Earth"
-  employer         : "Red Brick University"
+  bio              : "Video Compressor"
+  location         : "Bangalore, India" # Location of the author, used in the footer
+  employer         : "Samsung RnD Bangalore"
   uri              : # URL
   email            : "sidhartha2182000@gmail.com" 
 
@@ -52,16 +52,16 @@ author:
   stackoverflow    : # User number or user number and name (i.e., use "1" or "1/jeff-atwood")    
 
   # Social media
-  bluesky          : "bsky.app" # Replace this with you Bluesky username
+  bluesky          : # Replace this with you Bluesky username
   facebook         : # Username
   flickr           : # Username
   foursquare       : # Username
   goodreads        : # Username
   google_plus      : # Username
   keybase          : # Username
-  instagram        : # Username
+  instagram        :  _sid_wat_
   lastfm           : # Username
-  linkedin         : # Username
+  linkedin         : sidhartha-watsa
   mastodon         : # URL
   medium           : # URL
   pinterest        : # Username
