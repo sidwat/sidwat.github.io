@@ -40,29 +40,11 @@
       "endDate": "2024",
       "gpa": 9.0,
       "courses": ["Image Processing", "Robot Motion Planning", "Signals and Systems"]
-    },
-    {
-      "institution": "GitHub University",
-      "area": "M.S. in Jekyll",
-      "studyType": "",
-      "startDate": "",
-      "endDate": "2014",
-      "gpa": null,
-      "courses": []
-    },
-    {
-      "institution": "GitHub University",
-      "area": "B.S. in GitHub",
-      "studyType": "",
-      "startDate": "",
-      "endDate": "2012",
-      "gpa": null,
-      "courses": []
     }
   ],
   "skills": [],
-  "languages": [],
-  "interests": [],
+  "languages": ["English (Fluent)", "Hindi (Fluent)"],
+  "interests": ["Badminton"],
   "references": [],
   "publications": [
     {
