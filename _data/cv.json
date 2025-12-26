@@ -9,7 +9,7 @@
       "address": "",
       "postalCode": "",
       "city": "Earth",
-      "countryCode": "US",
+      "countryCode": "IN",
       "region": ""
     },
     "profiles": [
@@ -34,10 +34,19 @@
   "education": [
     {
       "institution": "Indian Institute of Technology, Kanpur",
-      "area": "Majors in Electrical and Mechanical Engineering",
+      "area": "Major in Mechanical Engineering",
       "studyType": "Bachelor of Technology",
       "startDate": "2019",
-      "endDate": "2024",
+      "endDate": "2023",
+      "gpa": 9.0,
+      "courses": ["Image Processing", "Robot Motion Planning", "Signals and Systems"]
+    },
+    {
+      "institution": "Indian Institute of Technology, Kanpur",
+      "area": "Major in Electrical Engineering",
+      "studyType": "Double Major Program",
+      "startDate": "2021",
+      "endDate": "2023",
       "gpa": 9.0,
       "courses": ["Image Processing", "Robot Motion Planning", "Signals and Systems"]
     }
@@ -48,32 +57,18 @@
   "references": [],
   "publications": [
     {
-      "name": "Paper Title Number 1",
-      "publisher": "Journal 1",
-      "releaseDate": "2009-10-01",
-      "website": "http://sidwat.github.io/files/paper1.pdf",
-      "summary": "This paper is about the number 1. The number 2 is left for future work."
+      "name": "Towards Autonomous Shooting Rover via Situation Aware Visual-Perception and Dynamic Action Execution",
+      "publisher": "2024 IEEE/SICE International Symposium on System Integration (SII)",
+      "releaseDate": "2024/1/8",
+      "website": "https://scholar.google.com/scholar?oi=bibs&cluster=13974241785383966203&btnI=1&hl=en",
+      "summary": "In this system paper, we present our approach to the DJI Robomaster AI Challenge, 2022 where our team ERA-IITK was ranked 3rd worldwide among 83 teams. We primarily focus on system hardware design and algorithmic components to achieve full autonomy. We first detail the hardware infrastructure, including intricate details on sensors and communication setup. Then we comprehensively describe our algorithmic pipeline and a state machine based on them to realize an autonomous system. Our major novelty is the high-speed and accurate visual perception module for target detection, and high-speed self-localization to maximize the likelihood of a target being shot. Our research endeavor in this paper can serve as a foundation for more complex systems and holds immense potential for various real-world applications."
     },
     {
-      "name": "Paper Title Number 2",
-      "publisher": "Journal 1",
-      "releaseDate": "2010-10-01",
-      "website": "http://sidwat.github.io/files/paper2.pdf",
-      "summary": "This paper is about the number 2. The number 3 is left for future work."
-    },
-    {
-      "name": "Paper Title Number 3",
-      "publisher": "Journal 1",
-      "releaseDate": "2015-10-01",
-      "website": "http://sidwat.github.io/files/paper3.pdf",
-      "summary": "This paper is about the number 3. The number 4 is left for future work."
-    },
-    {
-      "name": "Paper Title Number 4",
-      "publisher": "GitHub Journal of Bugs",
-      "releaseDate": "2024-02-17",
-      "website": "http://sidwat.github.io/files/paper3.pdf",
-      "summary": "This paper is about fixing template issue #693."
+      "name": "A cyber-physical system based unmanned ground vehicles for safety inspection and rescue support in an underground mine",
+      "publisher": "International Journal of Intelligent Unmanned Systems",
+      "releaseDate": "2025/2/10",
+      "website": "https://scholar.google.com/scholar?oi=bibs&cluster=4428417782255174815&btnI=1&hl=en",
+      "summary": "The unmanned ground vehicle (UGV) described in this manuscript is a robot designed by the authors to map the underground mine environments. The UGV works to develop a computational intelligence-based cyber-physical system (CPS)-based analytical framework for mining operations. The UGV demonstrated excellent semi-autonomous navigation capabilities in the absence of GNSS signals. The UGV has a suite that works in unison to provide relevant information. These sensors are integrated to form a robust sensor fusion-based architecture, creating a CPS with a wide range of capabilities such as data acquisition and navigation in challenging underground environments. UGVs can be used to enhance the efficacy of safety inspections, rescue during underground emergencies and assist miners in hazardous conditions."
     }
   ],
   "presentations": [
