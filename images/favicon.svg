@@ -1,1 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="2 2 20 20"><title>OOjs_UI_icon_academic-progressive</title><path d="M12.13,14,12,14l-.13,0L7,12.63V16c0,1.1,2.24,2,5,2s5-.9,5-2V12.63Z" fill="#36c"/><path d="M21.13,9.52l-9-2.5a.39.39,0,0,0-.26,0l-9,2.5a.5.5,0,0,0,0,1l9,2.5L12,13l.13,0,9-2.5a.5.5,0,0,0,0-1Z" fill="#36c"/><path d="M19.5,14.5a1,1,0,0,0-.5-.85V10H18v3.65a1,1,0,0,0-.5.85,1,1,0,0,0,.45.81L17.5,18c0,.37.45.67,1,.67s1-.3,1-.67l-.45-2.69A1,1,0,0,0,19.5,14.5Z" fill="#36c"/></svg>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>CV and Robotics Research Icon</title>
+    <desc>An icon representing computer vision and robotics research, featuring a gear enclosing a robotic eye with a camera aperture pupil.</desc>
+    <defs>
+    </defs>
+    <g id="CV-Robotics-Icon" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="Icon-Group" transform="translate(2.000000, 2.000000)" stroke="#005b96" stroke-width="2.5">
+            <path d="M30,60 C13.4314575,60 0,46.5685425 0,30 C0,13.4314575 13.4314575,0 30,0 C46.5685425,0 60,13.4314575 60,30 C60,46.5685425 46.5685425,60 30,60 Z M30,54 C43.254834,54 54,43.254834 54,30 C54,16.745166 43.254834,6 30,6 C16.745166,6 6,16.745166 6,30 C6,43.254834 16.745166,54 30,54 Z" id="Gear-Ring"></path>
+            <path d="M30,0 L30,6 M30,54 L30,60 M60,30 L54,30 M6,30 L0,30 M51.2132034,8.78679656 L46.9705627,13.0294373 M13.0294373,46.9705627 L8.78679656,51.2132034 M51.2132034,51.2132034 L46.9705627,46.9705627 M13.0294373,13.0294373 L8.78679656,8.78679656" id="Gear-Teeth"></path>
+            
+            <path d="M6,30 C6,30 16,14 30,14 C44,14 54,30 54,30 C54,30 44,46 30,46 C16,46 6,30 6,30 Z" id="Eye-Shape"></path>
+            
+            <polygon id="Aperture" points="30 37 24 34 24 26 30 23 36 26 36 34"></polygon>
+            
+            <circle id="Sensor-Node" fill="#005b96" cx="30" cy="14" r="3"></circle>
+        </g>
+    </g>
+</svg>
