@@ -15,13 +15,13 @@
     "profiles": [
       {
         "network": "Google Scholar",
-        "username": "",
+        "username": "Sidhartha Watsa",
         "url": "https://scholar.google.com/citations?user=HoIkFUgAAAAJ&hl=en"
       },
       {
         "network": "ORCID",
-        "username": "",
-        "url": "http://orcid.org/yourorcidurl"
+        "username": "Sidhartha Watsa",
+        "url": "https://orcid.org/0009-0003-3888-0736"
       },
       {
         "network": "GitHub",
@@ -39,7 +39,7 @@
       "startDate": "2019",
       "endDate": "2023",
       "gpa": 9.0,
-      "courses": ["Image Processing", "Robot Motion Planning", "Signals and Systems"]
+      "courses": ["Image Processing", "Digital Electronics", "Embedded Systems"]
     },
     {
       "institution": "Indian Institute of Technology, Kanpur",
@@ -47,8 +47,8 @@
       "studyType": "Double Major Program",
       "startDate": "2021",
       "endDate": "2023",
-      "gpa": 9.0,
-      "courses": ["Image Processing", "Robot Motion Planning", "Signals and Systems"]
+      "gpa": 9.5,
+      "courses": ["Manipulators and control", "Robot Motion Planning", "Vibration and Control"]
     }
   ],
   "skills": [],
