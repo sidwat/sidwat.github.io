@@ -1,20 +1,20 @@
 ---
-title: "Teaching experience 2"
+title: "Foundations of Design Practicum"
 collection: teaching
 type: "Workshop"
 permalink: /teaching/2015-spring-teaching-1
-venue: "University 1, Department"
-date: 2015-01-01
-location: "City, Country"
+venue: "Indian Institute of Technology (IIT) Mandi"
+date: 2022-05-20
+location: "Mandi, India"
 ---
 
-This is a description of a teaching experience. You can use markdown like any other post.
+This course was designed and launched for the upcoming fresher cohort to provide a multi-disciplinary fundamental knowledge forming a basis of how to build a robot from scratch.
 
-Heading 1
+Mechanical Chasis designing (Computer Aided Desigining, Fabrication, etc)
 ======
 
-Heading 2
+Robot Operating System 
 ======
 
-Heading 3
+Electronics in robots (Microcontrollers, computing device, drivers, etc)
 ======

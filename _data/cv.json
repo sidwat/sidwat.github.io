@@ -71,50 +71,20 @@
       "summary": "The unmanned ground vehicle (UGV) described in this manuscript is a robot designed by the authors to map the underground mine environments. The UGV works to develop a computational intelligence-based cyber-physical system (CPS)-based analytical framework for mining operations. The UGV demonstrated excellent semi-autonomous navigation capabilities in the absence of GNSS signals. The UGV has a suite that works in unison to provide relevant information. These sensors are integrated to form a robust sensor fusion-based architecture, creating a CPS with a wide range of capabilities such as data acquisition and navigation in challenging underground environments. UGVs can be used to enhance the efficacy of safety inspections, rescue during underground emergencies and assist miners in hazardous conditions."
     }
   ],
-  "presentations": [
-    {
-      "name": "Talk 1 on Relevant Topic in Your Field",
-      "event": "UC San Francisco, Department of Testing",
-      "date": "2012-03-01",
-      "location": "San Francisco, CA, USA",
-      "description": ""
-    },
-    {
-      "name": "Tutorial 1 on Relevant Topic in Your Field",
-      "event": "UC-Berkeley Institute for Testing Science",
-      "date": "2013-03-01",
-      "location": "Berkeley, CA, USA",
-      "description": ""
-    },
-    {
-      "name": "Talk 2 on Relevant Topic in Your Field",
-      "event": "London School of Testing",
-      "date": "2014-02-01",
-      "location": "London, UK",
-      "description": ""
-    },
-    {
-      "name": "Conference Proceeding talk 3 on Relevant Topic in Your Field",
-      "event": "Testing Institute of America 2014 Annual Conference",
-      "date": "2014-03-01",
-      "location": "Los Angeles, CA, USA",
-      "description": ""
-    }
-  ],
   "teaching": [
     {
-      "course": "Teaching experience 1",
-      "institution": "University 1, Department",
-      "date": "2014-01-01",
-      "role": "Undergraduate course",
-      "description": ""
+      "course": "Embedded Systems Programming in C",
+      "institution": "Learning and Development Team, Samsung R&D Bangalore",
+      "date": "2025-11-01",
+      "role": "Lecture",
+      "description": "This series of lecture offered the basic linux device driver coding principles which are required in camera systems."
     },
     {
-      "course": "Teaching experience 2",
-      "institution": "University 1, Department",
-      "date": "2015-01-01",
+      "course": "Foundations of Design Practicum",
+      "institution": "Indian Institute of Technology (IIT) Mandi",
+      "date": "2023-05-20",
       "role": "Workshop",
-      "description": ""
+      "description": "This course was launched as a multi-disciplinary institute compulsory course for freshers at IIT Mandi."
     }
   ],
   "portfolio": [

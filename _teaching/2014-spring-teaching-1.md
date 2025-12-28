@@ -1,20 +1,20 @@
 ---
-title: "Teaching experience 1"
+title: "Embedded Systems Programming in C"
 collection: teaching
-type: "Undergraduate course"
+type: "Lecture"
 permalink: /teaching/2014-spring-teaching-1
-venue: "University 1, Department"
-date: 2014-01-01
-location: "City, Country"
+venue: "Learning and Development Team, Samsung Reasearch Institute Bangalore"
+date: 2025-11-01
+location: "Bangalore, India"
 ---
 
-This is a description of a teaching experience. You can use markdown like any other post.
+The course consisted of basic device drivers programming principles in C language required in embedded systems, especially related to samsung camera devices.
 
-Heading 1
+Device Drivers and Linux Source Code
 ======
 
-Heading 2
+Interrupt Handling
 ======
 
-Heading 3
+Kernel threads
 ======
