@@ -1,5 +1,15 @@
-{% if site.url %}
-  {% assign base_path = site.url | append: site.baseurl %}
+{% comment %}
+Resolve `base_path` used across templates.
+- On production (jekyll.environment == "production") and when `site.url` is set to a non-local host, use full URL + baseurl.
+- Otherwise (development), prefer a relative `site.baseurl` (or empty) so assets are served from localhost correctly.
+{% endcomment %}
+{% assign site_url = site.url | default: "" %}
+{% assign is_prod = jekyll.environment == "production" %}
+
+{% assign host_is_local = site_url contains '0.0.0.0' or site_url contains 'localhost' or site_url contains '127.0.0.1' or site_url == '' %}
+
+{% if is_prod and site_url != '' and host_is_local == false %}
+  {% assign base_path = site_url | append: site.baseurl %}
 {% else %}
-  {% assign base_path = site.github.url %}
+  {% assign base_path = site.baseurl | default: "" %}
 {% endif %}

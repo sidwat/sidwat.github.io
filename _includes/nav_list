@@ -1,4 +1,3 @@
-{% include base_path %}
 {% assign navigation = site.data.navigation[include.nav] %}
 
 <nav class="nav__list">
@@ -9,12 +8,10 @@
         {% if nav.url %}
           {% comment %}internal/external URL check{% endcomment %}
           {% if nav.url contains "://" %}
-            {% assign domain = "" %}
+            <a href="{{ nav.url }}"><span class="nav__sub-title">{{ nav.title }}</span></a>
           {% else %}
-            {% assign domain = base_path %}
+            <a href="{{ nav.url | relative_url }}"><span class="nav__sub-title">{{ nav.title }}</span></a>
           {% endif %}
-
-          <a href="{{ domain }}{{ nav.url }}"><span class="nav__sub-title">{{ nav.title }}</span></a>
         {% else %}
           <span class="nav__sub-title">{{ nav.title }}</span>
         {% endif %}
@@ -24,19 +21,19 @@
           {% for child in nav.children %}
             {% comment %}internal/external URL check{% endcomment %}
             {% if child.url contains "://" %}
-              {% assign domain = "" %}
+              {% assign child_href = child.url %}
             {% else %}
-              {% assign domain = base_path %}
+              {% assign child_href = child.url | relative_url %}
             {% endif %}
 
-            {% comment %}set "active" class on current page{% endcomment %}
+            {% comment %}set "active" class on current page (compare raw urls)
             {% if child.url == page.url %}
               {% assign active = "active" %}
             {% else %}
               {% assign active = "" %}
             {% endif %}
 
-            <li><a href="{{ domain }}{{ child.url }}" class="{{ active }}">{{ child.title }}</a></li>
+            <li><a href="{{ child_href }}" class="{{ active }}">{{ child.title }}</a></li>
           {% endfor %}
         </ul>
         {% endif %}

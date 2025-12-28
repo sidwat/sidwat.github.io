@@ -5,7 +5,7 @@ permalink: /page-archive/
 author_profile: false
 ---
 
-{% include base_path %}
+{% comment %} removed base_path include {% endcomment %}
 {% for post in site.pages %}
   {% include archive-single.html %}
 {% endfor %}
