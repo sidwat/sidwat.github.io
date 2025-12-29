@@ -278,11 +278,11 @@ def parse_publications(pub_dir):
     return publications
 
 def parse_talks(talks_dir):
-    """Parse talks from the _talks directory."""
-    talks = []
+    """Parse Experiences from the _talks directory."""
+    Experiences = []
     
     if not os.path.exists(talks_dir):
-        return talks
+        return Experiences
     
     for talk_file in sorted(glob.glob(os.path.join(talks_dir, "*.md"))):
         with open(talk_file, 'r', encoding='utf-8') as file:
@@ -302,9 +302,9 @@ def parse_talks(talks_dir):
                 "description": front_matter.get('excerpt', '')
             }
             
-            talks.append(talk_entry)
+            Experiences.append(talk_entry)
     
-    return talks
+    return Experiences
 
 def parse_teaching(teaching_dir):
     """Parse teaching from the _teaching directory."""
@@ -389,7 +389,7 @@ def create_cv_json(md_file, config_file, repo_root, output_file):
     # Add publications
     cv_json["publications"] = parse_publications(os.path.join(repo_root, "_publications"))
     
-    # Add talks
+    # Add Experiences
     cv_json["presentations"] = parse_talks(os.path.join(repo_root, "_talks"))
     
     # Add teaching
