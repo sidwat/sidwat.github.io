@@ -107,21 +107,41 @@ all, the page still shows the photo and simply does not wave.
 
 ### Adding or replacing the wave video
 
-Put the encoded files in `public/` as `hero-wave.mp4` and `hero-wave.webm`, and
-a matching first frame at `public/portrait.jpg`. The video's first frame should
-match the still closely, or the fade-in will visibly jump.
+Everything the hero loads lives in `public/media/`, served from `/media/`.
+
+Shoot or generate a clip that **opens and closes on the same rest pose** — the
+current one starts and ends with folded hands — so `loop` is seamless and
+leaving the figure mid-wave returns to a frame that matches the still.
+
+These are the commands that produced the current files, from a 720x1280 source:
 
 ```bash
-ffmpeg -i source.mov -vf "scale=800:-2" -c:v libx264 -crf 24 -preset slow \
-  -pix_fmt yuv420p -an -movflags +faststart public/hero-wave.mp4
-ffmpeg -i source.mov -vf "scale=800:-2" -c:v libvpx-vp9 -crf 34 -b:v 0 \
-  -an public/hero-wave.webm
-ffmpeg -i source.mov -vf "scale=1000:-2" -frames:v 1 -q:v 3 public/portrait.jpg
+SRC=source.mp4
+CROP="crop=720:900:0:0"   # 9:16 source -> the figure's 4:5 frame
+
+ffmpeg -i "$SRC" -vf "$CROP" -c:v libx264 -crf 27 -preset slow \
+  -pix_fmt yuv420p -profile:v high -level 4.0 -an \
+  -movflags +faststart public/media/hero-wave.mp4
+
+ffmpeg -i "$SRC" -vf "$CROP" -c:v libvpx-vp9 -crf 36 -b:v 0 -row-mt 1 -an \
+  public/media/hero-wave.webm
+
+# Still MUST come from the same crop, frame 0, or the fade-in jumps.
+ffmpeg -i "$SRC" -vf "$CROP" -frames:v 1 -q:v 3 public/media/portrait.jpg
 ```
 
-Keep it under about 2 MB — it ships in the static export and GitHub Pages serves
-it uncompressed. It must be muted and silent (`-an`): browsers refuse to
-autoplay audio, and hover playback would be refused with it.
+Three things are not optional:
+
+- **Crop at encode time**, not with CSS. The source is 9:16 and the figure is
+  4:5; leaving it to `object-cover` slices the top of the head off. Re-derive
+  the crop if you change the source framing.
+- **`-an`.** Browsers refuse to autoplay anything with an audio track, so a
+  clip with sound will not play on hover at all. This is not a size decision.
+- **`+faststart`**, so the moov atom precedes mdat and playback can begin
+  before the file has finished arriving.
+
+Keep the result under roughly 1 MB. It is preloaded in full on every page load
+and GitHub Pages serves it uncompressed.
 
 Motion is deliberately minimal: one staggered rise on load plus the hover wave.
 `prefers-reduced-motion` disables the tilt and the playback, leaving the still
@@ -154,7 +174,8 @@ that `next/image` optimization stays off under static export).
 app/            routes; one directory per page, all statically prerendered
 components/     Nav, Footer, Hero, PageHeader
 lib/site.ts     name, nav items, and social links — edit here, not in components
-public/         static assets at the domain root: portrait.jpg, hero-wave.*, cv.pdf
+public/media/   portrait.jpg and hero-wave.{mp4,webm}, served from /media/
+public/         other static assets at the domain root (cv.pdf goes here)
 _archive/       superseded work, kept for reference; excluded from lint and tsc
 _legacy-jekyll/ the previous Jekyll site, kept for reference
 ```

@@ -160,7 +160,7 @@ export default function Hero() {
               className="relative aspect-[4/5] overflow-hidden border border-line bg-surface"
             >
               <Image
-                src="/portrait.jpg"
+                src="/media/portrait.jpg"
                 alt={`${site.name}, ${site.role.toLowerCase()}`}
                 fill
                 priority
@@ -183,8 +183,8 @@ export default function Hero() {
                   videoReady ? "opacity-100" : "opacity-0"
                 }`}
               >
-                <source src="/hero-wave.webm" type="video/webm" />
-                <source src="/hero-wave.mp4" type="video/mp4" />
+                <source src="/media/hero-wave.webm" type="video/webm" />
+                <source src="/media/hero-wave.mp4" type="video/mp4" />
               </video>
 
               {/* Grounds the portrait in the page rather than letting it sit as
