@@ -5,9 +5,13 @@ export const metadata: Metadata = { title: "Blog" };
 
 export default function Page() {
   return (
-    <div>
-      <PageHeader title="Blog" intro="Notes on vision, codecs, robotics, and whatever else holds my attention." />
-      <p className="text-muted">Content coming in a later phase.</p>
+    <div className="mx-auto max-w-5xl px-6 pb-24 pt-20">
+      <PageHeader
+        label="Writing"
+        title="Blog"
+        intro="Notes on compression, vision, and the occasional detour."
+      />
+      <p className="prose-body mt-12">Nothing here yet.</p>
     </div>
   );
 }

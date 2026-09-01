@@ -5,22 +5,26 @@ export const metadata: Metadata = { title: "CV" };
 
 export default function Page() {
   return (
-    <div>
+    <div className="mx-auto max-w-5xl px-6 pb-24 pt-20">
       <PageHeader
+        label="Curriculum vitae"
         title="CV"
-        intro="A full curriculum vitae, including education, roles, and publications."
+        intro="Education, roles, publications, and standards work, in one page."
       />
-      <a
-        href="/cv.pdf"
-        className="text-accent underline underline-offset-4"
-        target="_blank"
-        rel="noreferrer"
-      >
-        Download CV (PDF)
-      </a>
-      <p className="mt-4 text-sm text-muted">
-        Drop the file at <code>public/cv.pdf</code> to activate this link.
-      </p>
+      <div className="mt-12">
+        <a
+          href="/cv.pdf"
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-baseline gap-3 border border-line px-5 py-3 text-[0.9375rem] transition-colors hover:border-cb hover:text-cb"
+        >
+          Download the PDF
+          <span aria-hidden="true" className="font-mono text-sm">
+            ↓
+          </span>
+        </a>
+        <p className="eyebrow mt-5">Add public/cv.pdf to activate this link</p>
+      </div>
     </div>
   );
 }

@@ -1,25 +1,98 @@
 @import "tailwindcss";
 
+/*
+ * Palette is the YCbCr colour space a codec actually works in: a luma ramp plus
+ * the two chroma axes. Text sits at 235, not 255, the way broadcast white does.
+ */
 :root {
-  --background: #0a0a0b;
-  --foreground: #ededef;
-  --muted: #8b8b94;
-  --border: #232327;
-  --accent: #7dd3fc;
+  --ink: #08090e;
+  --surface: #10121a;
+  --line: #1e2130;
+  --luma: #e8eaf2;
+  --muted: #767c93;
+  --cb: #4c7dff;
+  --cr: #ff5c8a;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-ink: var(--ink);
+  --color-surface: var(--surface);
+  --color-line: var(--line);
+  --color-luma: var(--luma);
   --color-muted: var(--muted);
-  --color-border: var(--border);
-  --color-accent: var(--accent);
-  --font-sans: var(--font-inter);
+  --color-cb: var(--cb);
+  --color-cr: var(--cr);
+
+  --font-display: var(--font-archivo);
+  --font-sans: var(--font-archivo);
+  --font-mono: var(--font-plex-mono);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), system-ui, sans-serif;
-  -webkit-font-smoothing: antialiased;
+@layer base {
+  body {
+    background: var(--ink);
+    color: var(--luma);
+    font-family: var(--font-archivo), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: var(--cb);
+    color: var(--ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--cb);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  /* Display type rides Archivo's width axis out to 125 — wide, engineered,
+     closer to broadcast signage than to a default bold sans. */
+  .display {
+    font-variation-settings: "wdth" 118;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 0.94;
+  }
+
+  /* Monospace eyebrow used for labels and metadata, the register codec specs
+     are written in. */
+  .eyebrow {
+    font-family: var(--font-plex-mono), ui-monospace, monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .prose-body {
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  .prose-body a {
+    color: var(--luma);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--cb) 60%, transparent);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 150ms ease;
+  }
+
+  .prose-body a:hover {
+    text-decoration-color: var(--cb);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -1,38 +1,37 @@
 import Link from "next/link";
-import { nav, site } from "@/lib/site";
+import Hero from "@/components/Hero";
+import { nav } from "@/lib/site";
 
 export default function Home() {
   return (
-    <div>
-      <p className="text-sm text-muted">
-        {site.role} · {site.location}
-      </p>
-      <h1 className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">
-        {site.name}
-      </h1>
+    <>
+      <Hero />
 
-      <p className="mt-6 leading-relaxed text-muted">
-        I work on computer vision, robotics, and deep learning. I studied
-        Mechanical and Electrical Engineering at IIT Kanpur, worked on imitation
-        learning at the Robert Bosch Centre for Cyber Physical Systems at IISc
-        Bangalore, and am now at Samsung Research Institute Bangalore, where I
-        contribute to next-generation video codec standards in the AI Video
-        Processing Lab.
-      </p>
-
-      <nav className="mt-10 flex flex-wrap gap-x-6 gap-y-2 text-sm">
-        {nav
-          .filter((item) => item.href !== "/")
-          .map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-accent underline-offset-4 hover:underline"
-            >
-              {item.label}
-            </Link>
-          ))}
-      </nav>
-    </div>
+      <section className="mx-auto max-w-5xl px-6 py-24">
+        <h2 className="eyebrow">Sections</h2>
+        <ul className="mt-8 border-t border-line">
+          {nav
+            .filter((item) => item.href !== "/")
+            .map((item) => (
+              <li key={item.href} className="border-b border-line">
+                <Link
+                  href={item.href}
+                  className="group flex items-baseline justify-between gap-6 py-5 transition-colors hover:text-cb"
+                >
+                  <span className="display text-[clamp(1.5rem,4vw,2.25rem)]">
+                    {item.label}
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    className="font-mono text-sm text-muted transition-transform group-hover:translate-x-1"
+                  >
+                    →
+                  </span>
+                </Link>
+              </li>
+            ))}
+        </ul>
+      </section>
+    </>
   );
 }
