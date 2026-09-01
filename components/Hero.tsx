@@ -55,13 +55,38 @@ export default function Hero() {
   const rotateY = useTransform(springX, [0, 1], [-MAX_TILT, MAX_TILT]);
   const rotateX = useTransform(springY, [0, 1], [MAX_TILT, -MAX_TILT]);
 
+  const primed = useRef(false);
+
+  /**
+   * Decode a frame or two up front. Without this the first hover spends its
+   * opening moments spinning up the decoder, which is exactly where a delay is
+   * most obvious. The clip opens on the folded-hands pose, identical to the
+   * still, so priming is invisible.
+   */
+  const prime = useCallback(() => {
+    setVideoReady(true);
+    const video = videoRef.current;
+    if (!video || primed.current) return;
+    primed.current = true;
+    void video
+      .play()
+      .then(() => {
+        video.pause();
+        video.currentTime = 0;
+      })
+      .catch(() => {
+        /* Playback refused: hover will simply start it cold. */
+      });
+  }, []);
+
   const wave = useCallback(() => {
     const video = videoRef.current;
     if (!video || reduceMotion) return;
-    // Always restart, so a second hover replays the wave from the top.
-    video.currentTime = 0;
+    // Only seek when the clip has actually moved. Assigning currentTime = 0 on
+    // an already-rewound video still triggers a seek, and that seek is a stall.
+    if (video.currentTime > 0.05) video.currentTime = 0;
     void video.play().catch(() => {
-      /* Autoplay refused, or no file yet: the poster simply stays put. */
+      /* Playback refused, or no file: the still simply stays put. */
     });
   }, [reduceMotion]);
 
@@ -148,9 +173,11 @@ export default function Hero() {
                 muted
                 loop
                 playsInline
-                preload="metadata"
+                // Buffer the whole clip up front. It is ~450 KB, and the point
+                // of the interaction is that hovering plays it with no wait.
+                preload="auto"
                 aria-hidden="true"
-                onCanPlay={() => setVideoReady(true)}
+                onCanPlay={prime}
                 onClick={canHover ? undefined : wave}
                 className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
                   videoReady ? "opacity-100" : "opacity-0"
