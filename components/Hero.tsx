@@ -1,13 +1,21 @@
 "use client";
 
-import { useCallback, useSyncExternalStore } from "react";
-import dynamic from "next/dynamic";
-import { motion, useReducedMotion } from "framer-motion";
+import { useCallback, useRef, useState, useSyncExternalStore } from "react";
+import Image from "next/image";
+import {
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import { site } from "@/lib/site";
 
-// The canvas never renders on the server: static export has no WebGL context,
-// and the figure is illustrative, so it loads after the words are legible.
-const QuadtreeScene = dynamic(() => import("./QuadtreeScene"), { ssr: false });
+/**
+ * Degrees of tilt at the edge of the frame. Small on purpose — the portrait
+ * should read as a real person catching the light, not as a rotating card.
+ */
+const MAX_TILT = 6;
 
 /**
  * Subscribes to a media query without syncing it into state on mount, which
@@ -32,7 +40,50 @@ function useMediaQuery(query: string) {
 
 export default function Hero() {
   const reduceMotion = useReducedMotion();
-  const compact = useMediaQuery("(max-width: 767px)");
+  // Touch devices have no hover, so the wave needs a tap instead.
+  const canHover = useMediaQuery("(hover: hover)");
+  const videoRef = useRef<HTMLVideoElement>(null);
+  // The photo is the base layer and the video fades in over it once it can
+  // actually play. A <video> poster is not a usable fallback: when the source
+  // fails to load the browser drops the poster and paints an empty box.
+  const [videoReady, setVideoReady] = useState(false);
+
+  const pointerX = useMotionValue(0.5);
+  const pointerY = useMotionValue(0.5);
+  const springX = useSpring(pointerX, { stiffness: 140, damping: 18 });
+  const springY = useSpring(pointerY, { stiffness: 140, damping: 18 });
+  const rotateY = useTransform(springX, [0, 1], [-MAX_TILT, MAX_TILT]);
+  const rotateX = useTransform(springY, [0, 1], [MAX_TILT, -MAX_TILT]);
+
+  const wave = useCallback(() => {
+    const video = videoRef.current;
+    if (!video || reduceMotion) return;
+    // Always restart, so a second hover replays the wave from the top.
+    video.currentTime = 0;
+    void video.play().catch(() => {
+      /* Autoplay refused, or no file yet: the poster simply stays put. */
+    });
+  }, [reduceMotion]);
+
+  const rest = useCallback(() => {
+    const video = videoRef.current;
+    if (video) {
+      video.pause();
+      video.currentTime = 0;
+    }
+    pointerX.set(0.5);
+    pointerY.set(0.5);
+  }, [pointerX, pointerY]);
+
+  const trackPointer = useCallback(
+    (event: React.PointerEvent<HTMLDivElement>) => {
+      if (reduceMotion) return;
+      const box = event.currentTarget.getBoundingClientRect();
+      pointerX.set((event.clientX - box.left) / box.width);
+      pointerY.set((event.clientY - box.top) / box.height);
+    },
+    [pointerX, pointerY, reduceMotion],
+  );
 
   const rise = {
     hidden: { opacity: 0, y: 14 },
@@ -45,7 +96,7 @@ export default function Hero() {
         initial={reduceMotion ? "show" : "hidden"}
         animate="show"
         transition={{ staggerChildren: 0.09, delayChildren: 0.05 }}
-        className="mx-auto grid max-w-5xl gap-14 px-6 pb-24 pt-20 md:grid-cols-[1fr_minmax(0,1.05fr)] md:items-center md:gap-16 md:pt-28"
+        className="mx-auto grid max-w-5xl gap-14 px-6 pb-24 pt-20 md:grid-cols-[1fr_minmax(0,0.85fr)] md:items-center md:gap-16 md:pt-28"
       >
         <div>
           <motion.p variants={rise} className="eyebrow">
@@ -68,19 +119,63 @@ export default function Hero() {
           </motion.p>
         </div>
 
-        {/* Presented as a plate, the way a paper presents one: the figure is
-            the argument, and it earns a caption rather than sitting behind the
-            words as decoration. */}
-        <motion.figure variants={rise} className="md:mt-2">
-          <div className="relative aspect-video overflow-hidden border border-line bg-surface">
-            <QuadtreeScene
-              maxDepth={compact ? 5 : 6}
-              animate={!reduceMotion}
-            />
+        <motion.figure variants={rise}>
+          <div
+            className="[perspective:1100px]"
+            onPointerMove={trackPointer}
+            onPointerEnter={canHover ? wave : undefined}
+            onPointerLeave={canHover ? rest : undefined}
+          >
+            <motion.div
+              style={
+                reduceMotion
+                  ? undefined
+                  : { rotateX, rotateY, transformStyle: "preserve-3d" }
+              }
+              className="relative aspect-[4/5] overflow-hidden border border-line bg-surface"
+            >
+              <Image
+                src="/portrait.jpg"
+                alt={`${site.name}, ${site.role.toLowerCase()}`}
+                fill
+                priority
+                sizes="(max-width: 768px) 100vw, 40vw"
+                className="object-cover"
+              />
+
+              <video
+                ref={videoRef}
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                aria-hidden="true"
+                onCanPlay={() => setVideoReady(true)}
+                onClick={canHover ? undefined : wave}
+                className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
+                  videoReady ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                <source src="/hero-wave.webm" type="video/webm" />
+                <source src="/hero-wave.mp4" type="video/mp4" />
+              </video>
+
+              {/* Grounds the portrait in the page rather than letting it sit as
+                  a bright rectangle on dark ink. */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/45 via-transparent to-transparent"
+              />
+            </motion.div>
           </div>
-          <figcaption className="eyebrow mt-4 !leading-relaxed">
-            Fig. 1 — Quadtree partition of a frame. Blocks stay large where the
-            image is flat and split where it has structure.
+
+          <figcaption className="eyebrow mt-4">
+            Fig. 1 — Myself
+            {!reduceMotion && (
+              <span className="text-muted/60">
+                {canHover ? " · hover to wave" : " · tap to wave"}
+              </span>
+            )}
           </figcaption>
         </motion.figure>
       </motion.div>

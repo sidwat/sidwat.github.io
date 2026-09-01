@@ -14,8 +14,10 @@ statically exported Next.js app.
 | Output           | Static export (`output: 'export'` → `out/`)  |
 | Hosting          | GitHub Pages via GitHub Actions              |
 
-`framer-motion`, `three`, `@react-three/fiber`, and `@react-three/drei` are
-installed ahead of Phase 2 but not yet used.
+`framer-motion` drives the hero. `three`, `@react-three/fiber`, and
+`@react-three/drei` are currently unused by the live site — they are kept only
+for the archived quadtree figure in `_archive/quadtree-hero/`. Drop them from
+`package.json` if that archive is ever deleted.
 
 ## Running locally
 
@@ -85,32 +87,56 @@ body text stays at normal width — contrast from width, not from a second face.
 IBM Plex Mono handles labels and captions (`.eyebrow`), the register that
 standards documents are actually written in.
 
-**The hero is a figure, not a backdrop.** `components/QuadtreeScene.tsx` renders
-a real recursive quadtree partition: blocks stay large where the frame is flat
-and split along contours, exactly as a rate-distortion search behaves. It is
-presented as a captioned plate ("Fig. 1"), which is why it can be bright and
-legible instead of dimmed into illegibility behind text.
+**The hero is a captioned figure, not a backdrop.** The portrait is presented as
+a plate ("Fig. 1 — Myself"), which is why it can be bright and sharp instead of
+dimmed into illegibility behind text.
 
-Two things in `lib/quadtree.ts` are load-bearing:
+## The portrait hero
 
-- **Probe density scales with cell size** (`FEATURE_WIDTH`). Contours are ~0.015
-  wide; a fixed 5x5 probe samples a root cell every 0.25 and steps clean over
-  the feature, leaving a whole quadrant as one flat block. Scaling the probe is
-  what makes the partition correct.
-- **The frame is two square roots side by side**, so blocks stay square. A
-  single root stretched to 16:9 gives visibly rectangular blocks.
+`components/Hero.tsx` layers a still photo and a short video of Sidhartha
+waving. On hover (or tap, on touch) the video restarts and plays; on leave it
+pauses and resets to the rest pose. The frame tilts a few degrees toward the
+cursor for depth.
 
-Motion is deliberately minimal: one staggered rise on load, and a slow
-per-block oscillation weighted by detail. `prefers-reduced-motion` drops both,
-and the canvas switches to R3F's on-demand frameloop so it draws once and stops.
+**The photo is a real base layer, not the video's `poster`.** This matters: when
+a video's sources fail to load, browsers drop the poster and paint an empty box,
+so a visitor on a slow connection or an unsupported codec would see black where
+a face should be. Instead `next/image` renders the portrait underneath and the
+video fades in over it only once `canplay` fires. With no video file present at
+all, the page still shows the photo and simply does not wave.
+
+### Adding or replacing the wave video
+
+Put the encoded files in `public/` as `hero-wave.mp4` and `hero-wave.webm`, and
+a matching first frame at `public/portrait.jpg`. The video's first frame should
+match the still closely, or the fade-in will visibly jump.
+
+```bash
+ffmpeg -i source.mov -vf "scale=800:-2" -c:v libx264 -crf 24 -preset slow \
+  -pix_fmt yuv420p -an -movflags +faststart public/hero-wave.mp4
+ffmpeg -i source.mov -vf "scale=800:-2" -c:v libvpx-vp9 -crf 34 -b:v 0 \
+  -an public/hero-wave.webm
+ffmpeg -i source.mov -vf "scale=1000:-2" -frames:v 1 -q:v 3 public/portrait.jpg
+```
+
+Keep it under about 2 MB — it ships in the static export and GitHub Pages serves
+it uncompressed. It must be muted and silent (`-an`): browsers refuse to
+autoplay audio, and hover playback would be refused with it.
+
+Motion is deliberately minimal: one staggered rise on load plus the hover wave.
+`prefers-reduced-motion` disables the tilt and the playback, leaving the still
+photo.
+
+The earlier quadtree figure is archived in `_archive/quadtree-hero/` with notes
+on restoring it. That directory is excluded from ESLint and TypeScript.
 
 ## Roadmap
 
 **Phase 1 — scaffold (done).** Next.js at the repo root, route structure with
 placeholder content, shared `Nav` and `Footer`, static export, CI workflow.
 
-**Phase 2 — design system + 3D hero (done).** Tokens, type scale, the quadtree
-figure, and load motion. See the section above.
+**Phase 2 — design system + portrait hero (done).** Tokens, type scale, the
+captioned portrait with a hover wave, and load motion. See above.
 
 **Phase 3 — Notion as CMS.** Pull publications, projects, experience, and blog
 posts from Notion databases at build time via the Notion API. Because the site
@@ -126,8 +152,9 @@ that `next/image` optimization stays off under static export).
 
 ```
 app/            routes; one directory per page, all statically prerendered
-components/     Nav, Footer, PageHeader
+components/     Nav, Footer, Hero, PageHeader
 lib/site.ts     name, nav items, and social links — edit here, not in components
-public/         static assets served at the domain root (drop cv.pdf here)
+public/         static assets at the domain root: portrait.jpg, hero-wave.*, cv.pdf
+_archive/       superseded work, kept for reference; excluded from lint and tsc
 _legacy-jekyll/ the previous Jekyll site, kept for reference
 ```
