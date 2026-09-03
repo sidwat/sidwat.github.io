@@ -12,7 +12,7 @@
   --muted: #767c93;
   --cb: #4c7dff;
   --cr: #ff5c8a;
-  --swatch-next: #e9d5a3;
+  --swatch-next: #e7d09e;
   /* Overlay leaves near-black exactly where it is, so ink screens the grain in
      instead. Sand is a mid tone and takes overlay properly. */
   --grain: 0.055;
@@ -29,13 +29,17 @@
  * ramp far enough to read on a bright ground.
  */
 [data-theme="studio"] {
-  --ink: #e9d5a3;
+  /* Matched to the backdrop in public/media/peek-*.jpg so the corner portrait
+     has nothing to sit against. Was #e9d5a3, sampled from the hero portrait;
+     the two backdrops differ by about six units and the avatar is the one that
+     has to disappear. */
+  --ink: #e7d09e;
   --surface: #dfc994;
   --line: #c4a76b;
   --luma: #1a1509;
   --muted: #5f512c;
   --cb: #2547c8;
-  --cr: #a62c53;
+  --cr: #982848;
   --swatch-next: #08090e;
   /* Sand is a bright ground, so the grain has to work harder to register. */
   --grain: 0.085;
@@ -104,6 +108,18 @@
  * Registered so the feather radii interpolate. An unregistered custom property
  * is just a token to the engine and would snap between the two states.
  */
+@property --pk-x {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --pk-y {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+
 @property --fx {
   syntax: "<percentage>";
   inherits: false;
@@ -184,6 +200,37 @@
     --fb: 76%;
     border-color: transparent;
     background: transparent;
+  }
+
+  /*
+   * The corner portrait is anchored into the top-right of the viewport, so its
+   * top and right edges are the viewport's own and need no treatment. Only the
+   * two edges facing into the page are feathered: on studio he dissolves into a
+   * ground that is already his backdrop, and on ink he stays a print tucked
+   * into the corner, with a hairline where the page meets it.
+   */
+  .peek-frame {
+    border-left: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    border-bottom-left-radius: 14px;
+    -webkit-mask-image:
+      linear-gradient(to right, transparent 0%, #000 var(--pk-x), #000 100%),
+      linear-gradient(to bottom, #000 0%, #000 var(--pk-y), transparent 100%);
+    mask-image:
+      linear-gradient(to right, transparent 0%, #000 var(--pk-x), #000 100%),
+      linear-gradient(to bottom, #000 0%, #000 var(--pk-y), transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+    transition:
+      border-color 450ms ease,
+      --pk-x 450ms ease,
+      --pk-y 450ms ease;
+  }
+
+  [data-theme="studio"] .peek-frame {
+    --pk-x: 34%;
+    --pk-y: 52%;
+    border-color: transparent;
   }
 
   /* Label swapping for the theme toggle. display:none rather than a visibility
