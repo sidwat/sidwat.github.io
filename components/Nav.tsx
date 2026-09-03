@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
+import ThemeToggle from "@/components/ThemeToggle";
 import { nav, site } from "@/lib/site";
 
 export default function Nav() {
@@ -40,6 +41,8 @@ export default function Nav() {
               );
             })}
         </nav>
+
+        <ThemeToggle />
       </div>
     </header>
   );

@@ -35,8 +35,27 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${archivo.variable} ${plexMono.variable}`}>
+    // The theme script sets data-theme before React hydrates, so the server
+    // markup deliberately does not match. Nothing else on <html> is dynamic.
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${archivo.variable} ${plexMono.variable}`}
+    >
       <body className="min-h-dvh bg-ink">
+        {/*
+          Sets data-theme while the parser is still inside <body>, before any of
+          the page is painted, so a stored studio choice never flashes through
+          ink. This has to be a literal inline script: next/script's
+          beforeInteractive compiles to a self.__next_s push under static
+          export, which does not run until the Next bundle loads — well after
+          first paint, which is the entire thing being avoided here.
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem("theme");if(t==="studio")document.documentElement.dataset.theme=t}catch(e){}`,
+          }}
+        />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:absolute focus:left-6 focus:top-6 focus:z-50 focus:rounded focus:bg-cb focus:px-4 focus:py-2 focus:text-ink"

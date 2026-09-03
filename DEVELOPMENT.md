@@ -91,6 +91,46 @@ standards documents are actually written in.
 a plate ("Fig. 1 — Myself"), which is why it can be bright and sharp instead of
 dimmed into illegibility behind text.
 
+### The two grounds
+
+`components/ThemeToggle.tsx` switches `data-theme` on `<html>` between the
+default (unset) and `studio`. It is not only a colour swap — the two states
+differ in how the portrait meets the page:
+
+- **Ink** — near-black. The portrait is a bordered plate: a deliberate figure
+  sitting on the page, with a visible edge.
+- **Studio** — the page takes the colour of the wall in the photograph, the
+  border goes, and the portrait's edges feather out so there is no boundary at
+  all. `#e9d5a3` is sampled from `public/media/portrait.jpg`, matched to the
+  wall at the *edges* of the frame rather than its overall mean, because the
+  edges are the only part that has to disappear.
+
+Three things make the seam vanish, and all three are needed:
+
+1. **The page colour matches the wall.** On its own this is not enough: the wall
+   is vignetted, running `#f2dcab` at the top down to `#d3b583` at the lower
+   left, so no flat colour can match every edge.
+2. **Each edge is feathered** by `.portrait-frame`, using one linear-gradient
+   mask band per edge composited with `mask-composite: intersect`. A radial
+   vignette is the obvious approach and the wrong one: any radial large enough
+   to spare the face never reaches zero opacity inside the box, so the rectangle
+   stays visible. The bands are asymmetric — tight at the top, where his hair
+   nearly touches the frame, and generous at the bottom, where only clothing is
+   lost. The radii are registered with `@property` so they interpolate; an
+   unregistered custom property would snap.
+3. **Grain over the whole page**, portrait included (`body::after`, an inline
+   `feTurbulence`). A photograph carries sensor noise and flat CSS colour does
+   not, so even a perfectly matched hue still reads as a seam — the eye catches
+   the change in *texture*, not in colour. The blend mode is a token because
+   `overlay` leaves near-black untouched; ink screens the grain in instead.
+
+The choice is stored in `localStorage` and applied by a literal inline script at
+the top of `<body>`, before anything paints. That script must stay inline:
+`next/script` with `beforeInteractive` compiles to a `self.__next_s` push under
+static export, which does not run until the Next bundle loads — long after first
+paint, which is the whole point. `<html>` carries `suppressHydrationWarning`
+because the script deliberately makes the server and client markup differ.
+
 ## The portrait hero
 
 `components/Hero.tsx` layers a still photo and a short video of Sidhartha

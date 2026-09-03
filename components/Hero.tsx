@@ -17,6 +17,9 @@ import { site } from "@/lib/site";
  */
 const MAX_TILT = 6;
 
+/** HTMLMediaElement.HAVE_FUTURE_DATA — the readyState `canplay` corresponds to. */
+const HAVE_FUTURE_DATA = 3;
+
 /**
  * Subscribes to a media query without syncing it into state on mount, which
  * would mean rendering once against a guess and again against the truth.
@@ -90,6 +93,19 @@ export default function Hero() {
     });
   }, [reduceMotion]);
 
+  /**
+   * `canplay` is fired at the element, not replayed, so with preload="auto" and
+   * a warm cache it can land before hydration attaches onCanPlay — and then the
+   * video would sit invisible forever. Reconcile against readyState on attach.
+   */
+  const attachVideo = useCallback(
+    (node: HTMLVideoElement | null) => {
+      videoRef.current = node;
+      if (node && node.readyState >= HAVE_FUTURE_DATA) prime();
+    },
+    [prime],
+  );
+
   const rest = useCallback(() => {
     const video = videoRef.current;
     if (video) {
@@ -157,7 +173,7 @@ export default function Hero() {
                   ? undefined
                   : { rotateX, rotateY, transformStyle: "preserve-3d" }
               }
-              className="relative aspect-[4/5] overflow-hidden border border-line bg-surface"
+              className="portrait-frame relative aspect-[4/5] overflow-hidden"
             >
               <Image
                 src="/media/portrait.jpg"
@@ -169,7 +185,7 @@ export default function Hero() {
               />
 
               <video
-                ref={videoRef}
+                ref={attachVideo}
                 muted
                 loop
                 playsInline
@@ -186,13 +202,6 @@ export default function Hero() {
                 <source src="/media/hero-wave.webm" type="video/webm" />
                 <source src="/media/hero-wave.mp4" type="video/mp4" />
               </video>
-
-              {/* Grounds the portrait in the page rather than letting it sit as
-                  a bright rectangle on dark ink. */}
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/45 via-transparent to-transparent"
-              />
             </motion.div>
           </div>
 
