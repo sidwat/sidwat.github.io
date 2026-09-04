@@ -17,6 +17,11 @@
      instead. Sand is a mid tone and takes overlay properly. */
   --grain: 0.055;
   --grain-blend: screen;
+  /* Mesh field opacities. Per theme, because --line sits at a very different
+     contrast against each ground: the same alpha that reads as a whisper on
+     sand is invisible on ink. */
+  --mesh-base: 0.3;
+  --mesh-lit: 0.9;
 }
 
 /*
@@ -40,6 +45,8 @@
   /* Sand is a bright ground, so the grain has to work harder to register. */
   --grain: 0.085;
   --grain-blend: overlay;
+  --mesh-base: 0.15;
+  --mesh-lit: 0.75;
 }
 
 @theme inline {

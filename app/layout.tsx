@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Archivo, IBM_Plex_Mono } from "next/font/google";
+import MeshField from "@/components/MeshField";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { site } from "@/lib/site";
@@ -62,6 +63,7 @@ export default function RootLayout({
         >
           Skip to content
         </a>
+        <MeshField />
         <Nav />
         <div id="main">{children}</div>
         <Footer />

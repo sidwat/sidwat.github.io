@@ -131,6 +131,36 @@ static export, which does not run until the Next bundle loads — long after fir
 paint, which is the whole point. `<html>` carries `suppressHydrationWarning`
 because the script deliberately makes the server and client markup differ.
 
+## The mesh field
+
+`components/MeshField.tsx` draws a triangulated field behind the whole site on a
+`<canvas>` pinned at `-z-10`. At rest it is a faint wireframe; the cursor lights
+the edges near it and the vertices part slightly around it.
+
+The conceit is foveated coding. An encoder spends its bits where the viewer is
+looking, so here the cursor is the fovea: the mesh resolves around it and fades
+away everywhere else. That is also why the accent is `--cb` rather than a
+decorative colour — it is one of the two chroma axes the palette is built from.
+
+**The topology is built once**, by `lib/delaunay.ts`, and then held fixed while
+vertices are displaced. Re-triangulating per frame would be both slower and
+worse, since points drifting past each other produce sliver triangles that
+flicker. Points come from a jittered grid extended one cell past the viewport,
+so the mesh runs off every edge instead of ending in a visible border.
+
+**The loop stops when nothing is changing.** A `dirty` flag tracks whether the
+pointer actually moved, because `pointer.on` stays true while the cursor merely
+rests inside the window — keying off that alone would leave the loop running
+forever after the first mouse move. Measured: zero draw calls across three
+seconds idle, and it wakes on the next move.
+
+Opacities live in `--mesh-base` and `--mesh-lit` rather than in the component,
+because `--line` sits at very different contrast against each ground: the same
+alpha that reads as a whisper on sand is invisible on ink.
+
+Reduced motion leaves the field static, and coarse pointers never animate it at
+all. The canvas is `pointer-events-none` and `aria-hidden`.
+
 ## The portrait hero
 
 `components/Hero.tsx` layers a still photo and a short video of Sidhartha
