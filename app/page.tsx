@@ -1,12 +1,10 @@
 import Link from "next/link";
 import Hero from "@/components/Hero";
-import PeekAvatar from "@/components/PeekAvatar";
 import { nav } from "@/lib/site";
 
 export default function Home() {
   return (
     <>
-      <PeekAvatar />
       <Hero />
 
       <section className="mx-auto max-w-5xl px-6 py-24">

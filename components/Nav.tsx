@@ -21,10 +21,6 @@ export default function Nav() {
           {site.name}
         </Link>
 
-        {/* Left of the links, not flushed right: the top-right corner belongs
-            to the portrait peering in on the home page. */}
-        <ThemeToggle />
-
         <nav aria-label="Sections" className="flex flex-wrap gap-x-6 gap-y-1">
           {nav
             .filter((item) => item.href !== "/")
@@ -45,6 +41,8 @@ export default function Nav() {
               );
             })}
         </nav>
+
+        <ThemeToggle />
       </div>
     </header>
   );

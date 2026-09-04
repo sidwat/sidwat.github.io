@@ -101,39 +101,9 @@ differ in how the portrait meets the page:
   sitting on the page, with a visible edge.
 - **Studio** — the page takes the colour of the wall in the photograph, the
   border goes, and the portrait's edges feather out so there is no boundary at
-  all. The ground is `#e7d09e`, the backdrop of `public/media/peek-*.jpg`. It
-  was `#e9d5a3`, sampled from the hero portrait's wall; the two backdrops sit
-  about six units apart and the corner portrait is the one that has to vanish
-  completely, so it wins. Either way the colour is matched to the backdrop at
-  the *edges* of a frame rather than to its overall mean, because the edges are
-  the only part that has to disappear.
-
-  Changing it moved `--cr` too: on the slightly darker ground the old `#a62c53`
-  fell to 4.48:1 and out of AA, so it is now `#982848` (5.09:1). The token is
-  currently unused, but a palette entry that cannot legally hold text is a trap
-  for whoever reaches for it next.
-
-### The corner portrait
-
-`components/PeekAvatar.tsx` puts a second portrait in the top-right of the home
-page, anchored past the viewport edge so he reads as peering in from outside.
-He breaks into a smile whenever the cursor is over anything clickable, via one
-delegated `pointerover` listener matching `closest()` against the semantic
-interactive elements. Anything clickable but non-semantic — a `div` with an
-`onClick` — will not be seen, which is one more reason to keep the markup
-semantic.
-
-The two frames came in at different resolutions (693×618 and 1094×976) but the
-same framing: both ratios are 1.579, and the measured interocular distance
-differs by the same factor, so scaling them to a common size lands the eyes
-within a pixel or two with no warping. That is what makes the swap read as a
-change of expression rather than a jump, and their backdrops are identical
-enough that the area around him does not flicker as they cross-fade.
-
-Only the two edges facing into the page are feathered; the top and right are the
-viewport's own. He is `pointer-events-none` so he can never swallow a click, and
-he appears only at `lg` and up — below about 1024px the nav's links run far
-enough right to end up behind his face.
+  all. `#e9d5a3` is sampled from `public/media/portrait.jpg`, matched to the
+  wall at the *edges* of the frame rather than its overall mean, because the
+  edges are the only part that has to disappear.
 
 Three things make the seam vanish, and all three are needed:
 

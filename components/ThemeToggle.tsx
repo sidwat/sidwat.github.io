@@ -27,7 +27,7 @@ export default function ThemeToggle() {
     <button
       type="button"
       onClick={toggle}
-      className="group inline-flex items-center gap-2 self-center"
+      className="group ml-auto inline-flex items-center gap-2 self-center"
     >
       <span className="sr-only on-plate">
         Switch the background to the studio wall colour
@@ -43,7 +43,7 @@ export default function ThemeToggle() {
         aria-hidden="true"
         className="eyebrow transition-colors group-hover:text-luma"
       >
-        <span className="on-plate">#E7D09E</span>
+        <span className="on-plate">#E9D5A3</span>
         <span className="on-studio">#08090E</span>
       </span>
     </button>
