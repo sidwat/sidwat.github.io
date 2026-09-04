@@ -39,7 +39,11 @@
   --line: #c4a76b;
   --luma: #1a1509;
   --muted: #5f512c;
-  --cb: #2547c8;
+  /* Cb is the blue-difference axis, so its far end is warm amber-brown. On the
+     sand ground the accent moves to that end rather than to a new hue: blue
+     highlights on yellow read as an intrusion, brown reads as the same ground
+     concentrated. 5.60:1 on --ink, so it can still carry text. */
+  --cb: #6f4718;
   --cr: #a62c53;
   --swatch-next: #08090e;
   /* Sand is a bright ground, so the grain has to work harder to register. */
@@ -191,6 +195,51 @@
     --fb: 76%;
     border-color: transparent;
     background: transparent;
+  }
+
+  /* Every character is its own box so the reveal costs no reflow, which means
+     the text has to keep its own whitespace. */
+  .typed {
+    white-space: pre-wrap;
+  }
+
+  /* Zero width, so riding the typing head never nudges the line. The block is
+     drawn by the pseudo-element, which is outside flow. */
+  /* No width and no height, so the caret contributes nothing to the line box:
+     giving it a height inflates the line it sits on, which visibly spreads the
+     display type apart as the caret passes through. An empty inline-block
+     aligns its bottom margin edge to the baseline, so at zero height the box
+     collapses onto the baseline and the block below can be placed from there. */
+  .caret {
+    position: relative;
+    display: inline-block;
+    width: 0;
+    height: 0;
+  }
+
+  .caret::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -0.1em;
+    width: 0.46em;
+    height: 0.92em;
+    background: currentColor;
+  }
+
+  .caret-blink::after {
+    animation: caret-blink 1.05s steps(1) infinite;
+  }
+
+  @keyframes caret-blink {
+    0%,
+    50% {
+      opacity: 1;
+    }
+    50.01%,
+    100% {
+      opacity: 0;
+    }
   }
 
   /* Label swapping for the theme toggle. display:none rather than a visibility

@@ -75,11 +75,17 @@ Every choice derives from video coding rather than from generic portfolio
 styling. If you change one, change it knowing what it was for.
 
 **Colour is YCbCr.** Codecs do not work in RGB; they work in luma plus two
-chroma axes, so the two accents *are* those axes — `--cb` blue and `--cr`
-magenta — over a blue-shifted near-black. Text sits at `--luma` `#e8eaf2`, not
-pure white, because broadcast white is 235 rather than 255. Tokens live in
+chroma axes, so the two accents *are* those axes — `--cb` and `--cr` — over a
+blue-shifted near-black. Text sits at `--luma` `#e8eaf2`, not pure white,
+because broadcast white is 235 rather than 255. Tokens live in
 `app/globals.css` and are exposed to Tailwind through `@theme inline`, so use
 `text-luma` / `border-line` and not raw hex.
+
+`--cb` is blue on ink and warm brown `#6f4718` on studio. That is not an
+exception to the scheme but the point of it: Cb is the *blue-difference* axis,
+so its far end is amber-brown. Blue highlights on a sand ground read as an
+intrusion; the same axis, taken to its warm end, reads as the ground
+concentrated. Both values clear AA against their own ground.
 
 **Type is one superfamily on a width axis.** Archivo carries a `wdth` axis, so
 display type rides out to 118 (`.display`) for a broadcast-signage feel while
@@ -130,6 +136,31 @@ the top of `<body>`, before anything paints. That script must stay inline:
 static export, which does not run until the Next bundle loads — long after first
 paint, which is the whole point. `<html>` carries `suppressHydrationWarning`
 because the script deliberately makes the server and client markup differ.
+
+## The typed intro
+
+`components/Typed.tsx` types the hero copy in on load, the way a line arrives at
+a shell. The caller supplies the element and its styling; the component fills it
+in, so the eyebrow, the name and the paragraph keep their own typography.
+
+Every character is rendered up front and revealed by opacity rather than
+appended to a growing string. That costs one span per character — 233 on the
+home page — and buys three things: the full copy is in the server-rendered HTML
+for crawlers, it is in the accessibility tree from the start so a screen reader
+is never made to wait on an animation, and the layout never reflows, so there is
+no shift as it types.
+
+The caret is moved through the DOM to ride the typing head, since with reserved
+text it would otherwise sit at the end of the full string. It carries **no width
+and no height**: an inline-block with a height inflates the line box it sits on,
+which visibly spreads the display type apart as the caret passes through. At
+zero height the box collapses onto the baseline, and the block is drawn from
+there by a pseudo-element outside flow.
+
+Speeds are per character and starts are derived from the text lengths in
+`Hero.tsx`, so they stay correct if the copy changes. The paragraph is typed
+much faster than the name — the name carries the weight, the paragraph should
+not keep the reader waiting. Reduced motion reveals everything at once.
 
 ## The mesh field
 

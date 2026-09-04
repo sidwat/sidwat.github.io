@@ -9,6 +9,7 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
+import Typed from "@/components/Typed";
 import { site } from "@/lib/site";
 
 /**
@@ -16,6 +17,30 @@ import { site } from "@/lib/site";
  * should read as a real person catching the light, not as a rotating card.
  */
 const MAX_TILT = 6;
+
+/**
+ * The hero copy is typed in on load, the way a line arrives at a shell. Speeds
+ * are per character; the eyebrow sets the pace, the name is slower because it
+ * carries the most weight, and the paragraph is quick so the reader is not kept
+ * waiting on it. Starts are derived from the text so they stay correct if the
+ * copy changes.
+ */
+const EYEBROW_TEXT = `${site.employer} \u00b7 ${site.location}`;
+const NAME_TEXT = "Sidhartha\nWatsa";
+const BODY_TEXT =
+  "I work on making video smaller \u2014 next-generation codec standards in " +
+  "Samsung\u2019s AI Video Processing Lab. Before that, imitation learning at " +
+  "IISc Bangalore and autonomous systems at IIT Kanpur.";
+
+const EYEBROW_SPEED = 20;
+const NAME_SPEED = 34;
+const BODY_SPEED = 6;
+const BETWEEN_BLOCKS = 200;
+
+const EYEBROW_START = 260;
+const NAME_START =
+  EYEBROW_START + EYEBROW_TEXT.length * EYEBROW_SPEED + BETWEEN_BLOCKS;
+const BODY_START = NAME_START + NAME_TEXT.length * NAME_SPEED + BETWEEN_BLOCKS;
 
 /** HTMLMediaElement.HAVE_FUTURE_DATA — the readyState `canplay` corresponds to. */
 const HAVE_FUTURE_DATA = 3;
@@ -139,25 +164,33 @@ export default function Hero() {
         transition={{ staggerChildren: 0.09, delayChildren: 0.05 }}
         className="mx-auto grid max-w-5xl gap-14 px-6 pb-24 pt-20 md:grid-cols-[1fr_minmax(0,0.85fr)] md:items-center md:gap-16 md:pt-28"
       >
+        {/* Typed rather than faded in: these three carry their own entrance,
+            so they take no part in the stagger the figure uses. */}
         <div>
-          <motion.p variants={rise} className="eyebrow">
-            {site.employer} · {site.location}
-          </motion.p>
+          <p className="eyebrow">
+            <Typed
+              text={EYEBROW_TEXT}
+              speed={EYEBROW_SPEED}
+              startDelay={EYEBROW_START}
+            />
+          </p>
 
-          <motion.h1
-            variants={rise}
-            className="display mt-5 text-[clamp(2.75rem,7.5vw,4.75rem)]"
-          >
-            Sidhartha
-            <br />
-            Watsa
-          </motion.h1>
+          <h1 className="display mt-5 text-[clamp(2.75rem,7.5vw,4.75rem)]">
+            <Typed
+              text={NAME_TEXT}
+              speed={NAME_SPEED}
+              startDelay={NAME_START}
+            />
+          </h1>
 
-          <motion.p variants={rise} className="prose-body mt-7 max-w-md">
-            I work on making video smaller — next-generation codec standards in
-            Samsung&rsquo;s AI Video Processing Lab. Before that, imitation
-            learning at IISc Bangalore and autonomous systems at IIT Kanpur.
-          </motion.p>
+          <p className="prose-body mt-7 max-w-md">
+            <Typed
+              text={BODY_TEXT}
+              speed={BODY_SPEED}
+              startDelay={BODY_START}
+              keepCaret
+            />
+          </p>
         </div>
 
         <motion.figure variants={rise}>
