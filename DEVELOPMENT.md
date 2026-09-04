@@ -137,30 +137,48 @@ static export, which does not run until the Next bundle loads — long after fir
 paint, which is the whole point. `<html>` carries `suppressHydrationWarning`
 because the script deliberately makes the server and client markup differ.
 
-## The typed intro
+## The shell session
 
-`components/Typed.tsx` types the hero copy in on load, the way a line arrives at
-a shell. The caller supplies the element and its styling; the component fills it
-in, so the eyebrow, the name and the paragraph keep their own typography.
+The hero opens as a shell session: `$ whoami` prints the name and the role
+line, `$ cat about.txt` prints the bio, and it comes to rest on an empty prompt
+with a blinking caret.
 
-Every character is rendered up front and revealed by opacity rather than
-appended to a growing string. That costs one span per character — 233 on the
-home page — and buys three things: the full copy is in the server-rendered HTML
-for crawlers, it is in the accessibility tree from the start so a screen reader
-is never made to wait on an animation, and the layout never reflows, so there is
-no shift as it types.
+The split between the two components is the point of the whole thing:
 
-The caret is moved through the DOM to ride the typing head, since with reserved
-text it would otherwise sit at the end of the full string. It carries **no width
-and no height**: an inline-block with a height inflates the line box it sits on,
-which visibly spreads the display type apart as the caret passes through. At
-zero height the box collapses onto the baseline, and the block is drawn from
-there by a pseudo-element outside flow.
+- `components/Typed.tsx` types the **commands**, at a genuinely human 85ms per
+  keystroke with ±35% jitter so it does not read as a metronome.
+- `components/Printed.tsx` reveals the **output** in one go, because a shell
+  prints its output rather than typing it.
 
-Speeds are per character and starts are derived from the text lengths in
-`Hero.tsx`, so they stay correct if the copy changes. The paragraph is typed
-much faster than the name — the name carries the weight, the paragraph should
-not keep the reader waiting. Reduced motion reveals everything at once.
+That is what makes human typing speed affordable. Typing the bio's 190
+characters at 85ms each would take sixteen seconds; typing `cat about.txt` takes
+one, and the paragraph then arrives at once, exactly as a real terminal behaves.
+The whole sequence runs about 3.5 seconds.
+
+In both components the content is rendered up front and revealed by opacity
+rather than appended to a growing string. That buys three things: the full copy
+is in the server-rendered HTML for crawlers, it is in the accessibility tree
+from the start so a screen reader is never made to wait on an animation, and the
+layout never reflows, so nothing shifts as it runs. The prompt lines are
+`aria-hidden`, since the shell framing is decoration — the name, role and bio
+are the content.
+
+Timings chain off each other (`NAME_AT` from `CMD1_AT`, and so on) so retiming
+means changing one number rather than recomputing the sequence. The second
+prompt's `$` is revealed with its command rather than at load, because a shell
+does not show the next prompt until the last one has finished.
+
+The caret carries **no width and no height**. Height was the first attempt and
+it is wrong twice over: a zero-height box with the block placed from its top
+draws the caret entirely below the baseline, and giving the box a height to fix
+that inflates the line it sits on, which visibly spread the display type apart
+as the caret passed through. At zero height the box collapses onto the baseline
+and the block is placed from there by a pseudo-element outside flow.
+
+The name is set to `clamp(1.8rem, 4.8vw, 3.1rem)` so it holds one line at every
+width — 53px of headroom at 1280, 72px at 375. The ceiling matters more than it
+looks: the left column is only 493px at any viewport past `max-w-5xl`, so it is
+the max, not the `vw` term, that binds on desktop.
 
 ## The mesh field
 

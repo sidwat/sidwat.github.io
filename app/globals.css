@@ -265,6 +265,18 @@
     line-height: 0.94;
   }
 
+  /* A shell prompt line. Lowercase, unlike .eyebrow, because commands are. */
+  .prompt {
+    font-family: var(--font-plex-mono), ui-monospace, monospace;
+    font-size: 0.8125rem;
+    letter-spacing: 0.01em;
+    color: var(--muted);
+  }
+
+  .prompt-sigil {
+    color: var(--cb);
+  }
+
   /* Monospace eyebrow used for labels and metadata, the register codec specs
      are written in. */
   .eyebrow {

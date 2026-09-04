@@ -9,6 +9,7 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
+import Printed from "@/components/Printed";
 import Typed from "@/components/Typed";
 import { site } from "@/lib/site";
 
@@ -19,28 +20,34 @@ import { site } from "@/lib/site";
 const MAX_TILT = 6;
 
 /**
- * The hero copy is typed in on load, the way a line arrives at a shell. Speeds
- * are per character; the eyebrow sets the pace, the name is slower because it
- * carries the most weight, and the paragraph is quick so the reader is not kept
- * waiting on it. Starts are derived from the text so they stay correct if the
- * copy changes.
+ * The hero opens as a shell session. The commands are typed at human speed;
+ * the output is printed, because that is what a shell does and because typing
+ * a hundred and ninety characters at human speed would take half a minute.
+ *
+ * Every start is derived from the one before it, so retiming is a matter of
+ * changing one number rather than recomputing the chain.
  */
+const CMD_WHOAMI = "whoami";
+const CMD_ABOUT = "cat about.txt";
+
 const EYEBROW_TEXT = `${site.employer} \u00b7 ${site.location}`;
-const NAME_TEXT = "Sidhartha\nWatsa";
+const NAME_TEXT = "Sidhartha Watsa";
 const BODY_TEXT =
   "I work on making video smaller \u2014 next-generation codec standards in " +
   "Samsung\u2019s AI Video Processing Lab. Before that, imitation learning at " +
   "IISc Bangalore and autonomous systems at IIT Kanpur.";
 
-const EYEBROW_SPEED = 20;
-const NAME_SPEED = 34;
-const BODY_SPEED = 6;
-const BETWEEN_BLOCKS = 200;
+/** Milliseconds per keystroke. Typed jitters this by ±35%. */
+const TYPE_SPEED = 85;
+/** The pause between pressing return and the output arriving. */
+const RETURN_BEAT = 260;
 
-const EYEBROW_START = 260;
-const NAME_START =
-  EYEBROW_START + EYEBROW_TEXT.length * EYEBROW_SPEED + BETWEEN_BLOCKS;
-const BODY_START = NAME_START + NAME_TEXT.length * NAME_SPEED + BETWEEN_BLOCKS;
+const CMD1_AT = 420;
+const NAME_AT = CMD1_AT + CMD_WHOAMI.length * TYPE_SPEED + RETURN_BEAT;
+const EYEBROW_AT = NAME_AT + 130;
+const CMD2_AT = EYEBROW_AT + 520;
+const BODY_AT = CMD2_AT + CMD_ABOUT.length * TYPE_SPEED + RETURN_BEAT;
+const IDLE_PROMPT_AT = BODY_AT + 420;
 
 /** HTMLMediaElement.HAVE_FUTURE_DATA — the readyState `canplay` corresponds to. */
 const HAVE_FUTURE_DATA = 3;
@@ -164,32 +171,47 @@ export default function Hero() {
         transition={{ staggerChildren: 0.09, delayChildren: 0.05 }}
         className="mx-auto grid max-w-5xl gap-14 px-6 pb-24 pt-20 md:grid-cols-[1fr_minmax(0,0.85fr)] md:items-center md:gap-16 md:pt-28"
       >
-        {/* Typed rather than faded in: these three carry their own entrance,
-            so they take no part in the stagger the figure uses. */}
+        {/* A shell session. The prompt lines are decoration, so they are hidden
+            from assistive tech: what matters is the name, the role and the bio,
+            all of which are in the DOM from the start. These carry their own
+            entrance and take no part in the stagger the figure uses. */}
         <div>
-          <p className="eyebrow">
+          <p className="prompt" aria-hidden="true">
+            <span className="prompt-sigil">$ </span>
             <Typed
-              text={EYEBROW_TEXT}
-              speed={EYEBROW_SPEED}
-              startDelay={EYEBROW_START}
+              text={CMD_WHOAMI}
+              speed={TYPE_SPEED}
+              startDelay={CMD1_AT}
             />
           </p>
 
-          <h1 className="display mt-5 text-[clamp(2.75rem,7.5vw,4.75rem)]">
-            <Typed
-              text={NAME_TEXT}
-              speed={NAME_SPEED}
-              startDelay={NAME_START}
-            />
+          <h1 className="display mt-4 text-[clamp(1.8rem,4.8vw,3.1rem)]">
+            <Printed delay={NAME_AT}>{NAME_TEXT}</Printed>
           </h1>
 
-          <p className="prose-body mt-7 max-w-md">
-            <Typed
-              text={BODY_TEXT}
-              speed={BODY_SPEED}
-              startDelay={BODY_START}
-              keepCaret
-            />
+          <p className="eyebrow mt-3">
+            <Printed delay={EYEBROW_AT}>{EYEBROW_TEXT}</Printed>
+          </p>
+
+          {/* The sigil is revealed with the command, not at load: a shell does
+              not show the next prompt until the last one has finished. */}
+          <p className="prompt mt-9" aria-hidden="true">
+            <Printed delay={CMD2_AT}>
+              <span className="prompt-sigil">$ </span>
+            </Printed>
+            <Typed text={CMD_ABOUT} speed={TYPE_SPEED} startDelay={CMD2_AT} />
+          </p>
+
+          <p className="prose-body mt-4 max-w-md">
+            <Printed delay={BODY_AT}>{BODY_TEXT}</Printed>
+          </p>
+
+          {/* The session comes to rest on an empty prompt, waiting. */}
+          <p className="prompt mt-8" aria-hidden="true">
+            <Printed delay={IDLE_PROMPT_AT}>
+              <span className="prompt-sigil">$ </span>
+              <span className="caret caret-blink" />
+            </Printed>
           </p>
         </div>
 
