@@ -14,10 +14,11 @@ statically exported Next.js app.
 | Output           | Static export (`output: 'export'` → `out/`)  |
 | Hosting          | GitHub Pages via GitHub Actions              |
 
-`framer-motion` drives the hero. `three`, `@react-three/fiber`, and
-`@react-three/drei` are currently unused by the live site — they are kept only
-for the archived quadtree figure in `_archive/quadtree-hero/`. Drop them from
-`package.json` if that archive is ever deleted.
+`framer-motion` drives the hero and `clsx` handles conditional classes; that is
+the whole runtime dependency list. `three`, `@react-three/fiber` and
+`@react-three/drei` were removed in v1.0.1 — nothing on the live site imported
+them, and they were only ever there for the archived quadtree figure, whose
+README says how to reinstall them.
 
 ## Running locally
 
