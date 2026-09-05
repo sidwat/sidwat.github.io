@@ -1,0 +1,317 @@
+@import "tailwindcss";
+
+/*
+ * Palette is the YCbCr colour space a codec actually works in: a luma ramp plus
+ * the two chroma axes. Text sits at 235, not 255, the way broadcast white does.
+ */
+:root {
+  --ink: #08090e;
+  --surface: #10121a;
+  --line: #1e2130;
+  --luma: #e8eaf2;
+  --muted: #767c93;
+  --cb: #4c7dff;
+  --cr: #ff5c8a;
+  --swatch-next: #e9d5a3;
+  /* Overlay leaves near-black exactly where it is, so ink screens the grain in
+     instead. Sand is a mid tone and takes overlay properly. */
+  --grain: 0.055;
+  --grain-blend: screen;
+  /* Mesh field opacities. Per theme, because --line sits at a very different
+     contrast against each ground: the same alpha that reads as a whisper on
+     sand is invisible on ink. */
+  --mesh-base: 0.3;
+  --mesh-lit: 0.9;
+}
+
+/*
+ * Studio: the page takes the colour of the wall behind the portrait, so the
+ * figure has nothing to sit against. Sampled from public/media/portrait.jpg —
+ * the wall runs #f2dcab at the top down to #d3b583 at the lower left, so the
+ * page takes the mean and .portrait-frame feathers away the remainder.
+ *
+ * Luma inverts; the chroma axes stay the same two axes, moved down the luma
+ * ramp far enough to read on a bright ground.
+ */
+[data-theme="studio"] {
+  --ink: #e9d5a3;
+  --surface: #dfc994;
+  --line: #c4a76b;
+  --luma: #1a1509;
+  --muted: #5f512c;
+  /* Cb is the blue-difference axis, so its far end is warm amber-brown. On the
+     sand ground the accent moves to that end rather than to a new hue: blue
+     highlights on yellow read as an intrusion, brown reads as the same ground
+     concentrated. 5.60:1 on --ink, so it can still carry text. */
+  --cb: #6f4718;
+  --cr: #a62c53;
+  --swatch-next: #08090e;
+  /* Sand is a bright ground, so the grain has to work harder to register. */
+  --grain: 0.085;
+  --grain-blend: overlay;
+  --mesh-base: 0.15;
+  --mesh-lit: 0.75;
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-surface: var(--surface);
+  --color-line: var(--line);
+  --color-luma: var(--luma);
+  --color-muted: var(--muted);
+  --color-cb: var(--cb);
+  --color-cr: var(--cr);
+
+  --font-display: var(--font-archivo);
+  --font-sans: var(--font-archivo);
+  --font-mono: var(--font-plex-mono);
+}
+
+@layer base {
+  body {
+    background: var(--ink);
+    color: var(--luma);
+    font-family: var(--font-archivo), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    transition:
+      background-color 450ms ease,
+      color 450ms ease;
+  }
+
+  /*
+   * Film grain over the whole page, portrait included. A photograph carries
+   * sensor noise and flat CSS colour does not, so even an exactly matched hue
+   * betrays the seam — the eye reads the change in texture, not in colour.
+   * One grain across both sides removes that cue.
+   *
+   * feTurbulence rather than an image: a few hundred bytes, resolution
+   * independent, and no extra request.
+   */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    pointer-events: none;
+    opacity: var(--grain);
+    mix-blend-mode: var(--grain-blend);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    transition: opacity 450ms ease;
+  }
+
+  ::selection {
+    background: var(--cb);
+    color: var(--ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--cb);
+    outline-offset: 3px;
+  }
+}
+
+/*
+ * Registered so the feather radii interpolate. An unregistered custom property
+ * is just a token to the engine and would snap between the two states.
+ */
+@property --fx {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --ft {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --fb {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+
+@layer components {
+  /*
+   * Plate: a bordered figure sitting on ink, the way a paper prints one.
+   * Studio: the border dissolves and the edges feather into the page. The mask
+   * is applied in both states — at 100%/100% it is fully opaque — so the two
+   * only differ by two radii, which is what makes the change animatable.
+   */
+  .portrait-frame {
+    border: 1px solid var(--line);
+    background: var(--surface);
+    /* One band per edge, intersected — not a radial vignette. A radial large
+       enough to spare the face never reaches zero inside the box, which leaves
+       the rectangle visible; per-edge bands fade to zero exactly at the edge
+       while the middle stays untouched. */
+    -webkit-mask-image:
+      linear-gradient(
+        to right,
+        transparent 0%,
+        #000 var(--fx),
+        #000 calc(100% - var(--fx)),
+        transparent 100%
+      ),
+      linear-gradient(
+        to bottom,
+        transparent 0%,
+        #000 var(--ft),
+        #000 var(--fb),
+        transparent 100%
+      );
+    mask-image:
+      linear-gradient(
+        to right,
+        transparent 0%,
+        #000 var(--fx),
+        #000 calc(100% - var(--fx)),
+        transparent 100%
+      ),
+      linear-gradient(
+        to bottom,
+        transparent 0%,
+        #000 var(--ft),
+        #000 var(--fb),
+        transparent 100%
+      );
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+    transition:
+      border-color 450ms ease,
+      background-color 450ms ease,
+      --fx 450ms ease,
+      --ft 450ms ease,
+      --fb 450ms ease;
+  }
+
+  /* The top band stays tight because his hair reaches nearly to the frame edge;
+     the bottom is generous, where there is only clothing to lose. */
+  [data-theme="studio"] .portrait-frame {
+    --fx: 9%;
+    --ft: 5%;
+    --fb: 76%;
+    border-color: transparent;
+    background: transparent;
+  }
+
+  /* Every character is its own box so the reveal costs no reflow, which means
+     the text has to keep its own whitespace. */
+  .typed {
+    white-space: pre-wrap;
+  }
+
+  /* Zero width, so riding the typing head never nudges the line. The block is
+     drawn by the pseudo-element, which is outside flow. */
+  /* No width and no height, so the caret contributes nothing to the line box:
+     giving it a height inflates the line it sits on, which visibly spreads the
+     display type apart as the caret passes through. An empty inline-block
+     aligns its bottom margin edge to the baseline, so at zero height the box
+     collapses onto the baseline and the block below can be placed from there. */
+  .caret {
+    position: relative;
+    display: inline-block;
+    width: 0;
+    height: 0;
+  }
+
+  .caret::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -0.1em;
+    width: 0.46em;
+    height: 0.92em;
+    background: currentColor;
+  }
+
+  .caret-blink::after {
+    animation: caret-blink 1.05s steps(1) infinite;
+  }
+
+  @keyframes caret-blink {
+    0%,
+    50% {
+      opacity: 1;
+    }
+    50.01%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  /* Label swapping for the theme toggle. display:none rather than a visibility
+     trick, so assistive tech reads exactly one of the two. */
+  .on-studio {
+    display: none;
+  }
+
+  [data-theme="studio"] .on-plate {
+    display: none;
+  }
+
+  [data-theme="studio"] .on-studio {
+    display: inline;
+  }
+
+  /* Display type rides Archivo's width axis out to 125 — wide, engineered,
+     closer to broadcast signage than to a default bold sans. */
+  .display {
+    font-variation-settings: "wdth" 118;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 0.94;
+  }
+
+  /* A shell prompt line. Lowercase, unlike .eyebrow, because commands are. */
+  .prompt {
+    font-family: var(--font-plex-mono), ui-monospace, monospace;
+    font-size: 0.8125rem;
+    letter-spacing: 0.01em;
+    color: var(--muted);
+  }
+
+  .prompt-sigil {
+    color: var(--cb);
+  }
+
+  /* Monospace eyebrow used for labels and metadata, the register codec specs
+     are written in. */
+  .eyebrow {
+    font-family: var(--font-plex-mono), ui-monospace, monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .prose-body {
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  .prose-body a {
+    color: var(--luma);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--cb) 60%, transparent);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 150ms ease;
+  }
+
+  .prose-body a:hover {
+    text-decoration-color: var(--cb);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
