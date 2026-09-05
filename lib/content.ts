@@ -66,10 +66,10 @@ export type Education = {
 export const hero = {
   eyebrow: "MS Computer Science · UC San Diego",
   bio:
-    "I work on making video smaller — next-generation codec standards in " +
-    "Samsung’s AI Visual Processing Lab, and now a master’s in computer " +
-    "science at UC San Diego. Before that, imitation learning at IISc " +
-    "Bangalore and autonomous systems at IIT Kanpur.",
+    "I am interested in robots and vision. I spent two years at Samsung " +
+    "Research on next-generation video codecs — the work of making video " +
+    "smaller. Before that, imitation learning at IISc Bangalore, and " +
+    "mechanical engineering with a double major in electrical at IIT Kanpur.",
 };
 
 export const researchInterests = [
@@ -104,7 +104,7 @@ export const bio: Segment[] = [
     href: "https://research.samsung.com/sri-b",
   },
   {
-    text: ", contributing to next-generation video codec standards in the AI Visual Processing Lab. I am now reading for a master’s in computer science at ",
+    text: ", where I spent two years on next-generation video codec standards in the AI Visual Processing Lab. I am now reading for a master’s in computer science at ",
   },
   { text: "UC San Diego", href: "https://cse.ucsd.edu/" },
   { text: "." },
@@ -143,7 +143,7 @@ export const roles: Role[] = [
     unit: "AI Visual Processing Lab",
     location: "Bangalore, India",
     start: "2024-08",
-    period: "Aug 2024 — present",
+    period: "Aug 2024 — Aug 2026",
     points: [
       "Core AI-based proposals for video codec standards beyond Versatile Video Coding.",
       "Hardware-friendly neural architectures for AI-based in-loop filters and intra-frame prediction in VVC.",
