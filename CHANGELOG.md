@@ -4,6 +4,25 @@ Versions follow [semantic versioning](https://semver.org): the major number
 moves on a redesign or a change in what the site *is*, the minor on new
 sections or features, the patch on content and fixes.
 
+## 1.0.1
+
+Gaps found in the pre-launch audit, and one that only became obvious once the
+site was finished.
+
+- **A contact route.** There was no way to reach him from the site at all:
+  `site.email` had been in `lib/site.ts` since the scaffold but was rendered
+  nowhere, and every footer link led off-site. The footer now carries a
+  `mailto:`.
+- **A real 404.** It was Next's default "This page could not be found", inside
+  the layout. Now a proper page that says what happened and lists the sections,
+  which matters more than usual here: the Jekyll site's URLs (`/publication/…`,
+  `/Experiences/…`, `/talks/`) all change with this rebuild, so anyone
+  following an old link lands on it.
+- **Removed `three`, `@react-three/fiber` and `@react-three/drei`.** Nothing on
+  the live site imported them; they were left over from the archived quadtree
+  hero. Both the archive README and DEVELOPMENT.md claimed they were still
+  installed, and both now say how to reinstall them instead.
+
 ## 1.0.0 — 2026-09-05
 
 First public release. Replaces the Jekyll site that had served

@@ -9,5 +9,9 @@ cell size (a fixed probe steps over thin contours and leaves whole quadrants
 unsplit), and the frame is two square roots side by side so blocks stay square.
 
 To restore, move both files back to `lib/` and `components/` and render
-`<QuadtreeScene />`. It needs `three` and `@react-three/fiber`, which are still
-in package.json.
+`<QuadtreeScene />`, then reinstall the dependencies it needs — these were
+removed in v1.0.1 once nothing on the live site imported them:
+
+```bash
+pnpm add three @react-three/fiber @react-three/drei
+```
