@@ -10,6 +10,10 @@ type Props = {
   startDelay?: number;
   /** Leave the caret blinking when this block finishes. */
   keepCaret?: boolean;
+  /** Hold off until the previous step says it is done. */
+  start?: boolean;
+  /** Fired once the last character lands, so the next step can follow it. */
+  onDone?: () => void;
 };
 
 /**
@@ -28,12 +32,14 @@ export default function Typed({
   speed = 18,
   startDelay = 0,
   keepCaret = false,
+  start = true,
+  onDone,
 }: Props) {
   const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const root = ref.current;
-    if (!root) return;
+    if (!root || !start) return;
 
     const chars = Array.from(
       root.querySelectorAll<HTMLElement>("[data-char]"),
@@ -45,7 +51,10 @@ export default function Typed({
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       reveal();
       if (caret) caret.style.opacity = keepCaret ? "1" : "0";
-      return;
+      // Scheduled rather than called inline, so the parent's state update
+      // never lands during this effect.
+      const immediate = window.setTimeout(() => onDone?.(), 0);
+      return () => window.clearTimeout(immediate);
     }
 
     let i = 0;
@@ -57,6 +66,7 @@ export default function Typed({
           if (keepCaret) caret.classList.add("caret-blink");
           else caret.style.opacity = "0";
         }
+        onDone?.();
         return;
       }
       const ch = chars[i];
@@ -79,7 +89,7 @@ export default function Typed({
 
     timer = window.setTimeout(begin, startDelay);
     return () => window.clearTimeout(timer);
-  }, [text, speed, startDelay, keepCaret]);
+  }, [text, speed, startDelay, keepCaret, start, onDone]);
 
   // Words are inline-block so a line can never break inside one, even though
   // every character is a separate inline box. Whitespace runs stay as their

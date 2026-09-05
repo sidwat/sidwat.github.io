@@ -39,15 +39,12 @@ const BODY_TEXT =
 
 /** Milliseconds per keystroke. Typed jitters this by ±35%. */
 const TYPE_SPEED = 85;
-/** The pause between pressing return and the output arriving. */
+/** The pause between a command finishing and its output arriving. */
 const RETURN_BEAT = 260;
-
-const CMD1_AT = 420;
-const NAME_AT = CMD1_AT + CMD_WHOAMI.length * TYPE_SPEED + RETURN_BEAT;
-const EYEBROW_AT = NAME_AT + 130;
-const CMD2_AT = EYEBROW_AT + 520;
-const BODY_AT = CMD2_AT + CMD_ABOUT.length * TYPE_SPEED + RETURN_BEAT;
-const IDLE_PROMPT_AT = BODY_AT + 420;
+/** Before the first prompt is typed at all. */
+const FIRST_PROMPT_DELAY = 420;
+/** Between the two lines whoami prints. */
+const ROLE_OFFSET = 130;
 
 /** HTMLMediaElement.HAVE_FUTURE_DATA — the readyState `canplay` corresponds to. */
 const HAVE_FUTURE_DATA = 3;
@@ -75,6 +72,20 @@ function useMediaQuery(query: string) {
 
 export default function Hero() {
   const reduceMotion = useReducedMotion();
+  /**
+   * Which step of the session has completed. The chain is causal rather than a
+   * precomputed timeline: keystrokes jitter and setTimeout drifts under load,
+   * so a schedule computed from load drifts out of step and the output can
+   * arrive before the command that produced it has finished typing.
+   */
+  const [stage, setStage] = useState(0);
+
+  const advance = useCallback((to: number) => {
+    window.setTimeout(() => setStage((s) => Math.max(s, to)), RETURN_BEAT);
+  }, []);
+
+  const whoamiDone = useCallback(() => advance(1), [advance]);
+  const aboutDone = useCallback(() => advance(2), [advance]);
   // Touch devices have no hover, so the wave needs a tap instead.
   const canHover = useMediaQuery("(hover: hover)");
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -181,34 +192,42 @@ export default function Hero() {
             <Typed
               text={CMD_WHOAMI}
               speed={TYPE_SPEED}
-              startDelay={CMD1_AT}
+              startDelay={FIRST_PROMPT_DELAY}
+              onDone={whoamiDone}
             />
           </p>
 
           <h1 className="display mt-4 text-[clamp(1.8rem,4.8vw,3.1rem)]">
-            <Printed delay={NAME_AT}>{NAME_TEXT}</Printed>
+            <Printed show={stage >= 1}>{NAME_TEXT}</Printed>
           </h1>
 
           <p className="eyebrow mt-3">
-            <Printed delay={EYEBROW_AT}>{EYEBROW_TEXT}</Printed>
+            <Printed show={stage >= 1} delay={ROLE_OFFSET}>
+              {EYEBROW_TEXT}
+            </Printed>
           </p>
 
-          {/* The sigil is revealed with the command, not at load: a shell does
-              not show the next prompt until the last one has finished. */}
+          {/* The sigil arrives with its command: a shell does not show the next
+              prompt until the last one has finished. */}
           <p className="prompt mt-9" aria-hidden="true">
-            <Printed delay={CMD2_AT}>
+            <Printed show={stage >= 1}>
               <span className="prompt-sigil">$ </span>
             </Printed>
-            <Typed text={CMD_ABOUT} speed={TYPE_SPEED} startDelay={CMD2_AT} />
+            <Typed
+              text={CMD_ABOUT}
+              speed={TYPE_SPEED}
+              start={stage >= 1}
+              onDone={aboutDone}
+            />
           </p>
 
           <p className="prose-body mt-4 max-w-md">
-            <Printed delay={BODY_AT}>{BODY_TEXT}</Printed>
+            <Printed show={stage >= 2}>{BODY_TEXT}</Printed>
           </p>
 
           {/* The session comes to rest on an empty prompt, waiting. */}
           <p className="prompt mt-8" aria-hidden="true">
-            <Printed delay={IDLE_PROMPT_AT}>
+            <Printed show={stage >= 2} delay={420}>
               <span className="prompt-sigil">$ </span>
               <span className="caret caret-blink" />
             </Printed>

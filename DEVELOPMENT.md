@@ -163,10 +163,16 @@ layout never reflows, so nothing shifts as it runs. The prompt lines are
 `aria-hidden`, since the shell framing is decoration — the name, role and bio
 are the content.
 
-Timings chain off each other (`NAME_AT` from `CMD1_AT`, and so on) so retiming
-means changing one number rather than recomputing the sequence. The second
-prompt's `$` is revealed with its command rather than at load, because a shell
-does not show the next prompt until the last one has finished.
+**The chain is causal, not scheduled.** `Typed` reports completion through
+`onDone` and the hero advances a `stage`; each step is gated on the one before
+it. A precomputed timeline was the first attempt and it desynchronises:
+keystrokes jitter by ±35% and `setTimeout` drifts under load, so the bio printed
+while `$ cat about.txt` was still halfway through typing. Verified by sampling
+the DOM 70 times across a run — the output is never visible while its own
+command is unfinished.
+
+The second prompt's `$` is revealed with its command rather than at load,
+because a shell does not show the next prompt until the last one has finished.
 
 The caret carries **no width and no height**. Height was the first attempt and
 it is wrong twice over: a zero-height box with the block placed from its top

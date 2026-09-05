@@ -3,8 +3,10 @@
 import { useEffect, useRef, type ReactNode } from "react";
 
 type Props = {
-  /** Milliseconds from load until this appears. */
-  delay: number;
+  /** Whether the step that produces this output has finished. */
+  show: boolean;
+  /** Milliseconds to wait after that, for spacing within a step. */
+  delay?: number;
   children: ReactNode;
 };
 
@@ -16,12 +18,12 @@ type Props = {
  * Content is in the DOM from the start, so crawlers and screen readers get it
  * immediately and nothing reflows when it appears.
  */
-export default function Printed({ delay, children }: Props) {
+export default function Printed({ show, delay = 0, children }: Props) {
   const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
+    if (!el || !show) return;
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       el.style.opacity = "1";
@@ -32,7 +34,7 @@ export default function Printed({ delay, children }: Props) {
       el.style.opacity = "1";
     }, delay);
     return () => window.clearTimeout(timer);
-  }, [delay]);
+  }, [show, delay]);
 
   return (
     <span
