@@ -283,6 +283,16 @@ placeholder content, shared `Nav` and `Footer`, static export, CI workflow.
 **Phase 2 — design system + portrait hero (done).** Tokens, type scale, the
 captioned portrait with a hover wave, and load motion. See above.
 
+**Phase 2.5 — content port (done).** The real material from the Jekyll site now
+lives in `lib/content.ts` as typed data: four roles, two publications, five
+projects, two teaching entries, education and the bio. `public/cv.pdf` is the
+resume from `_legacy-jekyll/files/`. Blog and gallery are still empty because
+there was never anything real in them — the Jekyll posts and portfolio items
+were untouched academicpages template defaults.
+
+Content is typed data rather than MDX so the pages stay simple, and so a later
+move to a CMS is a change of *source* without touching the rendering.
+
 **Phase 3 — Notion as CMS.** Pull publications, projects, experience, and blog
 posts from Notion databases at build time via the Notion API. Because the site
 is statically exported, content refreshes need a scheduled or webhook-triggered
