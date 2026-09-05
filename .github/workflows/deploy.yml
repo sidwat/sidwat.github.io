@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ["nextjs-rebuild"]
+    branches: ["master", "nextjs-rebuild"]
   workflow_dispatch:
 
 permissions:
@@ -36,9 +36,8 @@ jobs:
         with:
           path: ./out
 
-  # Guarded to the default branch so pushes to nextjs-rebuild build and upload an
-  # artifact without ever republishing the live site. Remove this `if` (and add
-  # master to the push triggers above) when the rebuild is ready to go live.
+  # Guarded to the default branch: pushes to nextjs-rebuild still build and
+  # upload an artifact, proving the branch compiles, but only master publishes.
   deploy:
     needs: build
     if: github.ref == 'refs/heads/master'

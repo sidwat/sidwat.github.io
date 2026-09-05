@@ -60,14 +60,40 @@ excluded from ESLint. Delete it once the rebuild has everything it needs.
 
 ### Going live
 
-1. Set **Settings → Pages → Build and deployment → Source** to **GitHub Actions**.
-2. In `.github/workflows/deploy.yml`, add `master` to the `push.branches` list
-   and remove the `if: github.ref == 'refs/heads/master'` guard on the `deploy`
-   job — or just merge, since the guard already allows `master` to deploy.
-3. Merge `nextjs-rebuild` into `master`.
+The workflow now builds on pushes to both branches but the `deploy` job is
+guarded to `master`, so pushing to `nextjs-rebuild` proves the branch compiles
+without touching the live site. Two steps remain, **in this order**:
 
-Until then, pushes to `nextjs-rebuild` run the build and upload a Pages
-artifact, but the `deploy` job is skipped, so the live site never changes.
+1. Set **Settings → Pages → Build and deployment → Source** to **GitHub
+   Actions**. Do this *first*: it takes effect immediately and repo-wide, and it
+   is what stops the legacy Jekyll build. Merging before flipping it leaves the
+   deploy job failing against a Pages site still configured for a branch.
+2. Merge `nextjs-rebuild` into `master`. That push deploys.
+
+Note that step 1 stops the old site building the moment it is applied, so the
+gap between the two steps is the only window where the live site is stale.
+
+### Social and search assets
+
+`app/icon.png` and `app/opengraph-image.png` are static files using Next's
+metadata conventions, and they are static **on purpose**. Generating them with
+`next/og` at build time works and looks identical, but under `output: export`
+those routes emit files with no extension — `out/icon`, `out/opengraph-image`.
+GitHub Pages sets Content-Type from the extension, so they would be served as
+octet-stream: browsers may still sniff a favicon, but LinkedIn and Twitter
+scrapers reject non-image content types and the share card would silently never
+appear.
+
+To regenerate them, add `app/icon.tsx` / `app/opengraph-image.tsx` using
+`ImageResponse` with `export const dynamic = "force-static"` (required under
+`output: export`), read `lib/fonts/Archivo-Bold.ttf` so the type matches the
+site, build, then copy `out/icon` and `out/opengraph-image` back to
+`app/icon.png` and `app/opengraph-image.png` and delete the generators.
+
+`sitemap.ts` and `robots.ts` are derived from `nav`, so a page added to the site
+cannot be left out of the sitemap. The sitemap emits the trailing-slash form,
+matching `trailingSlash: true` — the unslashed form would point crawlers at a
+redirect.
 
 ## Design system
 

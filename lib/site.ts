@@ -7,13 +7,14 @@ export const site = {
   url: "https://sidwat.github.io",
 };
 
+// Blog and gallery have routes but no content, so they stay out of the nav
+// rather than sending anyone to a dead end. Add them back when they have
+// something in them.
 export const nav = [
   { href: "/", label: "Home" },
   { href: "/experience", label: "Experience" },
   { href: "/publications", label: "Publications" },
   { href: "/projects", label: "Projects" },
-  { href: "/blog", label: "Blog" },
-  { href: "/gallery", label: "Gallery" },
   { href: "/cv", label: "CV" },
 ];
 

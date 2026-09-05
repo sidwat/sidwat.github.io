@@ -29,7 +29,9 @@ export const metadata: Metadata = {
     template: `%s — ${site.name}`,
   },
   description:
-    "Sidhartha Watsa works on next-generation video codec standards at Samsung Research, Bangalore. Previously imitation learning at IISc and autonomous systems at IIT Kanpur.",
+    "Sidhartha Watsa — robots, vision, and making video smaller. Two years on " +
+    "next-generation video codec standards at Samsung Research; now a master's " +
+    "in computer science at UC San Diego.",
 };
 
 export default function RootLayout({
