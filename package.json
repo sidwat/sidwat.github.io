@@ -1,6 +1,6 @@
 {
-  "name": "nextscaffold",
-  "version": "0.1.0",
+  "name": "sidwat-site",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -29,5 +29,6 @@
     "tailwindcss": "^4",
     "typescript": "^5"
   },
-  "packageManager": "pnpm@11.25.0"
+  "packageManager": "pnpm@11.25.0",
+  "description": "Personal site for sidwat.github.io"
 }
