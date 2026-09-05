@@ -9,6 +9,7 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
+import { hero } from "@/lib/content";
 import Printed from "@/components/Printed";
 import Typed from "@/components/Typed";
 import { site } from "@/lib/site";
@@ -30,12 +31,9 @@ const MAX_TILT = 6;
 const CMD_WHOAMI = "whoami";
 const CMD_ABOUT = "cat about.txt";
 
-const EYEBROW_TEXT = `${site.employer} \u00b7 ${site.location}`;
+const EYEBROW_TEXT = hero.eyebrow;
 const NAME_TEXT = "Sidhartha Watsa";
-const BODY_TEXT =
-  "I work on making video smaller \u2014 next-generation codec standards in " +
-  "Samsung\u2019s AI Video Processing Lab. Before that, imitation learning at " +
-  "IISc Bangalore and autonomous systems at IIT Kanpur.";
+const BODY_TEXT = hero.bio;
 
 /** Milliseconds per keystroke. Typed jitters this by ±35%. */
 const TYPE_SPEED = 85;

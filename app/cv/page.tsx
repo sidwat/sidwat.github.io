@@ -3,8 +3,12 @@ import PageHeader from "@/components/PageHeader";
 import {
   bio,
   education,
+  honours,
+  patents,
   publications,
+  researchInterests,
   roles,
+  skills,
   teaching,
 } from "@/lib/content";
 
@@ -25,13 +29,41 @@ function Section({
   );
 }
 
+/** Two-column row: a period or identifier on the left, the entry on the right. */
+function Row({
+  aside,
+  children,
+}: {
+  aside: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <li className="grid gap-1 md:grid-cols-[10rem_1fr] md:gap-8">
+      <p className="eyebrow md:pt-1">{aside}</p>
+      <div className="max-w-2xl">{children}</div>
+    </li>
+  );
+}
+
+function Tags({ items }: { items: string[] }) {
+  return (
+    <ul className="flex flex-wrap gap-x-4 gap-y-1">
+      {items.map((item) => (
+        <li key={item} className="eyebrow">
+          {item}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export default function Page() {
   return (
     <div className="mx-auto max-w-5xl px-6 pb-24 pt-20">
       <PageHeader
         label="Curriculum vitae"
         title="CV"
-        intro="Education, roles, publications, and standards work, in one page."
+        intro="Education, roles, publications, patents, and teaching, in one page."
       />
 
       <div className="mt-12">
@@ -63,41 +95,40 @@ export default function Page() {
           </p>
         </Section>
 
+        <Section label="Research interests">
+          <Tags items={researchInterests} />
+        </Section>
+
         <Section label="Education">
-          {education.map((item) => (
-            <div key={item.institution} className="max-w-2xl">
-              <p className="text-[1.0625rem]">{item.degree}</p>
-              <p className="eyebrow mt-2">
-                {item.href ? (
-                  <a href={item.href} target="_blank" rel="noreferrer">
-                    {item.institution}
-                  </a>
-                ) : (
-                  item.institution
-                )}
-              </p>
-            </div>
-          ))}
+          <ol className="space-y-6">
+            {education.map((item) => (
+              <Row key={item.degree} aside={item.period}>
+                <p className="text-[1.0625rem]">{item.degree}</p>
+                <p className="eyebrow mt-1.5">
+                  {item.href ? (
+                    <a href={item.href} target="_blank" rel="noreferrer">
+                      {item.institution}
+                    </a>
+                  ) : (
+                    item.institution
+                  )}
+                  {item.detail ? ` · ${item.detail}` : ""}
+                </p>
+              </Row>
+            ))}
+          </ol>
         </Section>
 
         <Section label="Experience">
           <ol className="space-y-6">
             {roles.map((role) => (
-              <li
-                key={`${role.org}-${role.start}`}
-                className="grid gap-1 md:grid-cols-[7rem_1fr] md:gap-8"
-              >
-                <p className="eyebrow md:pt-1">
-                  {new Date(role.start).getFullYear()}
+              <Row key={`${role.org}-${role.start}`} aside={role.period}>
+                <p className="text-[1.0625rem]">{role.title}</p>
+                <p className="eyebrow mt-1.5">
+                  {role.org}
+                  {role.unit ? ` · ${role.unit}` : ""}
                 </p>
-                <div className="max-w-2xl">
-                  <p className="text-[1.0625rem]">{role.title}</p>
-                  <p className="eyebrow mt-1.5">
-                    {role.org}
-                    {role.unit ? ` · ${role.unit}` : ""}
-                  </p>
-                </div>
-              </li>
+              </Row>
             ))}
           </ol>
         </Section>
@@ -105,43 +136,66 @@ export default function Page() {
         <Section label="Publications">
           <ol className="space-y-6">
             {publications.map((paper) => (
-              <li
-                key={paper.url}
-                className="grid gap-1 md:grid-cols-[7rem_1fr] md:gap-8"
-              >
-                <p className="eyebrow md:pt-1">{paper.year}</p>
-                <div className="max-w-2xl">
-                  <p className="text-[1.0625rem]">
-                    <a href={paper.url} target="_blank" rel="noreferrer">
-                      {paper.title}
-                    </a>
-                  </p>
-                  <p className="eyebrow mt-1.5">{paper.venue}</p>
-                </div>
-              </li>
+              <Row key={paper.url} aside={String(paper.year)}>
+                <p className="text-[1.0625rem]">
+                  <a href={paper.url} target="_blank" rel="noreferrer">
+                    {paper.title}
+                  </a>
+                </p>
+                <p className="eyebrow mt-1.5">{paper.venue}</p>
+              </Row>
+            ))}
+          </ol>
+        </Section>
+
+        <Section label="Patents">
+          <ol className="space-y-6">
+            {patents.map((patent) => (
+              <Row key={patent.applicationNo} aside={patent.applicationNo}>
+                <p className="text-[1.0625rem]">{patent.title}</p>
+              </Row>
             ))}
           </ol>
         </Section>
 
         <Section label="Teaching">
-          <ol className="space-y-8">
+          <ol className="space-y-6">
             {teaching.map((course) => (
-              <li key={course.title} className="max-w-2xl">
+              <Row key={course.title} aside={course.period}>
                 <p className="text-[1.0625rem]">{course.title}</p>
                 <p className="eyebrow mt-1.5">
-                  {course.kind} · {course.venue}
+                  {course.venue} · {course.invitedBy.toLowerCase()}
                 </p>
-                <p className="prose-body mt-3">{course.summary}</p>
-                <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1">
-                  {course.topics.map((topic) => (
-                    <li key={topic} className="eyebrow">
-                      {topic}
+                <ul className="mt-3 space-y-2">
+                  {course.points.map((point) => (
+                    <li
+                      key={point}
+                      className="prose-body relative pl-5 before:absolute before:left-0 before:top-[0.85em] before:h-px before:w-3 before:bg-line"
+                    >
+                      {point}
                     </li>
                   ))}
                 </ul>
-              </li>
+              </Row>
             ))}
           </ol>
+        </Section>
+
+        <Section label="Honours">
+          <ul className="max-w-2xl space-y-2">
+            {honours.map((honour) => (
+              <li
+                key={honour}
+                className="prose-body relative pl-5 before:absolute before:left-0 before:top-[0.85em] before:h-px before:w-3 before:bg-line"
+              >
+                {honour}
+              </li>
+            ))}
+          </ul>
+        </Section>
+
+        <Section label="Tools">
+          <Tags items={skills} />
         </Section>
       </div>
     </div>

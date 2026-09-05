@@ -17,11 +17,9 @@ export default function Page() {
         {roles.map((role) => (
           <li
             key={`${role.org}-${role.start}`}
-            className="grid gap-2 border-b border-line py-8 md:grid-cols-[7rem_1fr] md:gap-8"
+            className="grid gap-2 border-b border-line py-8 md:grid-cols-[10rem_1fr] md:gap-8"
           >
-            <p className="eyebrow md:pt-1">
-              {new Date(role.start).getFullYear()}
-            </p>
+            <p className="eyebrow md:pt-1">{role.period}</p>
 
             <div>
               <h2 className="text-[1.375rem] leading-snug">{role.title}</h2>
@@ -29,7 +27,17 @@ export default function Page() {
                 {role.org}
                 {role.unit ? ` · ${role.unit}` : ""} · {role.location}
               </p>
-              <p className="prose-body mt-3 max-w-2xl">{role.summary}</p>
+
+              <ul className="mt-4 max-w-2xl space-y-2">
+                {role.points.map((point) => (
+                  <li
+                    key={point}
+                    className="prose-body relative pl-5 before:absolute before:left-0 before:top-[0.85em] before:h-px before:w-3 before:bg-line"
+                  >
+                    {point}
+                  </li>
+                ))}
+              </ul>
             </div>
           </li>
         ))}

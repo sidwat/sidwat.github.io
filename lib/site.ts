@@ -1,8 +1,8 @@
 export const site = {
   name: "Sidhartha Watsa",
   role: "Research Engineer",
-  employer: "Samsung Research",
-  location: "Bangalore",
+  employer: "UC San Diego",
+  location: "San Diego",
   email: "sidhartha2182000@gmail.com",
   url: "https://sidwat.github.io",
 };
