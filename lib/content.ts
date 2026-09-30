@@ -222,6 +222,13 @@ export const publications: Publication[] = [
 export const patents: Patent[] = [
   {
     title:
+      "Hybrid AI Loop Filter for Video Codec with Hardware-Friendly Model Selection",
+    applicationNo: "202541087044",
+    summary:
+      "Encodes video with a lightweight AI-based in-loop filter (ILF) that selects a handcrafted filter (the ‘secret sauce’) and a downscale level (1×–8×) based on reconstruction error and video content. It then loads the matching pretrained neural-network weights from a lookup table using a signaled index. This keeps AI filtering content-adaptive while keeping the hardware structure fixed; only on/off switches and weight loading change.",
+  },
+  {
+    title:
       "Inverted-L-scan method for AI-based intra-frame prediction in a video codec",
     applicationNo: "202541023751",
     summary:
