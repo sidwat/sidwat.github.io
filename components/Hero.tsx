@@ -223,6 +223,30 @@ export default function Hero() {
             <Printed show={stage >= 2}>{BODY_TEXT}</Printed>
           </p>
 
+          <div className="mt-6 flex flex-wrap gap-3">
+            <a
+              href="/cv.pdf"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-baseline gap-3 border border-cb bg-cb px-5 py-3 text-[0.9375rem] text-ink transition-opacity hover:opacity-85"
+            >
+              View CV
+              <span aria-hidden="true" className="font-mono text-sm">
+                ↗
+              </span>
+            </a>
+            <a
+              href="/cv.pdf"
+              download
+              className="inline-flex items-baseline gap-3 border border-line px-5 py-3 text-[0.9375rem] transition-colors hover:border-cb hover:text-cb"
+            >
+              Download PDF
+              <span aria-hidden="true" className="font-mono text-sm">
+                ↓
+              </span>
+            </a>
+          </div>
+
           {/* The session comes to rest on an empty prompt, waiting. */}
           <p className="prompt mt-8" aria-hidden="true">
             <Printed show={stage >= 2} delay={420}>
