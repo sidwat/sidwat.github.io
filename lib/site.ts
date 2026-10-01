@@ -3,7 +3,7 @@ export const site = {
   role: "Research Engineer",
   employer: "UC San Diego",
   location: "San Diego",
-  email: "sidhartha2182000@gmail.com",
+  email: "swatsa@ucsd.edu",
   url: "https://sidwat.github.io",
 };
 
