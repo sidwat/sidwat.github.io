@@ -36,7 +36,7 @@ export default function Page() {
               </h2>
               <p className="eyebrow mt-2">{paper.venue}</p>
               <p className="prose-body mt-3 max-w-2xl">{paper.abstract}</p>
-              <p className="mt-4 max-w-2xl font-mono text-[0.75rem] leading-relaxed text-muted/80">
+              <p className="mt-4 max-w-2xl font-mono text-[0.75rem] leading-relaxed text-muted">
                 {paper.citation}
               </p>
             </div>

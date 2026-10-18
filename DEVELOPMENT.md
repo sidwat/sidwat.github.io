@@ -14,8 +14,11 @@ statically exported Next.js app.
 | Output           | Static export (`output: 'export'` → `out/`)  |
 | Hosting          | GitHub Pages via GitHub Actions              |
 
-`framer-motion` drives the hero and `clsx` handles conditional classes; that is
-the whole runtime dependency list. `three`, `@react-three/fiber` and
+`framer-motion` drives the hero and `clsx` handles conditional classes. Since
+v1.1.0 the blog adds a build-time Markdown pipeline (`gray-matter`, `zod`,
+`unified` with `remark-parse`, `remark-gfm`, `remark-rehype`, `rehype-slug`,
+`rehype-autolink-headings`, `rehype-pretty-code` + `shiki`,
+`rehype-stringify`); none of it ships to the browser. `three`, `@react-three/fiber` and
 `@react-three/drei` were removed in v1.0.1 — nothing on the live site imported
 them, and they were only ever there for the archived quadtree figure, whose
 README says how to reinstall them.
@@ -32,13 +35,29 @@ Then open http://localhost:3000.
 ## Building
 
 ```bash
-pnpm build
+pnpm build          # production: drafts and future-dated posts left out
+pnpm build:drafts   # preview: drafts and scheduled posts included, marked DRAFT
 ```
 
 This writes a fully static site to `out/`. Because `output: 'export'` is set,
-server-only features are unavailable: no Route Handlers, no Server Actions, no
-`next/image` optimization (hence `images: { unoptimized: true }`), and no
-dynamic `revalidate`. Any data fetching has to happen at build time.
+server-only features are unavailable: no Server Actions, no request-reading
+Route Handlers, no `next/image` optimization (hence
+`images: { unoptimized: true }`), and no dynamic `revalidate`. Any data
+fetching has to happen at build time. A `GET` Route Handler marked
+`export const dynamic = "force-static"` is fine: it is rendered once into a
+file, which is how `app/blog/feed.xml/route.ts` becomes `out/blog/feed.xml`.
+
+**Always build through the pnpm scripts, not bare `next build`.** Both scripts
+run `node lib/blog/prune-export.mjs` afterwards. `output: 'export'` refuses a
+dynamic route whose `generateStaticParams` returns nothing, so with zero
+published posts `/blog/[slug]` is given one placeholder param (`__no-posts`,
+which renders the 404) and the prune step deletes `out/blog/__no-posts/`.
+Skip it and that directory ships. `deploy.yml` already runs `pnpm build`.
+
+The contact form reads `NEXT_PUBLIC_CONTACT_ENDPOINT` and
+`NEXT_PUBLIC_CONTACT_ACCESS_KEY` at build time. Neither is secret (both are
+inlined into the page). Without them the build still succeeds and `/contact/`
+shows its not-configured state with the `mailto:` fallback.
 
 `trailingSlash: true` is on so every route emits `out/<route>/index.html`, which
 is what GitHub Pages serves cleanly without a redirect hop.
@@ -320,22 +339,44 @@ were untouched academicpages template defaults.
 Content is typed data rather than MDX so the pages stay simple, and so a later
 move to a CMS is a change of *source* without touching the rendering.
 
-**Phase 3 — Notion as CMS.** Pull publications, projects, experience, and blog
-posts from Notion databases at build time via the Notion API. Because the site
+**Phase 3 — Notion as CMS.** Pull publications, projects and experience from
+Notion databases at build time via the Notion API. (The blog took a different,
+Git-based route in Phase 4; see below.) Because the site
 is statically exported, content refreshes need a scheduled or webhook-triggered
 rebuild rather than ISR. Store the integration token as a repository secret and
 pass it into the `pnpm build` step.
 
-**Phase 4 — blog and gallery.** MDX or Notion-backed post rendering, syntax
-highlighting, RSS, and an image gallery with proper responsive sources (note
-that `next/image` optimization stays off under static export).
+**Phase 4 — blog (done, v1.1.0, Git-based) and gallery.** The blog shipped
+with Markdown in the repository rather than Notion: posts are files in
+`content/blog/` (front matter rules in `content/blog/README.md`), edited by
+hand or through a Git-based CMS at `/admin/` that commits the same files.
+That keeps builds deterministic and offline, gives every edit a commit to roll
+back, and needs no build secret. A post is public only when `draft: false` and
+its date has passed at build time. Rendering is build-time only: syntax
+highlighting, no raw HTML, an RSS feed at `/blog/feed.xml`, posts in the
+sitemap.
+
+The seam is `lib/blog`. Pages import only `@/lib/blog` (`getAllPosts()`,
+`getPost(slug)`, the `Post` type) and never touch `fs` or `content/`. Moving
+the blog to Notion later, as Phase 3 once planned, means rewriting
+`lib/blog/load.ts` to return the same `Post` objects; no page changes.
+
+The contact page shipped in the same release: `/contact/`, a form posting to a
+third-party form service through the one-file adapter
+`lib/contact/provider.ts`, with the `mailto:` as fallback.
+
+Still to do: the image gallery with proper responsive sources (note that
+`next/image` optimization stays off under static export).
 
 ## Layout
 
 ```
 app/            routes; one directory per page, all statically prerendered
-components/     Nav, Footer, Hero, PageHeader
-lib/site.ts     name, nav items, and social links — edit here, not in components
+components/     Nav, Footer, Hero, PageHeader; blog/ and contact/ for those pages
+content/blog/   blog posts as Markdown (one file per post)
+lib/site.ts     name, nav items, social links and the nav/footer copy — edit here, not in components
+lib/blog/       the blog seam: loader, validator, renderer, copy, export prune step
+lib/contact/    the contact form adapter (provider.ts)
 public/media/   portrait.jpg and hero-wave.{mp4,webm}, served from /media/
 public/         other static assets at the domain root (cv.pdf goes here)
 _archive/       superseded work, kept for reference; excluded from lint and tsc

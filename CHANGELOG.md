@@ -4,6 +4,87 @@ Versions follow [semantic versioning](https://semver.org): the major number
 moves on a redesign or a change in what the site *is*, the minor on new
 sections or features, the patch on content and fixes.
 
+## 1.1.0 (unreleased)
+
+A blog and a contact page. The date is set when `integration/blog-contact`
+merges to `master`.
+
+### Fixes (F-6)
+
+- **Home with reduced motion:** the figcaption hint was added or removed from
+  `useReducedMotion()`, which differs between server and first client render.
+  That caused React hydration error #418 and dropped the stored studio ground.
+  The hint now uses a hydration-safe media query.
+- **Contrast:** publications citations and the home caption hint use `--muted`
+  at full strength (4.8:1 ink, 5.4:1 studio).
+- **Dependencies:** `next` and `eslint-config-next` 16.3.8; `sharp` 0.35.5 and
+  `source-map-js` 1.2.2 re-locked. `pnpm audit --prod` has no high or critical.
+
+### Blog
+
+- **`/blog/` is real.** It replaces the "Coming soon" placeholder: posts listed
+  newest first and grouped by year, each with date, title, summary, reading
+  time and tags. With nothing published it shows a deliberate empty state, and
+  the link stays in the nav (decision Q9).
+- **Post pages at `/blog/<slug>/`,** rendered at build time from Markdown in
+  `content/blog/`: headings with anchors, GFM tables and footnotes, syntax
+  highlighting (Shiki, no client JS), figures, older/newer links and a "Write a
+  message" link at the end. Each page has its own title, description,
+  canonical URL, Open Graph article tags and JSON-LD.
+- **Nothing is published by accident.** A post is public only when
+  `draft: false` and its date has passed at build time. `pnpm build:drafts`
+  shows drafts and scheduled posts with a visible marker, for previewing.
+  Front matter is validated and a bad post fails the build, naming the file
+  and field. Raw HTML in a post is not rendered.
+- **An RSS 2.0 feed** at `/blog/feed.xml` (summaries only), linked from the
+  blog index.
+- **A CMS at `/admin/`** (Sveltia, Git-based) for writing posts in the
+  browser; it commits Markdown to the repository like any other edit.
+  *(Lands with task I-2, still open when this entry was written; drop this
+  line if 1.1.0 ships without it.)*
+- Sitemap lists every published post; `robots.txt` disallows `/admin/`.
+
+### Contact
+
+- **`/contact/`, a contact form,** sent through a third-party form service
+  (Web3Forms) behind a one-file adapter, `lib/contact/provider.ts`. Every
+  state is designed: field errors with a summary, submitting, success, provider
+  and network failures, rate limiting, spam rejection, no JavaScript, and not
+  configured. Each failure keeps what the visitor typed and offers the
+  `mailto:` instead.
+
+### Navigation
+
+- **Contact joins the nav, and "Blogs" becomes "Blog".** Below 1024px the bar
+  wraps (brand and theme toggle on top, links beneath) and is no longer sticky,
+  so a three-row bar never pins a third of a phone screen; from 1024px it is
+  one sticky row as before. Links are 28px tall, 44px on touch screens, and the
+  current page is underlined as well as brighter, since the colour change alone
+  was 2.34:1 on studio.
+- **The footer adds "Write a message →"** under the email address, which stays.
+- The page wrapper is now a `<main>` landmark, and post links use a
+  full-strength underline (it was 2.60:1).
+
+### Removed
+
+- **The Jekyll placeholder posts.** `_legacy-jekyll/_posts/` (the template's
+  four numbered sample posts and a sample dated 2199) and
+  `_legacy-jekyll/_drafts/` were never built or served by the Next.js site, but
+  they were the only "posts" in the repository and would have been confused
+  with real ones. The rest of `_legacy-jekyll/` stays (decision Q6).
+
+### Known
+
+- **Drafts are public in the repository.** `draft: true` keeps a post off the
+  site, but the repository is public, so anyone can read it on GitHub. Do not
+  put anything in a draft that must stay private.
+- **The CMS needs a GitHub token.** Signing in at `/admin/` takes a personal
+  access token with write access to this repository, stored in that browser.
+- **The contact form needs the Web3Forms key.** Until
+  `NEXT_PUBLIC_CONTACT_ACCESS_KEY` (and the endpoint) are set for the deploy
+  build, `/contact/` shows the not-configured state with the `mailto:`
+  fallback. The key is not a secret: it is inlined into the page by design.
+
 ## 1.0.1
 
 Gaps found in the pre-launch audit, and one that only became obvious once the

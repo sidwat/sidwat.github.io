@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="dark light">
+<title>Editor</title>
+<!--
+  Blog editor (Sveltia CMS). Spec: docs/03-integrations-spec.md §4.2; states: docs/design/admin-entry.md.
+  The CMS script is pinned to an exact version with an SRI hash. Version, hash and how to bump them:
+  docs/runbooks/cms-reference.md. Do not add any other script to this page.
+-->
+<style>
+  #boot {
+    --ink: #08090e; --luma: #e8eaf2; --muted: #767c93; --cb: #4c7dff; --cr: #ff5c8a;
+    position: fixed; inset: 0; z-index: 1;
+    display: grid; place-items: center; padding: 1.5rem;
+    background: var(--ink); color: var(--luma);
+    font: 400 0.875rem/1.6 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    text-align: center;
+  }
+  @media (prefers-color-scheme: light) {
+    #boot { --ink: #e9d5a3; --luma: #1a1509; --muted: #5f512c; --cb: #6f4718; --cr: #a62c53; }
+  }
+  #boot p { margin: 0; }
+  #boot [hidden] { display: none; }
+  #boot .glyph {
+    display: inline-block; min-width: 1.5em; margin-right: 0.5em;
+    border: 1px solid var(--cr); color: var(--cr); line-height: 1.4;
+  }
+  #boot .hint { color: var(--muted); }
+  #boot a {
+    display: inline-flex; align-items: center; min-height: 44px;
+    color: var(--luma); text-decoration: underline; text-decoration-color: var(--cb);
+    text-underline-offset: 3px;
+  }
+  #boot a:focus-visible { outline: 2px solid var(--cb); outline-offset: 3px; }
+</style>
+</head>
+<body style="margin:0">
+<div id="boot">
+  <div>
+    <p id="status" role="status" hidden>loading editor…</p>
+    <noscript><p>The editor needs JavaScript.</p></noscript>
+    <div id="fail" role="alert" hidden>
+      <p><span class="glyph" aria-hidden="true">!</span>Could not load the editor.</p>
+      <p class="hint">Check your connection or content blocker, then reload.</p>
+      <p><a id="reload" href="">Reload</a></p>
+    </div>
+  </div>
+</div>
+<script>
+  (function () {
+    var boot = document.getElementById("boot"), status = document.getElementById("status");
+    var fail = document.getElementById("fail"), done = false;
+    status.hidden = false;
+    var slow = setTimeout(function () { status.textContent = "still loading… slow connection?"; }, 8000);
+    var stall = setTimeout(function () { window.cmsFailed(); }, 20000);
+    window.cmsLoaded = function () { done = true; clearTimeout(slow); clearTimeout(stall); boot.remove(); };
+    window.cmsFailed = function () {
+      if (done) return;
+      clearTimeout(slow); clearTimeout(stall); status.hidden = true; fail.hidden = false;
+    };
+    document.getElementById("reload").onclick = function (e) { e.preventDefault(); location.reload(); };
+  })();
+</script>
+<script async
+  src="https://unpkg.com/@sveltia/cms@0.246.1/dist/sveltia-cms.js"
+  integrity="sha384-MesywyNCDYtPV/xerXlPq0YXvMWNmWdmHGo1FQ7TotJtZ6QSLe7Nd2quNAdpni4j"
+  crossorigin="anonymous"
+  onload="cmsLoaded()" onerror="cmsFailed()"></script>
+</body>
+</html>

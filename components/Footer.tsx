@@ -1,11 +1,18 @@
-import { site, socials } from "@/lib/site";
+import Link from "next/link";
+import { shellCopy, site, socials } from "@/lib/site";
+
+// Hit height (docs/design/contact.md §9): 28px for fine pointers, 44px under
+// a coarse pointer. Below sm the contact column sits under the socials and is
+// left-aligned; from sm it is right-aligned.
+const hit =
+  "flex items-center justify-start min-h-7 pointer-coarse:min-h-11 sm:justify-end";
 
 export default function Footer() {
   return (
     <footer className="border-t border-line">
       <div className="mx-auto flex max-w-5xl flex-wrap items-end justify-between gap-8 px-6 py-14">
         <div>
-          <p className="eyebrow">Elsewhere</p>
+          <p className="eyebrow">{shellCopy["footer.elsewhere"]}</p>
           <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2">
             {socials.map((s) => (
               <li key={s.href}>
@@ -22,18 +29,26 @@ export default function Footer() {
           </ul>
         </div>
 
-        <div className="text-right">
-          {/* The only way to reach him from the site: the social links all lead
-              off-site, and the email was in lib/site.ts but rendered nowhere. */}
-          <p className="eyebrow">Get in touch</p>
+        <div className="text-left sm:text-right">
+          {/* The mailto stays for anyone who would rather use their own mail
+              client; the form is the second way in. */}
+          <p className="eyebrow">{shellCopy["footer.touch"]}</p>
           <a
             href={`mailto:${site.email}`}
-            className="mt-4 block text-[0.9375rem] text-muted transition-colors hover:text-luma"
+            className={`${hit} mt-4 text-[0.9375rem] text-muted transition-colors hover:text-luma`}
           >
             {site.email}
           </a>
+          <Link href="/contact/" className={`text-link ${hit} text-[0.9375rem]`}>
+            {shellCopy["footer.write"]}
+            <span aria-hidden="true" className="font-mono">
+              {" →"}
+            </span>
+          </Link>
           <p className="eyebrow mt-6">
-            © {new Date().getFullYear()} {site.name}
+            {shellCopy["footer.copyright"]
+              .replace("{year}", String(new Date().getFullYear()))
+              .replace("{name}", site.name)}
           </p>
         </div>
       </div>

@@ -1,0 +1,17 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Editor (wireframe)</title><style>
+/* Token values documented in docs/design/tokens.md. The real /admin/ page uses prefers-color-scheme instead of data-scheme. */
+*{box-sizing:border-box}
+body{margin:0;background:#777;font-family:ui-monospace,"IBM Plex Mono","SF Mono",Menlo,monospace}
+.wrap{display:flex;flex-wrap:wrap;gap:1.5rem;padding:1.5rem}
+figure{margin:0}
+figcaption{font-size:.75rem;color:#eee;margin-top:.5rem}
+.f{width:440px;height:280px;display:grid;place-items:center;text-align:center;padding:1.5rem}
+.f[data-scheme=dark]{--ink:#08090e;--luma:#e8eaf2;--muted:#767c93;--cb:#4c7dff;--cr:#ff5c8a}
+.f[data-scheme=light]{--ink:#e9d5a3;--luma:#1a1509;--muted:#5f512c;--cb:#6f4718;--cr:#a62c53}
+.f{background:var(--ink);color:var(--luma);font-size:.875rem;line-height:1.6}
+.f p{margin:0}
+.muted{color:var(--muted)}
+.title{display:flex;gap:.5rem;align-items:center;justify-content:center}
+.glyph{display:inline-flex;align-items:center;justify-content:center;width:1.25rem;height:1.25rem;border:1px solid var(--cr);color:var(--cr);font-size:.75rem}
+a{color:var(--luma);text-decoration:underline;text-decoration-color:var(--cb);text-underline-offset:3px;display:inline-flex;align-items:center;min-height:2.75rem}
+</style></head><body><div class="wrap"><figure><div class="f" data-scheme="dark"><p>loading editor…</p></div><figcaption>loading, prefers-color-scheme: dark (ink tokens)</figcaption></figure><figure><div class="f" data-scheme="dark"><p>still loading… slow connection?</p></div><figcaption>slow (8 s), prefers-color-scheme: dark (ink tokens)</figcaption></figure><figure><div class="f" data-scheme="dark"><p>The editor needs JavaScript.</p></div><figcaption>no JavaScript, prefers-color-scheme: dark (ink tokens)</figcaption></figure><figure><div class="f" data-scheme="dark"><div><p class="title"><span class="glyph" aria-hidden="true">!</span><span>Could not load the editor.</span></p><p class="muted" style="margin-top:.5rem">Check your connection or content blocker, then reload.</p><a href="#">Reload</a></div></div><figcaption>failed (script error or 20 s), prefers-color-scheme: dark (ink tokens)</figcaption></figure><figure><div class="f" data-scheme="light"><p>loading editor…</p></div><figcaption>loading, prefers-color-scheme: light (studio tokens)</figcaption></figure><figure><div class="f" data-scheme="light"><p>still loading… slow connection?</p></div><figcaption>slow (8 s), prefers-color-scheme: light (studio tokens)</figcaption></figure><figure><div class="f" data-scheme="light"><p>The editor needs JavaScript.</p></div><figcaption>no JavaScript, prefers-color-scheme: light (studio tokens)</figcaption></figure><figure><div class="f" data-scheme="light"><div><p class="title"><span class="glyph" aria-hidden="true">!</span><span>Could not load the editor.</span></p><p class="muted" style="margin-top:.5rem">Check your connection or content blocker, then reload.</p><a href="#">Reload</a></div></div><figcaption>failed (script error or 20 s), prefers-color-scheme: light (studio tokens)</figcaption></figure></div></body></html>

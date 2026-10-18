@@ -1,0 +1,137 @@
+# Sveltia CMS configuration for the blog editor at https://sidwat.github.io/admin/
+# Spec: docs/03-integrations-spec.md §4.2. Content contract: docs/00-overview.md §5.1.
+# Owner guide: docs/runbooks/editing-posts.md. Options checked against sveltiacms.app docs on 2026-10-17
+# for Sveltia CMS 0.246.1 (the version pinned in index.html).
+#
+# This file is public (it is served at /admin/config.yml). It contains no credentials and never may.
+# Sign-in is by a fine-grained GitHub personal access token that the owner pastes into the editor;
+# the token lives only in that browser. See docs/runbooks/token-rotation.md.
+
+backend:
+  name: github
+  repo: sidwat/sidwat.github.io
+  branch: master
+  # Token sign-in only. Without this the CMS also offers "Sign In with GitHub", which defaults to
+  # Netlify's OAuth service and cannot work here. No base_url / auth_endpoint: add them (and `oauth`
+  # here) only if a Worker-based OAuth flow is introduced (03 §6, L0.5).
+  auth_methods: [token]
+  commit_messages:
+    create: 'Blog: add "{{slug}}"'
+    update: 'Blog: update "{{slug}}"'
+    delete: 'Blog: delete "{{slug}}"'
+    uploadMedia: 'Blog: upload "{{path}}"'
+    deleteMedia: 'Blog: delete "{{path}}"'
+
+site_url: https://sidwat.github.io
+display_url: https://sidwat.github.io
+
+# master is unprotected, so a save is a commit to master, which deploys. If branch protection is ever
+# enabled on master, switch to editorial_workflow and give the token Pull requests: read and write.
+publish_mode: simple
+
+# Top-level media storage (the Asset Library). Each post's images go to its own folder; see the
+# collection-level media_folder below.
+media_folder: public/images/blog
+public_folder: /images/blog
+
+media_libraries:
+  default:
+    config:
+      slugify_filename: true
+      # Resize and convert uploads in the browser before they are committed. This also strips
+      # Exif metadata (including GPS location) from JPEG/PNG photos. Animated images are left as is.
+      transformations:
+        raster_image:
+          format: webp
+          quality: 80
+          width: 1600
+          height: 1600
+        svg:
+          optimize: true
+  stock_assets:
+    providers: []
+
+slug:
+  encoding: ascii
+  clean_accents: true
+  maxlength: 80
+
+collections:
+  - name: blog
+    label: Blog posts
+    label_singular: Blog post
+    description: Drafts are saved to the public GitHub repository. Anyone can read them there.
+    folder: content/blog
+    extension: md
+    format: frontmatter
+    create: true
+    delete: true
+    # content/blog/README.md has no front matter; listing only files with a draft field keeps it out.
+    filter: { field: draft, value: [true, false] }
+    slug:
+      template: "{{slug}}"
+      editable: [create]
+      hint: Becomes the web address. It cannot change later without breaking links.
+      pattern: ['^[a-z0-9]+(-[a-z0-9]+)*$', "Use lowercase letters, numbers and single hyphens, for example my-first-post."]
+    identifier_field: title
+    summary: "{{title}} · {{draft | ternary('draft', 'published')}}"
+    sortable_fields:
+      fields: [date, title, draft]
+      default:
+        field: date
+        direction: descending
+    view_filters:
+      - { label: Drafts, field: draft, pattern: true }
+      - { label: Published, field: draft, pattern: false }
+    # Images for a post go to public/images/blog/<slug>/ and are referenced as /images/blog/<slug>/<file>.
+    media_folder: /public/images/blog/{{filename}}
+    public_folder: /images/blog/{{filename}}
+    fields:
+      - label: Draft (hidden from the site)
+        name: draft
+        widget: boolean
+        default: true
+        hint: On = hidden from the site. Turn off when the post is ready. New posts start with this on.
+      - label: Title
+        name: title
+        widget: string
+        maxlength: 90
+        hint: Up to 90 characters.
+      - label: Publish date
+        name: date
+        widget: datetime
+        default: "{{now}}"
+        output_utc: true
+        hint: Publishing time. A future date keeps the post hidden until the next site build after that time.
+      - label: Last updated
+        name: updated
+        widget: datetime
+        required: false
+        output_utc: true
+      - label: Summary
+        name: summary
+        widget: text
+        maxlength: 200
+        hint: "Up to 200 characters; aim for 140. The first 100 must make sense on their own: phones show about that much in the list."
+      - label: Tags
+        name: tags
+        widget: list
+        required: false
+        default: []
+        # A simple list's pattern is tested against the items joined with commas.
+        pattern: ['^[a-z0-9]+(-[a-z0-9]+)*(,[a-z0-9]+(-[a-z0-9]+)*)*$', "Lowercase words joined by hyphens, for example video-coding."]
+        hint: Lowercase words joined by hyphens, for example video-coding.
+      - label: Cover image
+        name: cover
+        widget: image
+        required: false
+        hint: Optional. 1200 x 630 works best; keep the subject in the middle 60%. Under 200 KB.
+      - label: Cover alt text
+        name: coverAlt
+        widget: string
+        required: false
+        hint: Required if there is a cover. Say what the picture shows, not "image of".
+      - label: Body
+        name: body
+        widget: markdown
+        hint: Markdown. Give every image alt text that says what it shows; add a title to get a numbered caption. Raw HTML is not rendered.

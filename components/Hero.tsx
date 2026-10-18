@@ -86,6 +86,13 @@ export default function Hero() {
   const aboutDone = useCallback(() => advance(2), [advance]);
   // Touch devices have no hover, so the wave needs a tap instead.
   const canHover = useMediaQuery("(hover: hover)");
+  // framer-motion's useReducedMotion reads matchMedia during the client's first
+  // render but returns null on the server, so markup that is added or removed
+  // on it diverges at hydration (React #418) and React re-renders the whole
+  // root, dropping <html data-theme>. Structural branches use this
+  // hydration-safe query instead: false on the server and during hydration,
+  // then the real value.
+  const hideWaveHint = useMediaQuery("(prefers-reduced-motion: reduce)");
   const videoRef = useRef<HTMLVideoElement>(null);
   // The photo is the base layer and the video fades in over it once it can
   // actually play. A <video> poster is not a usable fallback: when the source
@@ -303,8 +310,8 @@ export default function Hero() {
 
           <figcaption className="eyebrow mt-4">
             Fig. 1 — Myself
-            {!reduceMotion && (
-              <span className="text-muted/60">
+            {!hideWaveHint && (
+              <span className="text-muted">
                 {canHover ? " · hover to wave" : " · tap to wave"}
               </span>
             )}

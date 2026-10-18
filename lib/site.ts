@@ -7,16 +7,28 @@ export const site = {
   url: "https://sidwat.github.io",
 };
 
-// The blog route is a published placeholder until there are posts. The gallery
-// stays out of the nav until it has content.
+// `nav` also drives the sitemap and the 404 link list. The blog stays listed
+// while it has no posts (Q9 default); the gallery stays out until it has content.
+// Labels are the `nav.*` IDs in docs/design/copy.md.
 export const nav = [
   { href: "/", label: "Home" },
   { href: "/experience", label: "Experience" },
   { href: "/publications", label: "Publications" },
   { href: "/projects", label: "Projects" },
   { href: "/teaching", label: "Teaching" },
-  { href: "/blog", label: "Blogs" },
+  { href: "/blog", label: "Blog" },
+  { href: "/contact", label: "Contact" },
 ];
+
+// Generated 1:1 from docs/design/copy.md ("Shell: navigation and footer", the
+// IDs not covered by `nav` above). Do not edit by hand: change the copy deck.
+export const shellCopy = {
+  "nav.aria": "Sections",
+  "footer.elsewhere": "Elsewhere",
+  "footer.touch": "Get in touch",
+  "footer.write": "Write a message",
+  "footer.copyright": "© {year} {name}",
+} as const;
 
 export const socials = [
   { href: "https://github.com/sidwat", label: "GitHub" },

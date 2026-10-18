@@ -1,0 +1,376 @@
+{
+  "/": {
+    "title": "Sidhartha Watsa — Research Engineer",
+    "description": "Sidhartha Watsa — robots, vision, and making video smaller. Two years on next-generation video codec standards at Samsung Research; now a master's in computer science at UC San Diego.",
+    "canonical": null,
+    "robots": null,
+    "ogImage": "https://sidwat.github.io/opengraph-image.png?opengraph-image.0_ynla-ejhs7e.png",
+    "headings": [
+      "H1: Sidhartha Watsa",
+      "H2: Sections"
+    ],
+    "navLabels": [
+      "Experience",
+      "Publications",
+      "Projects",
+      "Teaching",
+      "Blogs"
+    ],
+    "text": "$ whoami Sidhartha Watsa MS COMPUTER SCIENCE · UC SAN DIEGO $ cat about.txt I am interested in robots and vision. I spent two years at Samsung Research on next-generation video codecs — the work of making video smaller. Before that, imitation learning at IISc Bangalore, and mechanical engineering with a double major in electrical at IIT Kanpur. View CV ↗ Download PDF ↓ $ FIG. 1 — MYSELF SECTIONS Experience → Publications → Projects → Teaching → Blogs →",
+    "links": [
+      "#main",
+      "/",
+      "/blog/",
+      "/cv.pdf",
+      "/experience/",
+      "/projects/",
+      "/publications/",
+      "/teaching/",
+      "https://github.com/sidwat",
+      "https://orcid.org/0009-0003-3888-0736",
+      "https://scholar.google.com/citations?user=HoIkFUgAAAAJ&hl=en",
+      "https://www.linkedin.com/in/sidhartha-watsa",
+      "mailto:swatsa@ucsd.edu"
+    ],
+    "scripts": [
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self"
+    ],
+    "status": 200
+  },
+  "/experience/": {
+    "title": "Experience — Sidhartha Watsa",
+    "description": "Sidhartha Watsa — robots, vision, and making video smaller. Two years on next-generation video codec standards at Samsung Research; now a master's in computer science at UC San Diego.",
+    "canonical": null,
+    "robots": null,
+    "ogImage": "https://sidwat.github.io/opengraph-image.png?opengraph-image.0_ynla-ejhs7e.png",
+    "headings": [
+      "H1: Experience",
+      "H2: Senior Engineer",
+      "H2: Project Associate",
+      "H2: Techno-manager",
+      "H2: Project Associate"
+    ],
+    "navLabels": [
+      "Experience",
+      "Publications",
+      "Projects",
+      "Teaching",
+      "Blogs"
+    ],
+    "text": "WHERE I HAVE WORKED Experience Research roles across video coding, imitation learning, and autonomous systems. AUG 2024 — AUG 2026 Senior Engineer SAMSUNG RESEARCH INSTITUTE BANGALORE · AI VISUAL PROCESSING LAB · BANGALORE, INDIA Core AI-based proposals for video codec standards beyond Versatile Video Coding. Hardware-friendly neural architectures for AI-based in-loop filters and intra-frame prediction in VVC. On-device models optimised for real-time processing and efficient codec integration at the edge. Open-source codecs: Advanced Professional Video (APV) and eXtra Essential Video (XEVC), including the intrinsic optimisations behind APV’s adoption in FFmpeg. FEB 2024 — JUN 2024 Project Associate INDIAN INSTITUTE OF SCIENCE, BANGALORE · ROBERT BOSCH CENTRE FOR CYBER-PHYSICAL SYSTEMS, WITH PROF. RAVI PRAKASH · BANGALORE, INDIA Imitation learning from imperfect demonstrations across diverse robotic dynamics. Computed feasibility and optimality scores for each state–action pair in suboptimal human demonstrations. Trained behaviour-cloning and inverse reinforcement learning models on the refined demonstration subsets. Simulated on a KUKA industrial arm in Gazebo and Gym, then deployed an end-effector trajectory planning pipeline on the physical arm. MAY 2023 Techno-manager ITC LTD. · FOOD BUSINESS DIVISION · BANGALORE, INDIA On the KITES internship: research into cold grinding of wheat and its nutritional advantages over conventionally milled flour. JUL 2021 — JAN 2022 Project Associate INDIAN INSTITUTE OF TECHNOLOGY KANPUR · INTELLIGENT SYSTEMS AND CONTROLS LAB, WITH PROF. LAXMIDHAR BEHERA · KANPUR, INDIA Built an unmanned excavator with a 2-DOF arm for remote terrain inspection and data collection. Integrated gas, microphone and vision sensors, with fusion algorithms for visual-acoustic analysis. Designed the electronics architecture: power management, actuators and arm control. Formulated the decision algorithms for BIRAC’s brain-controlled wheelchair, driven by an Ultracortex Mark IV EEG headset.",
+    "links": [
+      "#main",
+      "/",
+      "/blog/",
+      "/experience/",
+      "/projects/",
+      "/publications/",
+      "/teaching/",
+      "https://github.com/sidwat",
+      "https://orcid.org/0009-0003-3888-0736",
+      "https://scholar.google.com/citations?user=HoIkFUgAAAAJ&hl=en",
+      "https://www.linkedin.com/in/sidhartha-watsa",
+      "mailto:swatsa@ucsd.edu"
+    ],
+    "scripts": [
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self"
+    ],
+    "status": 200
+  },
+  "/publications/": {
+    "title": "Publications — Sidhartha Watsa",
+    "description": "Sidhartha Watsa — robots, vision, and making video smaller. Two years on next-generation video codec standards at Samsung Research; now a master's in computer science at UC San Diego.",
+    "canonical": null,
+    "robots": null,
+    "ogImage": "https://sidwat.github.io/opengraph-image.png?opengraph-image.0_ynla-ejhs7e.png",
+    "headings": [
+      "H1: Publications",
+      "H2: A cyber-physical system based unmanned ground vehicles for safety inspection and rescue support in an underground mine",
+      "H2: Towards autonomous shooting rover via situation aware visual-perception and dynamic action execution",
+      "H2: Patents filed",
+      "H3: Hybrid AI Loop Filter for Video Codec with Hardware-Friendly Model Selection",
+      "H3: Inverted-L-scan method for AI-based intra-frame prediction in a video codec",
+      "H3: Methods and system for AI-based pixel-block prediction for a video codec"
+    ],
+    "navLabels": [
+      "Experience",
+      "Publications",
+      "Projects",
+      "Teaching",
+      "Blogs"
+    ],
+    "text": "PAPERS, PATENTS AND STANDARDS Publications Peer-reviewed work, filed patents, and contributions to video coding standards. 2025 · JOURNAL A cyber-physical system based unmanned ground vehicles for safety inspection and rescue support in an underground mine INTERNATIONAL JOURNAL OF INTELLIGENT UNMANNED SYSTEMS A robot designed to map underground mine environments, built around a computational-intelligence cyber-physical framework for mining operations. It navigates semi-autonomously without GNSS, fusing a sensor suite into an architecture capable of data acquisition and navigation in challenging underground conditions — improving safety inspection, emergency rescue and assistance to miners in hazardous environments. L. Behera, S. Agarwal, T. Sandhan, P. Sharma, A. Kumar, A. Ranjan, S. Watsa, et al. International Journal of Intelligent Unmanned Systems, vol. 13, no. 1, pp. 92–128, Feb. 2025. 2024 · CONFERENCE Towards autonomous shooting rover via situation aware visual-perception and dynamic action execution IEEE/SICE INTERNATIONAL SYMPOSIUM ON SYSTEM INTEGRATION (SII) Our approach to the DJI RoboMaster AI Challenge 2022, where team ERA-IITK placed third worldwide. The paper details the hardware infrastructure and the algorithmic pipeline, with a state machine built on top to reach full autonomy. The novelty is a high-speed, accurate visual perception module for target detection paired with fast self-localisation, maximising the likelihood of a target being hit. S. Chikoti, Y. Seelam, A. Jain, N. Mehta, S. Watsa, et al. 2024 IEEE/SICE International Symposium on System Integration, Ha Long, Vietnam, 2024, pp. 1113–1118. PATENTS FILED 202541087044 Hybrid AI Loop Filter for Video Codec with Hardware-Friendly Model Selection Encodes video with a lightweight AI-based in-loop filter (ILF) that selects a handcrafted filter (the ‘secret sauce’) and a downscale level (1×–8×) based on reconstruction error and video content. It then loads the matching pretrained neural-network weights from a lookup table using a signaled index. This keeps AI filtering content-adaptive while keeping the hardware structure fixed; only on/off switches and weight loading change. 202541023751 Inverted-L-scan method for AI-based intra-frame prediction in a video codec A pre- and post-processing method using an inverted L-scan order to prepare neighbouring pixels for a unified AI-based intra prediction model, preserving inter-pixel correlation in next-generation codecs and improving coding efficiency. 202541024348 Methods and system for AI-based pixel-block prediction for a video codec A unified, low-complexity neural architecture for intra prediction with multi-scale CNN blocks, leveraging neighbouring reference lines to predict coding units, optimised for efficient hardware implementation.",
+    "links": [
+      "#main",
+      "/",
+      "/blog/",
+      "/experience/",
+      "/projects/",
+      "/publications/",
+      "/teaching/",
+      "https://doi.org/10.1108/IJIUS-07-2024-0202",
+      "https://github.com/sidwat",
+      "https://ieeexplore.ieee.org/abstract/document/10417488/",
+      "https://orcid.org/0009-0003-3888-0736",
+      "https://scholar.google.com/citations?user=HoIkFUgAAAAJ&hl=en",
+      "https://www.linkedin.com/in/sidhartha-watsa",
+      "mailto:swatsa@ucsd.edu"
+    ],
+    "scripts": [
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self"
+    ],
+    "status": 200
+  },
+  "/projects/": {
+    "title": "Projects — Sidhartha Watsa",
+    "description": "Sidhartha Watsa — robots, vision, and making video smaller. Two years on next-generation video codec standards at Samsung Research; now a master's in computer science at UC San Diego.",
+    "canonical": null,
+    "robots": null,
+    "ogImage": "https://sidwat.github.io/opengraph-image.png?opengraph-image.0_ynla-ejhs7e.png",
+    "headings": [
+      "H1: Projects",
+      "H2: End-to-end NNLF decoder inference in Halide",
+      "H2: AI-based in-loop filters",
+      "H2: AI-based intra-frame prediction",
+      "H2: Open Advanced Professional Video codec (APV)",
+      "H2: IEEE DJI RoboMaster AI Challenge",
+      "H2: ISRO Chandrayaan moon mapping challenge"
+    ],
+    "navLabels": [
+      "Experience",
+      "Publications",
+      "Projects",
+      "Teaching",
+      "Blogs"
+    ],
+    "text": "SELECTED WORK Projects Codec research at Samsung, and autonomous systems before it. End-to-end NNLF decoder inference in Halide SAMSUNG RESEARCH BANGALORE Investigated whether kernel-level optimisation could meet the decoder-side hardware realisability constraint. Optimised single-core x86 inference of a MAC-bound model using Halide vectorisation, cache locality and scheduling. Designed modular Halide generators composing every NN operation into a unified float32 and int16 quantised pipeline. Delivered 130% decoder complexity against 600% for SADL, down to 115% multicore — ready for the post-VVC call for proposals in 2027. AI-based in-loop filters SAMSUNG RESEARCH BANGALORE Designed a low-complexity neural network for suppressing compression and banding artefacts. Combined handcrafted filters with NNLF, trained on DIV2K, scaled and blended with the deblocking output. Delivered state-of-the-art Bjøntegaard Delta Bitrate gains at ultra-low complexity — under 1k MAC/pixel. Integrated the model into the VVC Test Model, with C++ inference through optimised SADL. AI-based intra-frame prediction SAMSUNG RESEARCH BANGALORE Examined whether a single neural model could replace seven post-VVC intra predictors across coding unit sizes. Designed an input preprocessing stage that retains strong inter-pixel correlation in reference regions. Developed a unified model of multi-scale CNN blocks adaptable to differing spatial resolutions. Integrated the NN-based mode alongside classical predictors in post-VVC, with SADL inference. Open Advanced Professional Video codec (APV) SAMSUNG RESEARCH BANGALORE Contributed core algorithms to APV, an open-source, perceptually lossless professional codec. Optimised the DCT transform and quantisation using platform intrinsics — NEON and AVX. Brought APV plugins to FFmpeg, ultrasound edge devices and Premiere Pro for NAB demonstrations. Integrated the codec end to end on Samsung edge devices for a Samsung Developer Conference demo. IEEE DJI RoboMaster AI Challenge IIT KANPUR, WITH PROF. LAXMIDHAR BEHERA Engineered two autonomous robots for intelligent shooting in a dynamic arena. Adapted YOLO-v5 for armour-plate detection at roughly 85% mAP and 90% shooting accuracy. Built motion planning and localisation from visual marker detection combined with rf2o laser odometry. Deployed YOLO-v5 on outpost camera feeds via DarkNet for global robot and opponent localisation. ISRO Chandrayaan moon mapping challenge INTER-IIT TECH MEET Trained a network to produce high-resolution lunar terrain from medium- and low-resolution inputs. Processed TMC and OHRC imagery into ortho-corrected rectangular patches for training. Cascaded SRGAN with a Shifted Window Transformer (SwinIR) to reach 16× upscaling. Reached an SSIM of 0.71 against the high-resolution OHRC reference imagery.",
+    "links": [
+      "#main",
+      "/",
+      "/blog/",
+      "/experience/",
+      "/projects/",
+      "/publications/",
+      "/teaching/",
+      "https://github.com/sidwat",
+      "https://orcid.org/0009-0003-3888-0736",
+      "https://scholar.google.com/citations?user=HoIkFUgAAAAJ&hl=en",
+      "https://www.linkedin.com/in/sidhartha-watsa",
+      "mailto:swatsa@ucsd.edu"
+    ],
+    "scripts": [
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self"
+    ],
+    "status": 200
+  },
+  "/teaching/": {
+    "title": "Teaching — Sidhartha Watsa",
+    "description": "Sidhartha Watsa — robots, vision, and making video smaller. Two years on next-generation video codec standards at Samsung Research; now a master's in computer science at UC San Diego.",
+    "canonical": null,
+    "robots": null,
+    "ogImage": "https://sidwat.github.io/opengraph-image.png?opengraph-image.0_ynla-ejhs7e.png",
+    "headings": [
+      "H1: Teaching",
+      "H2: Fundamentals of device drivers",
+      "H2: Foundations of Design Practicum"
+    ],
+    "navLabels": [
+      "Experience",
+      "Publications",
+      "Projects",
+      "Teaching",
+      "Blogs"
+    ],
+    "text": "TEACHING AND INVITED INSTRUCTION Teaching Courses and workshops I have designed and taught. OCT 2025 — DEC 2025 Fundamentals of device drivers SAMSUNG RESEARCH INSTITUTE BANGALORE · BANGALORE, INDIA INVITED BY THE LEARNING AND DEVELOPMENT TEAM Interactive sessions on device-driver fundamentals through Linux kernel programming on a Raspberry Pi. Recognised with the Talent Transformer’s Award, 2025. MAY 2022 — JUL 2022 Foundations of Design Practicum INDIAN INSTITUTE OF TECHNOLOGY MANDI · MANDI, HIMACHAL PRADESH, INDIA INVITED BY PROF. LAXMIDHAR BEHERA, DIRECTOR Designed an institute-wide compulsory interdisciplinary course on building a robot from scratch. Ran a 30-day workshop training the teaching assistants who would deliver it.",
+    "links": [
+      "#main",
+      "/",
+      "/blog/",
+      "/experience/",
+      "/projects/",
+      "/publications/",
+      "/teaching/",
+      "https://github.com/sidwat",
+      "https://orcid.org/0009-0003-3888-0736",
+      "https://scholar.google.com/citations?user=HoIkFUgAAAAJ&hl=en",
+      "https://www.linkedin.com/in/sidhartha-watsa",
+      "mailto:swatsa@ucsd.edu"
+    ],
+    "scripts": [
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self"
+    ],
+    "status": 200
+  },
+  "/gallery/": {
+    "title": "Gallery — Sidhartha Watsa",
+    "description": "Sidhartha Watsa — robots, vision, and making video smaller. Two years on next-generation video codec standards at Samsung Research; now a master's in computer science at UC San Diego.",
+    "canonical": null,
+    "robots": null,
+    "ogImage": "https://sidwat.github.io/opengraph-image.png?opengraph-image.0_ynla-ejhs7e.png",
+    "headings": [
+      "H1: Gallery"
+    ],
+    "navLabels": [
+      "Experience",
+      "Publications",
+      "Projects",
+      "Teaching",
+      "Blogs"
+    ],
+    "text": "PHOTOGRAPHS Gallery Pictures taken away from the screen. Nothing here yet.",
+    "links": [
+      "#main",
+      "/",
+      "/blog/",
+      "/experience/",
+      "/projects/",
+      "/publications/",
+      "/teaching/",
+      "https://github.com/sidwat",
+      "https://orcid.org/0009-0003-3888-0736",
+      "https://scholar.google.com/citations?user=HoIkFUgAAAAJ&hl=en",
+      "https://www.linkedin.com/in/sidhartha-watsa",
+      "mailto:swatsa@ucsd.edu"
+    ],
+    "scripts": [
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self"
+    ],
+    "status": 200
+  },
+  "/blog/": {
+    "title": "Blogs — Sidhartha Watsa",
+    "description": "Sidhartha Watsa — robots, vision, and making video smaller. Two years on next-generation video codec standards at Samsung Research; now a master's in computer science at UC San Diego.",
+    "canonical": null,
+    "robots": null,
+    "ogImage": "https://sidwat.github.io/opengraph-image.png?opengraph-image.0_ynla-ejhs7e.png",
+    "headings": [
+      "H1: Blogs"
+    ],
+    "navLabels": [
+      "Experience",
+      "Publications",
+      "Projects",
+      "Teaching",
+      "Blogs"
+    ],
+    "text": "WRITING Blogs Notes on compression, vision, and the occasional detour. Coming soon.",
+    "links": [
+      "#main",
+      "/",
+      "/blog/",
+      "/experience/",
+      "/projects/",
+      "/publications/",
+      "/teaching/",
+      "https://github.com/sidwat",
+      "https://orcid.org/0009-0003-3888-0736",
+      "https://scholar.google.com/citations?user=HoIkFUgAAAAJ&hl=en",
+      "https://www.linkedin.com/in/sidhartha-watsa",
+      "mailto:swatsa@ucsd.edu"
+    ],
+    "scripts": [
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self"
+    ],
+    "status": 200
+  },
+  "/404.html": {
+    "title": "Not found — Sidhartha Watsa",
+    "description": "Sidhartha Watsa — robots, vision, and making video smaller. Two years on next-generation video codec standards at Samsung Research; now a master's in computer science at UC San Diego.",
+    "canonical": null,
+    "robots": "noindex",
+    "ogImage": "https://sidwat.github.io/opengraph-image.png?opengraph-image.0_ynla-ejhs7e.png",
+    "headings": [
+      "H1: No such page"
+    ],
+    "navLabels": [
+      "Experience",
+      "Publications",
+      "Projects",
+      "Teaching",
+      "Blogs"
+    ],
+    "text": "404 No such page That address does not exist here — it may have moved when the site was rebuilt, or never existed at all. TRY ONE OF THESE Home → Experience → Publications → Projects → Teaching → Blogs →",
+    "links": [
+      "#main",
+      "/",
+      "/blog/",
+      "/experience/",
+      "/projects/",
+      "/publications/",
+      "/teaching/",
+      "https://github.com/sidwat",
+      "https://orcid.org/0009-0003-3888-0736",
+      "https://scholar.google.com/citations?user=HoIkFUgAAAAJ&hl=en",
+      "https://www.linkedin.com/in/sidhartha-watsa",
+      "mailto:swatsa@ucsd.edu"
+    ],
+    "scripts": [
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self",
+      "self"
+    ],
+    "status": 200
+  }
+}

@@ -296,7 +296,7 @@
   .prose-body a {
     color: var(--luma);
     text-decoration: underline;
-    text-decoration-color: color-mix(in srgb, var(--cb) 60%, transparent);
+    text-decoration-color: var(--cb);
     text-underline-offset: 3px;
     transition: text-decoration-color 150ms ease;
   }
@@ -315,3 +315,877 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ---- blog prose ---- */
+/*
+ * Owned by Frontend (02 §2). Implements docs/design/prose.md (post body),
+ * blog-index.md §3 (row link), blog-post.md (header, cover, end of post) and
+ * tokens.md §3/§4 (reading veil, text link). Tokens only; every rule is the
+ * same on both grounds because the tokens carry the difference. In
+ * `@layer components` so Tailwind utilities still win.
+ */
+@layer components {
+  /* Reading veil (tokens.md §3): a 90% ink wash under long text and forms, so
+     a lit mesh strand cannot drop text below its static contrast. Feathered
+     left and right from md so there is no visible rectangle; flat and
+     full-bleed below. Shared with the contact form block. */
+  .reading-veil {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .reading-veil::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset-block: 0;
+    left: -1.5rem;
+    right: -1.5rem;
+    background: color-mix(in srgb, var(--ink) 90%, transparent);
+    pointer-events: none;
+  }
+
+  @media (width >= 48rem) {
+    .reading-veil::before {
+      left: -2rem;
+      right: auto;
+      width: calc(36rem + 4rem);
+      background: linear-gradient(
+        to right,
+        transparent,
+        color-mix(in srgb, var(--ink) 90%, transparent) 2rem,
+        color-mix(in srgb, var(--ink) 90%, transparent) calc(100% - 2rem),
+        transparent
+      );
+    }
+  }
+
+  /* Text link with arrow (tokens.md §4.8): "Write a message →", "RSS feed". */
+  .text-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    color: var(--luma);
+    text-decoration: underline;
+    text-decoration-color: var(--cb);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    transition: color 150ms ease;
+  }
+
+  .text-link:hover {
+    color: var(--cb);
+    text-decoration-thickness: 2px;
+  }
+
+  /* ---- index rows (blog-index.md §3) ---- */
+
+  /* The title link covers the whole row; the row is `relative`. */
+  .post-row-link {
+    transition: color 150ms ease;
+  }
+
+  .post-row-link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+
+  .post-row-link:hover {
+    color: var(--cb);
+  }
+
+  /* Ring on the row, not around the title, so the hit area looks focused. */
+  .post-row-link:focus-visible {
+    outline: none;
+  }
+
+  .post-row-link:focus-visible::after {
+    outline: 2px solid var(--cb);
+    outline-offset: -2px;
+  }
+
+  /* ---- post header and end of post (blog-post.md) ---- */
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    transition: color 150ms ease;
+  }
+
+  .back-link:hover {
+    color: var(--luma);
+  }
+
+  /* Cover: frame width, the Open Graph ratio, capped height. A plain image on
+     both grounds: never .portrait-frame, which would feather it on studio. */
+  .post-cover {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1200 / 630;
+    max-height: 26rem;
+    object-fit: cover;
+    border: 1px solid var(--line);
+    background: var(--surface);
+  }
+
+  .post-tags li + li::before {
+    content: "·";
+    content: "·" / "";
+    margin-right: 0.75rem;
+  }
+
+  /* ---- post body (prose.md §2) ---- */
+
+  .post-body {
+    counter-reset: fig;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: var(--luma);
+
+    /* Syntax palette: three tonal classes, no new colours (prose.md §2.6). */
+    --shiki-foreground: var(--luma);
+    --shiki-background: transparent;
+    --shiki-token-function: var(--luma);
+    --shiki-token-parameter: var(--luma);
+    --shiki-token-keyword: var(--cb);
+    --shiki-token-constant: var(--cb);
+    --shiki-token-string: var(--cb);
+    --shiki-token-string-expression: var(--cb);
+    --shiki-token-link: var(--cb);
+    --shiki-token-comment: var(--muted);
+    --shiki-token-punctuation: var(--muted);
+  }
+
+  @media (width >= 40rem) {
+    .post-body {
+      font-size: 1.125rem;
+      line-height: 1.75;
+    }
+  }
+
+  /* One 36rem column; code, tables and figures break out to the frame. */
+  .post-body > * {
+    max-width: 36rem;
+  }
+
+  .post-body > pre,
+  .post-body > figure,
+  .post-body > .table-wrap {
+    max-width: none;
+  }
+
+  .post-body > :first-child {
+    margin-top: 0;
+  }
+
+  .post-body > :last-child {
+    margin-bottom: 0;
+  }
+
+  .post-body p {
+    margin: 0 0 1.25rem;
+    overflow-wrap: anywhere;
+    hyphens: manual;
+  }
+
+  /* Headings: the body never has an h1 (lib/blog demotes it). */
+  .post-body h2,
+  .post-body h3,
+  .post-body h4 {
+    color: var(--luma);
+    scroll-margin-top: 6rem;
+    overflow-wrap: anywhere;
+  }
+
+  .post-body h2 {
+    margin: 3.5rem 0 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-variation-settings: "wdth" 112;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  .post-body > h2:first-child {
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .post-body h3 {
+    margin: 2.5rem 0 0.75rem;
+    font-size: 1.1875rem;
+    font-weight: 600;
+    font-variation-settings: "wdth" 105;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+
+  .post-body h4 {
+    margin: 2rem 0 0.5rem;
+    font-family: var(--font-plex-mono), ui-monospace, monospace;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  @media (width >= 40rem) {
+    .post-body h2 {
+      font-size: 1.75rem;
+    }
+
+    .post-body h3 {
+      font-size: 1.3125rem;
+    }
+  }
+
+  .post-body :is(h2, h3, h4) code {
+    font-size: 0.9em;
+  }
+
+  /* Heading anchor: hidden until hover or focus, but never display:none, so
+     it stays in the tab order and shows when focused. */
+  .post-body .anchor {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2rem;
+    min-height: 2rem;
+    margin-left: 0.5rem;
+    font-family: var(--font-plex-mono), ui-monospace, monospace;
+    font-size: 0.8125rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+    vertical-align: middle;
+    color: var(--muted);
+    text-decoration: none;
+    opacity: 0;
+  }
+
+  .post-body :is(h2, h3, h4):hover .anchor,
+  .post-body .anchor:hover,
+  .post-body .anchor:focus-visible {
+    opacity: 1;
+  }
+
+  .post-body .anchor:focus-visible {
+    color: var(--cb);
+  }
+
+  /* Links: full-strength accent underline (tokens.md §7 R-1). */
+  .post-body a:not(.anchor) {
+    color: var(--luma);
+    text-decoration: underline;
+    text-decoration-color: var(--cb);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  .post-body a:not(.anchor):hover {
+    color: var(--cb);
+    text-decoration-thickness: 2px;
+  }
+
+  /* Lists: the Teaching hyphen rule, in --muted so it survives at reading size. */
+  .post-body ul,
+  .post-body ol {
+    margin: 0 0 1.25rem;
+    padding: 0;
+  }
+
+  .post-body li > :is(ul, ol) {
+    margin: 0.5rem 0 0;
+  }
+
+  .post-body ul {
+    list-style: none;
+  }
+
+  .post-body ul > li {
+    position: relative;
+    margin-top: 0.5rem;
+    padding-left: 1.25rem;
+  }
+
+  .post-body ul > li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.85em;
+    width: 0.75rem;
+    height: 1px;
+    background: var(--muted);
+  }
+
+  .post-body ol {
+    list-style: decimal;
+    padding-left: 1.75rem;
+  }
+
+  .post-body ol ol {
+    list-style: lower-alpha;
+  }
+
+  .post-body ol > li {
+    margin-top: 0.5rem;
+  }
+
+  .post-body ol > li::marker {
+    font-family: var(--font-plex-mono), ui-monospace, monospace;
+    font-size: 0.8125em;
+    color: var(--muted);
+  }
+
+  .post-body li > p {
+    margin: 0;
+  }
+
+  .post-body li > p + p {
+    margin-top: 0.75rem;
+  }
+
+  .post-body li {
+    overflow-wrap: anywhere;
+  }
+
+  /* Task lists: a drawn box; the check mark, not colour, carries the state. */
+  .post-body ul.contains-task-list > li {
+    padding-left: 1.75rem;
+  }
+
+  .post-body ul.contains-task-list > li::before {
+    content: none;
+  }
+
+  .post-body .task-list-item input[type="checkbox"] {
+    appearance: none;
+    position: absolute;
+    left: 0;
+    top: 0.4em;
+    width: 1rem;
+    height: 1rem;
+    margin: 0;
+    border: 1px solid var(--muted);
+    border-radius: 2px;
+    background: transparent;
+    opacity: 1;
+  }
+
+  .post-body .task-list-item input[type="checkbox"]:checked {
+    background: var(--cb);
+    border-color: var(--cb);
+  }
+
+  .post-body .task-list-item input[type="checkbox"]:checked::after {
+    content: "✓";
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font: 500 0.75rem/1 var(--font-plex-mono), ui-monospace, monospace;
+    color: var(--ink);
+  }
+
+  .post-body blockquote {
+    margin: 1.75rem 0;
+    padding-left: 1.25rem;
+    border-left: 2px solid var(--cb);
+    color: var(--muted);
+  }
+
+  .post-body blockquote p {
+    margin-bottom: 0.75rem;
+  }
+
+  .post-body blockquote > :last-child {
+    margin-bottom: 0;
+  }
+
+  /* Inline code. */
+  .post-body code {
+    font-family: var(--font-plex-mono), ui-monospace, monospace;
+    font-size: 0.875em;
+    font-weight: 400;
+    color: var(--luma);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 0.1em 0.35em;
+    overflow-wrap: anywhere;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+
+  /* Fenced code: scrolls in its own focusable region, never wraps. */
+  .post-body figure[data-rehype-pretty-code-figure] {
+    margin: 1.75rem 0;
+  }
+
+  .post-body pre {
+    margin: 1.75rem 0;
+    padding: 0.875rem 1rem;
+    overflow-x: auto;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    font-family: var(--font-plex-mono), ui-monospace, monospace;
+    font-size: 0.8125rem;
+    line-height: 1.65;
+    tab-size: 2;
+    white-space: pre;
+    overflow-wrap: normal;
+    scrollbar-width: thin;
+    scrollbar-color: var(--muted) transparent;
+  }
+
+  .post-body figure[data-rehype-pretty-code-figure] > pre {
+    margin: 0;
+  }
+
+  @media (width >= 40rem) {
+    .post-body pre {
+      padding: 1rem 1.25rem;
+      font-size: 0.875rem;
+    }
+  }
+
+  .post-body pre[data-language]::before {
+    content: attr(data-language);
+    display: block;
+    margin-bottom: 0.75rem;
+    font: 500 0.6875rem var(--font-plex-mono), ui-monospace, monospace;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .post-body pre code {
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: inherit;
+    white-space: inherit;
+    overflow-wrap: normal;
+  }
+
+  /* Tables: the wrapper scrolls; columns never crush. */
+  .post-body .table-wrap {
+    margin: 1.75rem 0;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--muted) transparent;
+  }
+
+  .post-body table {
+    border-collapse: collapse;
+    width: max-content;
+    min-width: 100%;
+  }
+
+  .post-body th {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--muted);
+    font: 500 0.6875rem/1.4 var(--font-plex-mono), ui-monospace, monospace;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .post-body td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    font-variant-numeric: tabular-nums;
+    vertical-align: top;
+  }
+
+  .post-body :is(th, td):not([align]) {
+    text-align: left;
+  }
+
+  /* Footnotes. */
+  .post-body .footnotes {
+    margin-top: 3.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .post-body .footnotes li:target {
+    outline: 2px solid var(--cb);
+    outline-offset: 4px;
+  }
+
+  .post-body sup {
+    line-height: 0;
+  }
+
+  .post-body a[data-footnote-ref],
+  .post-body a[data-footnote-backref] {
+    display: inline-block;
+    min-width: 1.5rem;
+    text-align: center;
+  }
+
+  .post-body a[data-footnote-ref] {
+    font-size: 0.75em;
+  }
+
+  .post-body strong {
+    font-weight: 600;
+    color: var(--luma);
+  }
+
+  .post-body del {
+    color: var(--muted);
+    text-decoration: line-through;
+  }
+
+  /* Images and numbered captions ("Fig. N —", the hero's convention). */
+  .post-body figure {
+    margin: 2rem 0;
+  }
+
+  .post-body img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    border-radius: 0;
+  }
+
+  .post-body p img {
+    display: inline;
+    border: 0;
+    background: none;
+    vertical-align: middle;
+  }
+
+  .post-body figcaption {
+    counter-increment: fig;
+    max-width: 36rem;
+    margin-top: 0.75rem;
+    font: 0.75rem/1.5 var(--font-plex-mono), ui-monospace, monospace;
+    color: var(--muted);
+  }
+
+  .post-body figcaption::before {
+    content: "Fig. " counter(fig) " — ";
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .post-body hr {
+    max-width: 36rem;
+    margin: 3rem 0;
+    border: 0;
+    border-top: 1px solid var(--line);
+  }
+}
+/* ---- end blog prose ---- */
+
+/* ---- contact form ---- */
+/*
+ * Owned by Frontend (02 §2). Implements docs/design/contact.md and the
+ * recipes in tokens.md §4.1–4.6. Control borders are --muted, never --line
+ * (--line is 1.25:1 on ink). Error text sits on the page ground, never on
+ * --surface (studio --cr on --surface is 4.16:1). The block reuses
+ * .reading-veil and .text-link from the blog prose block.
+ */
+@layer components {
+  .contact-field {
+    margin-bottom: 1.5rem;
+  }
+
+  /* Field label (tokens.md §4.1): brighter and a point larger than .eyebrow. */
+  .contact-field label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-family: var(--font-plex-mono), ui-monospace, monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--luma);
+  }
+
+  .contact-optional {
+    color: var(--muted);
+    text-transform: none;
+    letter-spacing: 0.02em;
+  }
+
+  /* Text input / textarea (tokens.md §4.2): 48px tall, 16px type (no iOS zoom). */
+  .contact-field input,
+  .contact-field textarea {
+    display: block;
+    width: 100%;
+    min-height: 3rem;
+    margin: 0;
+    padding: 0.75rem 0.875rem;
+    font: 1rem/1.5 var(--font-archivo), system-ui, sans-serif;
+    color: var(--luma);
+    caret-color: var(--luma);
+    background: var(--surface);
+    border: 1px solid var(--muted);
+    border-radius: 2px;
+    transition: border-color 150ms ease;
+  }
+
+  .contact-field textarea {
+    min-height: 9rem;
+    resize: vertical;
+    field-sizing: content;
+  }
+
+  .contact-field input:hover,
+  .contact-field textarea:hover {
+    border-color: var(--luma);
+  }
+
+  /* Every focus on a text control shows the ring, drawn as a 2px border. */
+  .contact-field input:focus,
+  .contact-field textarea:focus {
+    outline: 2px solid var(--cb);
+    outline-offset: 0;
+  }
+
+  /* Read-only while sending: same look, no hover change. Never `disabled`. */
+  .contact-form-busy,
+  .contact-form-busy input,
+  .contact-form-busy textarea,
+  .contact-form-busy button {
+    cursor: progress;
+  }
+
+  .contact-form-busy input:hover,
+  .contact-form-busy textarea:hover {
+    border-color: var(--muted);
+  }
+
+  /* 2px error border without shifting the box. */
+  .contact-field-invalid input,
+  .contact-field-invalid textarea,
+  .contact-field-invalid input:hover,
+  .contact-field-invalid textarea:hover {
+    border-color: var(--cr);
+    box-shadow: inset 0 0 0 1px var(--cr);
+  }
+
+  /* Browser autofill must not repaint the fill and break the contrast pairs. */
+  .contact-field input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 100px var(--surface) inset;
+    -webkit-text-fill-color: var(--luma);
+    caret-color: var(--luma);
+  }
+
+  .contact-field-invalid input:-webkit-autofill {
+    -webkit-box-shadow:
+      0 0 0 100px var(--surface) inset,
+      inset 0 0 0 1px var(--cr);
+  }
+
+  .contact-counter {
+    margin-top: 0.5rem;
+    text-align: right;
+    font-family: var(--font-plex-mono), ui-monospace, monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  /* Inline error (tokens.md §4.3). */
+  .contact-error {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--cr);
+  }
+
+  .contact-glyph {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-top: 0.0625rem;
+    border: 1px solid currentColor;
+    font-family: var(--font-plex-mono), ui-monospace, monospace;
+    font-size: 0.75rem;
+    line-height: 1;
+  }
+
+  /* Error summary and failure panel (tokens.md §4.4): on the ground, a 2px
+     --cr rule, a --luma heading. Focus is moved here, so it is not a live
+     region. */
+  /* Focus targets clear the sticky header when they are scrolled to. */
+  .contact-alert,
+  .contact-success,
+  .contact-field input,
+  .contact-field textarea {
+    scroll-margin-top: 6rem;
+  }
+
+  .contact-alert {
+    margin-bottom: 2rem;
+    padding: 0.25rem 0 0.25rem 1rem;
+    border-left: 2px solid var(--cr);
+  }
+
+  .contact-alert h2 {
+    margin-bottom: 0.75rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--luma);
+  }
+
+  .contact-alert p {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--luma);
+  }
+
+  .contact-alert ul a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    color: var(--luma);
+    text-decoration: underline;
+    text-decoration-color: var(--cb);
+    text-underline-offset: 3px;
+  }
+
+  .contact-alert ul a:hover {
+    color: var(--cb);
+    text-decoration-thickness: 2px;
+  }
+
+  .contact-note {
+    color: var(--muted);
+  }
+
+  .contact-consent {
+    max-width: 36rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .contact-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  @media (width >= 40rem) {
+    .contact-actions {
+      flex-direction: row;
+    }
+  }
+
+  /* Buttons (tokens.md §4.5, §4.6). Busy keeps full colour: a dimmed label
+     would fall below 4.5:1. */
+  .contact-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 3rem;
+    padding: 0 1.5rem;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    font: 500 1rem/1 var(--font-archivo), system-ui, sans-serif;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      background-color 150ms ease,
+      border-color 150ms ease;
+  }
+
+  .contact-button-primary {
+    background: var(--cb);
+    color: var(--ink);
+  }
+
+  .contact-button-primary:hover:not([aria-disabled="true"]) {
+    background: var(--luma);
+  }
+
+  /* Pre-hydration only, for a fraction of a second: looks like the idle button. */
+  .contact-button-primary:disabled {
+    cursor: default;
+  }
+
+  .contact-button-secondary {
+    background: transparent;
+    color: var(--luma);
+    border-color: var(--muted);
+  }
+
+  .contact-button-secondary:hover {
+    border-color: var(--luma);
+  }
+
+  .contact-status {
+    margin-top: 0.75rem;
+    font-size: 0.9375rem;
+    color: var(--muted);
+  }
+
+  .contact-status:empty {
+    margin: 0;
+  }
+
+  .contact-alt {
+    margin-top: 1.5rem;
+    font-size: 1rem;
+    color: var(--muted);
+  }
+
+  .contact-success {
+    padding: 2rem 0;
+    border-block: 1px solid var(--line);
+  }
+
+  .contact-success h2 {
+    margin-bottom: 1rem;
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--luma);
+  }
+
+  .contact-success p {
+    margin-bottom: 1.5rem;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  /* Honeypot (contact.md §3.5): off-screen, not display:none. */
+  .contact-honeypot {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+}
+/* ---- end contact form ---- */

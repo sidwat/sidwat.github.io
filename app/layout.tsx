@@ -67,7 +67,7 @@ export default function RootLayout({
         </a>
         <MeshField />
         <Nav />
-        <div id="main">{children}</div>
+        <main id="main">{children}</main>
         <Footer />
       </body>
     </html>

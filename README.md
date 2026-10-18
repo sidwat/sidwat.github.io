@@ -7,9 +7,15 @@ deployed to GitHub Pages.
 
 ```bash
 pnpm install
-pnpm dev      # http://localhost:3000
-pnpm build    # static export to out/
+pnpm dev            # http://localhost:3000 (shows drafts)
+pnpm build          # static export to out/
+pnpm build:drafts   # the same, with draft and scheduled posts included
 ```
+
+Blog posts are Markdown files in `content/blog/`; see its
+[README](content/blog/README.md). Build through the pnpm scripts rather than
+bare `next build`: they finish with a step the static export needs (explained
+in DEVELOPMENT.md).
 
 See [DEVELOPMENT.md](DEVELOPMENT.md) for the stack, branch strategy, deployment
 steps, and roadmap. The previous Jekyll site is preserved under

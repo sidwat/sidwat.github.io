@@ -1,0 +1,155 @@
+# QA checks for pull requests (docs/04-qa-plan.md §8). Never deploys, uses no
+# repository secrets, never contacts the real contact provider (the specs stub it)
+# and never exercises the CMS.
+name: QA
+
+on:
+  pull_request:
+    branches: ["integration/blog-contact", "master"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: qa-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  QA_ARTIFACTS: ${{ github.workspace }}/qa-artifacts
+  NEXT_TELEMETRY_DISABLED: "1"
+
+jobs:
+  static:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # SEC-02 scans the PR's commits
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm exec tsc --noEmit
+      - name: SEC-02 secret scan of the PR commits
+        run: node tests/scripts/scan-out.mjs --git "origin/${{ github.base_ref || 'master' }}"
+
+  # Separate job: a red audit (SEC-03) is reported on the PR without blocking the
+  # build matrix and browser tests. Open findings are in docs/qa-report.md.
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: SEC-03 dependency audit (high/critical fail)
+        run: pnpm audit --prod --audit-level high
+
+  build-matrix:
+    needs: static
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # B0 B1 B1X B2 B3(each invalid case must fail) B4; runs scan-out (SEC-01) on each
+      # export. Fixtures are written to the runner workspace only and removed after.
+      - run: node tests/scripts/build-matrix.mjs
+      - name: out/ size and First Load JS per route (REG-07 / PERF-04)
+        if: always()
+        run: |
+          for b in B0 B1 B2 B4; do
+            [ -d "$QA_ARTIFACTS/out-$b" ] || continue
+            echo "### $b" >> "$GITHUB_STEP_SUMMARY"
+            node tests/scripts/route-js.mjs "$QA_ARTIFACTS/out-$b" >> "$GITHUB_STEP_SUMMARY"
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: builds
+          path: |
+            qa-artifacts/out-*
+            qa-artifacts/*.log
+            qa-artifacts/build-matrix.json
+          retention-days: 7
+
+  e2e:
+    needs: build-matrix
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        build: [B0, B1, B1X, B2, B4]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - uses: actions/download-artifact@v4
+        with:
+          name: builds
+          path: qa-artifacts
+      - run: pnpm exec playwright install --with-deps chromium firefox webkit
+      - name: Playwright (chromium, firefox, webkit + emulated devices) on ${{ matrix.build }}
+        run: pnpm test:e2e
+        env:
+          QA_BUILD: ${{ matrix.build }}
+          QA_OUT_DIR: qa-artifacts/out-${{ matrix.build }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report-${{ matrix.build }}
+          path: |
+            qa-artifacts/playwright-report
+            qa-artifacts/playwright-results.json
+            qa-artifacts/test-results
+          retention-days: 7
+
+  lighthouse:
+    needs: build-matrix
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - uses: actions/download-artifact@v4
+        with:
+          name: builds
+          path: qa-artifacts
+      - run: cp -R qa-artifacts/out-B1 out
+      # Mobile preset (default). Performance thresholds are "warn" because shared
+      # runners are noisy; the release gate is a local median-of-3 run (04 §5.8).
+      - name: Lighthouse CI (mobile) on B1
+        run: pnpm dlx @lhci/cli@0.15.1 autorun --config=./lighthouserc.json
+      - name: Lighthouse CI (desktop) on B1
+        run: pnpm dlx @lhci/cli@0.15.1 autorun --config=./lighthouserc.json --collect.settings.preset=desktop --upload.outputDir=./.lighthouseci-report-desktop
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lhci
+          path: |
+            .lighthouseci
+            .lighthouseci-report
+            .lighthouseci-report-desktop
+          retention-days: 7

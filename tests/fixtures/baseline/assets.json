@@ -1,0 +1,50 @@
+{
+  "/cv.pdf": {
+    "status": 200,
+    "bytes": 197176,
+    "sha256": "8b0506ee2a085f7f3eaff6ddfc8123329f01f05be794f35926e6202f5b8d1b0e",
+    "contentType": "application/pdf"
+  },
+  "/media/portrait.jpg": {
+    "status": 200,
+    "bytes": 46249,
+    "sha256": "edd4ebf7d0e70976bea1f88659690451ee33a60121f87f4c6cf6267c21dc31fe",
+    "contentType": "image/jpeg"
+  },
+  "/media/hero-wave.mp4": {
+    "status": 200,
+    "bytes": 443224,
+    "sha256": "5005cf658a0ef45efcd4ec993e22ee9cc89ef604ed5c5eed07a642607db04527",
+    "contentType": "video/mp4"
+  },
+  "/media/hero-wave.webm": {
+    "status": 200,
+    "bytes": 319489,
+    "sha256": "a90aaa11b9400ebfdca1e4842a6531b655b9d2231bc3adc7c57ce30d55815006",
+    "contentType": "video/webm"
+  },
+  "/icon.png": {
+    "status": 200,
+    "bytes": 17114,
+    "sha256": "1741a276fd80766d88eddd9cc307cd3f19d8a374628dad1c02207d1d8a62541d",
+    "contentType": "image/png"
+  },
+  "/opengraph-image.png": {
+    "status": 200,
+    "bytes": 44849,
+    "sha256": "206765dbef55689556f30d0dc55d171ae72b3edb07a0a057ff632864e6239117",
+    "contentType": "image/png"
+  },
+  "/robots.txt": {
+    "status": 200,
+    "bytes": 70,
+    "sha256": "8c13ce3ef7e1f21b24a72ead34f645103224ab9a7cdd0e3b09e6e0b8ddf36dd8",
+    "contentType": "text/plain; charset=utf-8"
+  },
+  "/sitemap.xml": {
+    "status": 200,
+    "bytes": 869,
+    "sha256": "93f7a1937fd192c1302ae65d66832fd3f17dc3d94231dba114e6a60dd8a3c28e",
+    "contentType": "application/xml; charset=utf-8"
+  }
+}

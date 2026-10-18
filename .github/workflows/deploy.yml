@@ -31,6 +31,11 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
+        # Repository *variables* (not secrets): both values are public by design and
+        # end up in the browser bundle. Never map a real secret to NEXT_PUBLIC_*.
+        env:
+          NEXT_PUBLIC_CONTACT_ENDPOINT: ${{ vars.CONTACT_ENDPOINT }}
+          NEXT_PUBLIC_CONTACT_ACCESS_KEY: ${{ vars.CONTACT_ACCESS_KEY }}
 
       - uses: actions/upload-pages-artifact@v3
         with:

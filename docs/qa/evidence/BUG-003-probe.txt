@@ -1,0 +1,17 @@
+BUG-003 probe, 2026-10-17. Steps per context: open /, click the ground toggle (to studio),
+reload, read <html data-theme>, read localStorage.theme, then open /teaching/.
+Served with tests/scripts/serve-out.mjs. Playwright 1.64.1 (Chromium 1248 build, Firefox 1555 build).
+
+== baseline origin/master eab9889
+chromium reduce         after=studio reload=null    ls=studio teaching=studio errs=[React #418 x2]
+chromium no-preference  after=studio reload=studio  ls=studio teaching=studio errs=[]
+firefox  reduce         after=studio reload=null    ls=studio teaching=studio errs=[React #418 x2]
+firefox  no-preference  after=studio reload=studio  ls=studio teaching=studio errs=[]
+== integration/blog-contact 42ddff7 (B0)
+chromium reduce         after=studio reload=null    ls=studio teaching=studio errs=[React #418 x2]
+chromium no-preference  after=studio reload=studio  ls=studio teaching=studio errs=[]
+firefox  reduce         after=studio reload=null    ls=studio teaching=studio errs=[React #418 x2]
+firefox  no-preference  after=studio reload=studio  ls=studio teaching=studio errs=[]
+
+Error text: "Minified React error #418; visit https://react.dev/errors/418?args[]=HTML&args[]= ..."
+Automated reproduction: tests/e2e/regression.spec.ts "BUG-003 reduced motion: stored studio ground survives reload on home".

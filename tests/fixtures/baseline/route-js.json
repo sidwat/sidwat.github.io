@@ -1,0 +1,90 @@
+{
+  "dir": "<baseline out/>",
+  "files": 78,
+  "totalKB": 2715.7,
+  "htmlPages": 10,
+  "jsChunks": 12,
+  "jsTotalKB": 708.2,
+  "routes": [
+    {
+      "route": "/",
+      "chunks": 9,
+      "rawKB": 707.8,
+      "gzipKB": 221.3,
+      "inlineScripts": 10,
+      "htmlKB": 26.9
+    },
+    {
+      "route": "/_not-found/",
+      "chunks": 8,
+      "rawKB": 567.7,
+      "gzipKB": 175.2,
+      "inlineScripts": 10,
+      "htmlKB": 22.9
+    },
+    {
+      "route": "/404.html",
+      "chunks": 8,
+      "rawKB": 567.7,
+      "gzipKB": 175.2,
+      "inlineScripts": 10,
+      "htmlKB": 22.9
+    },
+    {
+      "route": "/404/",
+      "chunks": 8,
+      "rawKB": 567.7,
+      "gzipKB": 175.2,
+      "inlineScripts": 10,
+      "htmlKB": 22.9
+    },
+    {
+      "route": "/blog/",
+      "chunks": 8,
+      "rawKB": 567.7,
+      "gzipKB": 175.2,
+      "inlineScripts": 8,
+      "htmlKB": 19.3
+    },
+    {
+      "route": "/experience/",
+      "chunks": 8,
+      "rawKB": 567.7,
+      "gzipKB": 175.2,
+      "inlineScripts": 14,
+      "htmlKB": 31.8
+    },
+    {
+      "route": "/gallery/",
+      "chunks": 8,
+      "rawKB": 567.7,
+      "gzipKB": 175.2,
+      "inlineScripts": 8,
+      "htmlKB": 19.3
+    },
+    {
+      "route": "/projects/",
+      "chunks": 8,
+      "rawKB": 567.7,
+      "gzipKB": 175.2,
+      "inlineScripts": 17,
+      "htmlKB": 37.5
+    },
+    {
+      "route": "/publications/",
+      "chunks": 8,
+      "rawKB": 567.7,
+      "gzipKB": 175.2,
+      "inlineScripts": 12,
+      "htmlKB": 29.6
+    },
+    {
+      "route": "/teaching/",
+      "chunks": 8,
+      "rawKB": 567.7,
+      "gzipKB": 175.2,
+      "inlineScripts": 10,
+      "htmlKB": 23.9
+    }
+  ]
+}
