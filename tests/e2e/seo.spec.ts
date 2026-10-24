@@ -17,7 +17,7 @@ test("REG-08 sitemap: every baseline URL is still listed, only intended addition
   const now = locs(await res.text());
   const base = baselineText("sitemap.txt").trim().split("\n");
   for (const u of base) expect(now, `baseline URL ${u}`).toContain(u);
-  const intended = new RegExp(`^${SITE}/(contact|blog/[a-z0-9-]+)/$`);
+  const intended = new RegExp(`^${SITE}/(contact|blog/[a-z0-9-]+|projects/[a-z0-9-]+)/$`);
   for (const u of now.filter((u) => !base.includes(u))) expect(u, "unexpected sitemap addition").toMatch(intended);
 });
 
@@ -43,7 +43,9 @@ test("SEO-04 robots.txt disallows /admin/ and names an absolute sitemap", async 
 test("SEO-05 /admin/ is noindex and not linked from any page", async ({ page }) => {
   needs("admin", "I-2");
   await page.goto("/admin/");
-  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
+  const robots = page.locator('meta[name="robots"]');
+  expect(await robots.count()).toBeGreaterThan(0);
+  for (const tag of await robots.all()) await expect(tag).toHaveAttribute("content", /noindex/);
   const queue = ["/", ...EXISTING_PAGES, "/blog/", "/contact/"];
   const seen = new Set<string>();
   while (queue.length) {

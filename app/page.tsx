@@ -1,14 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
+import ProjectCard from "@/components/ProjectCard";
 import Hero from "@/components/Hero";
 import { projects, bio, education, researchInterests, honours } from "@/lib/content";
 import { nav } from "@/lib/site";
-
-const projectPictures = [
-  {src:"/media/projects/landscape.jpg",alt:"Alpine landscape used as an illustrative image-processing sample"},
-  {src:"/media/projects/compression.jpg",alt:"Bird photograph comparing original detail and JPEG compression artifacts"},
-  {src:"/media/projects/flower.jpeg",alt:"Colorful flower painting used as an illustrative compression sample"},
-];
 
 export default function Home() {
   return (
@@ -17,10 +12,7 @@ export default function Home() {
 
       <section className="home-work page-shell" aria-labelledby="selected-work">
         <div className="section-heading"><h2 id="selected-work">Selected work</h2><Link href="/projects/" className="quiet-link">Projects <span aria-hidden="true">→</span></Link></div>
-        <div className="work-grid">{projects.slice(0, 3).map((project, index) => <article className="work-card" key={project.title}>
-          <Link href={`/projects/#project-${index + 1}`} className="project-photo" aria-label={`Illustrative image — view ${project.title}`}><Image src={projectPictures[index].src} alt={projectPictures[index].alt} width={640} height={360} sizes="(max-width: 768px) 100vw, 33vw"/><span>Illustrative image</span></Link>
-          <div className="work-card-body"><p className="eyebrow">{project.affiliation}</p><h3><Link href={`/projects/#project-${index + 1}`}>{project.title}<span className="sr-only"> — view project</span></Link></h3><p className="prose-body">{project.points[0]}</p><Link href={`/projects/#project-${index + 1}`} className="quiet-link">Projects <span aria-hidden="true">→</span></Link></div>
-        </article>)}</div>
+        <div className="work-grid">{projects.slice(0, 3).map(project => <ProjectCard key={project.slug} project={project} />)}</div>
       </section>
       <div className="page-shell">
         <section className="home-content"><h2>Research interests</h2><div className="interest-tags">{researchInterests.map(item=><span key={item}>{item}</span>)}</div></section>

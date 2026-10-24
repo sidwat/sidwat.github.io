@@ -171,3 +171,9 @@ Not visitor-facing. Integrations pastes these into the Sveltia field `hint`s.
 - Every string visible in the wireframes and hi-fi pages in `assets/` is produced from this table; the wireframe generator looks strings up by ID, so a missing ID would have failed the build of the wireframes.
 - Specimen article text, specimen post titles and the figure/cover placeholders in `assets/post-*.html` and the sample titles in [blog-index.md](blog-index.md) are **placeholders, not copy**: real post content comes from `content/blog/`.
 - Metadata strings (`*.meta.title`, `*.meta.description`) are included because they are visible in tabs and search results.
+
+### Unconfigured contact form
+
+`contact.unconfigured`: Please email me directly using the address below.
+
+This is a neutral state, not a failed submission. Show the form only when a valid endpoint and access key are available at build time.

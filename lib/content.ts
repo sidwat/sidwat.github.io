@@ -40,6 +40,8 @@ export type Patent = {
 };
 
 export type Project = {
+  slug: string;
+  symbol: string;
   title: string;
   affiliation: string;
   points: string[];
@@ -245,6 +247,8 @@ export const patents: Patent[] = [
 
 export const projects: Project[] = [
   {
+    slug: "nnlf-halide",
+    symbol: "NNLF",
     title: "End-to-end NNLF decoder inference in Halide",
     affiliation: "Samsung Research Bangalore",
     points: [
@@ -255,6 +259,8 @@ export const projects: Project[] = [
     ],
   },
   {
+    slug: "neural-loop-filters",
+    symbol: "NNFilter",
     title: "AI-based in-loop filters",
     affiliation: "Samsung Research Bangalore",
     points: [
@@ -265,6 +271,8 @@ export const projects: Project[] = [
     ],
   },
   {
+    slug: "neural-intra-prediction",
+    symbol: "NNIntra",
     title: "AI-based intra-frame prediction",
     affiliation: "Samsung Research Bangalore",
     points: [
@@ -275,6 +283,8 @@ export const projects: Project[] = [
     ],
   },
   {
+    slug: "apv",
+    symbol: "APV",
     title: "Open Advanced Professional Video codec (APV)",
     affiliation: "Samsung Research Bangalore",
     points: [
@@ -285,6 +295,8 @@ export const projects: Project[] = [
     ],
   },
   {
+    slug: "robomaster",
+    symbol: "ROBOMASTER",
     title: "IEEE DJI RoboMaster AI Challenge",
     affiliation: "IIT Kanpur, with Prof. Laxmidhar Behera",
     points: [
@@ -295,6 +307,8 @@ export const projects: Project[] = [
     ],
   },
   {
+    slug: "chandrayaan",
+    symbol: "CHANDRAYAAN",
     title: "ISRO Chandrayaan moon mapping challenge",
     affiliation: "Inter-IIT Tech Meet",
     points: [

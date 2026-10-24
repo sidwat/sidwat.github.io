@@ -45,6 +45,8 @@ for (const path of EXISTING_PAGES) {
         await expect(page.locator("#hero-title")).toHaveText("Sidhartha Watsa");
         await expect(page.locator(".hero-bio")).toHaveText(hero.bio);
         await expect(page.locator('.hero-actions a[href="/cv.pdf"]')).toHaveCount(2);
+      } else if (path === "/projects/") {
+        await expect(page.locator(".project-ticket")).toHaveCount(6);
       } else expect(text.toLocaleLowerCase()).toBe(b.text.toLocaleLowerCase());
     });
 

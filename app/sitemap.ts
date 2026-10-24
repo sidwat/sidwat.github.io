@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/blog";
+import { projects } from "@/lib/content";
 import { nav, site } from "@/lib/site";
 
 export const dynamic = "force-static";
@@ -28,5 +29,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...pages, ...posts];
+  return [...pages, ...projects.map(project => ({ url: absolute(`/projects/${project.slug}`), priority: 0.7 })), ...posts];
 }

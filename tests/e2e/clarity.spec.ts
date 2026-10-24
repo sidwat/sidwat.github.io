@@ -45,8 +45,8 @@ test("Clarity pictures: real assets, project anchors and institution destination
  expect(await images.evaluateAll(nodes=>nodes.every(n=>(n as HTMLImageElement).naturalWidth>0))).toBe(true);
  await expect(page.locator('.institution-card>a[href="https://cse.ucsd.edu/"]')).toHaveCount(1);
  await expect(page.locator('.institution-card>a[href="https://www.iitk.ac.in/"]')).toHaveCount(2);
- await page.locator(".project-photo").first().click();await expect(page).toHaveURL(/\/projects\/#project-1$/);
- await expect(page.locator("#project-1")).toBeVisible();
+ await page.locator(".project-ticket").first().click();await expect(page).toHaveURL(/\/projects\/nnlf-halide\/$/);
+ await expect(page.locator(".project-detail h1")).toContainText("Halide");
 });
 
 test("Motion demos: all modes, pause control, and Reduced Motion",async({page})=>{

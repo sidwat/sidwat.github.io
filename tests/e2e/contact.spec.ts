@@ -224,11 +224,14 @@ test("CON-13 HTML payloads are never rendered as HTML", async ({ page }) => {
   await expect(page.locator("#main b", { hasText: "bold" })).toHaveCount(0);
 });
 
-test("CON-14 B4 (no config): provider-error state with mailto, no crash", async ({ page }) => {
+test("CON-14 B4 (no config): neutral email fallback, no false failure", async ({ page }) => {
   onlyOn("B4");
   const messages = watchConsole(page);
   await openForm(page, false);
-  await expect(page.getByTestId("contact-fallback")).toBeVisible();
+  await expect(page.getByTestId("contact-unconfigured")).toBeVisible();
+  await expect(page.getByText("Message not sent", {exact:true})).toHaveCount(0);
+  await expect(page.getByTestId("contact-form")).toHaveCount(0);
+  await expect(page.locator('#main a[href^="mailto:"]')).toBeVisible();
   expect(messages.filter((m) => m.startsWith("pageerror"))).toEqual([]);
 });
 
