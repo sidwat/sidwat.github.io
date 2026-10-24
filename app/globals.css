@@ -11,8 +11,8 @@
   --cr: #b52b4a;
   --on-accent: #ffffff;
   --soft: #eaf2fb;
-  --mesh-base: 0.08;
-  --mesh-lit: 0.22;
+  --mesh-base: 0.18;
+  --mesh-lit: 0.65;
   --font-archivo: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-plex-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 }
@@ -27,8 +27,8 @@
   --cr: #ff8eaa;
   --on-accent: #101820;
   --soft: #1b293c;
-  --mesh-base: 0.14;
-  --mesh-lit: 0.26;
+  --mesh-base: 0.28;
+  --mesh-lit: 0.75;
 }
 @theme inline {
   --color-ink: var(--ink);
@@ -130,7 +130,7 @@
   .patent-list { display: grid; gap: 1.25rem; }
   .patent-panel { background: var(--surface); padding: 2rem; border-radius: 1.25rem; display: grid; grid-template-columns: 10rem 1fr; gap: 2rem; }
   .teaching-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-  .teaching-panel { padding: 2.25rem; border-radius: 1.5rem; background: var(--surface); }
+  .teaching-panel { padding: 2.25rem; border-radius: 1.5rem; background: transparent; }
   .teaching-panel>p { margin-bottom: 1.5rem; color: var(--cb); }
   .teaching-panel h2 { font-size: 1.9rem; letter-spacing: -.03em; line-height: 1.2; font-weight: 550; }
   .teaching-panel .eyebrow { letter-spacing: 0; text-transform: none; font-size: .875rem; }
@@ -1087,7 +1087,7 @@
 .project-ticket:focus-visible { outline-offset: 5px; }
 .project-ticket h3 { min-height: 3.6em; }
 .project-word { height: 190px; display: grid; place-items: center; color: var(--cb); font-size: clamp(1.25rem,2vw,2rem); font-weight: 600; letter-spacing: -.04em; }
-.project-banner { position: relative; height: clamp(12rem,25vw,20rem); margin-top: 1rem; overflow: hidden; border-radius: 1.5rem; background: var(--surface); }
+.project-banner { position: relative; height: clamp(12rem,25vw,20rem); margin-top: 1rem; overflow: hidden; border-radius: 1.5rem; background: transparent; }
 .project-banner canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .project-motion-control { display: flex; justify-content: flex-end; margin-block: .5rem 2rem; }
 .project-motion-control button { font-size: .75rem; color: var(--muted); }
@@ -1097,3 +1097,7 @@
 .project-details li { margin-bottom: 1.5rem; font-size: 1.0625rem; line-height: 1.8; color: var(--muted); }
 @media(prefers-reduced-motion:reduce) { .project-motion-control { display: none; } }
 .work-card :is(h2,h3) { font-size: 1.4rem; line-height: 1.25; letter-spacing: -.035em; font-weight: 600; margin-top: .9rem; min-height: 3.6em; }
+
+/* One transparent pointer field shared by every route, above the body paint. */
+body { isolation: isolate; }
+.site-web { position: fixed; inset: 0; z-index: -1; pointer-events: none; width: 100%; height: 100%; }

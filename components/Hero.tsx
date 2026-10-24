@@ -1,13 +1,11 @@
 import { hero } from "@/lib/content";
 import { site } from "@/lib/site";
 import MotionControl from "@/components/MotionControl";
-import ParticleField from "@/components/ParticleField";
 import Portrait from "@/components/Portrait";
 
 export default function Hero() {
   return (
     <section className="clarity-hero" aria-labelledby="hero-title">
-      <ParticleField subtle />
       <p className="eyebrow">{hero.eyebrow}</p>
       <h1 id="hero-title">{site.name}</h1>
       <p className="hero-bio">{hero.bio}</p>
