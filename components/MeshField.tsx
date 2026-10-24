@@ -1,12 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { triangulate, type Point } from "@/lib/delaunay";
-
-/** Roughly one vertex per this many square pixels of viewport. */
-const AREA_PER_VERTEX = 15000;
-const MIN_VERTICES = 45;
-const MAX_VERTICES = 170;
+import { textClearances, clearContent } from "@/lib/ambient-space";
+type Point = { x: number; y: number };
 
 /** How far the illumination reaches, and how far the mesh parts, in px. */
 const LIGHT_RADIUS = 240;
@@ -29,29 +25,29 @@ function hexToRgb(hex: string): [number, number, number] {
     : [(n >> 16) & 255, (n >> 8) & 255, n & 255];
 }
 
-/**
- * Jittered-grid sampling, extended one cell beyond the viewport so the mesh
- * runs off every edge instead of ending in a visible border. Even coverage
- * without the clumping that uniform random sampling produces.
- */
-function sample(w: number, h: number, target: number): Point[] {
-  const cell = Math.sqrt((w * h) / target);
-  const cols = Math.ceil(w / cell) + 2;
-  const rows = Math.ceil(h / cell) + 2;
-  const pts: Point[] = [];
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      pts.push({
-        x: (c - 1) * cell + Math.random() * cell,
-        y: (r - 1) * cell + Math.random() * cell,
-      });
+/** Sparse irregular orb webs, anchored off the edges rather than a full-page grid. */
+function sample(w:number,h:number): { points:Point[]; edges:[number,number][] } {
+  const points:Point[]=[],edges:[number,number][]=[];
+  const spokes=11,rings=5;
+  for(const [cx,cy] of [[w*.04,h*.16],[w*.96,h*.82]]){
+    const start=points.length;
+    const radius=Math.max(w*.48,h*.62);
+    for(let ring=0;ring<rings;ring++){
+      for(let spoke=0;spoke<spokes;spoke++){
+        const angle=spoke/spokes*Math.PI*2+.04*Math.sin(spoke*7);
+        const r=radius*(ring+1)/rings*(1+.07*Math.sin(spoke*3+ring));
+        const index=points.length;
+        points.push({x:cx+Math.cos(angle)*r,y:cy+Math.sin(angle)*r});
+        edges.push([index,start+ring*spokes+(spoke+1)%spokes]);
+        if(ring>0)edges.push([index,index-spokes]);
+      }
     }
   }
-  return pts;
+  return {points,edges};
 }
 
 /**
- * A triangulated field behind the page. At rest it is almost invisible; the
+ * Sparse silk webs behind the page. At rest it is almost invisible; the
  * cursor lights the edges near it and the vertices part around it.
  *
  * The conceit is foveated coding: an encoder spends its bits where the viewer
@@ -85,6 +81,7 @@ export default function MeshField() {
     // forever after the first mouse move, since pointer.on stays true while the
     // cursor merely rests inside the window and nothing is actually changing.
     let dirty = true;
+    let clearances = textClearances();
 
     const readColours = () => {
       const cs = getComputedStyle(document.documentElement);
@@ -105,14 +102,11 @@ export default function MeshField() {
       canvas.style.height = h + "px";
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      const target = Math.min(
-        MAX_VERTICES,
-        Math.max(MIN_VERTICES, Math.round((w * h) / AREA_PER_VERTEX)),
-      );
-      home = sample(w, h, target);
-      cur = home.map((p) => ({ ...p }));
-      vel = home.map(() => ({ x: 0, y: 0 }));
-      edges = triangulate(home);
+      const web=sample(w,h);
+      home=web.points;
+      cur=home.map(p=>({...p}));
+      vel=home.map(()=>({x:0,y:0}));
+      edges=web.edges;
     };
 
     const draw = () => {
@@ -124,11 +118,11 @@ export default function MeshField() {
       ctx.beginPath();
       for (const [i, j] of edges) {
         ctx.moveTo(cur[i].x, cur[i].y);
-        ctx.lineTo(cur[j].x, cur[j].y);
+        ctx.quadraticCurveTo((cur[i].x+cur[j].x)/2+3, (cur[i].y+cur[j].y)/2+5, cur[j].x, cur[j].y);
       }
       ctx.stroke();
 
-      if (!pointer.on) return;
+      if (!pointer.on) { clearContent(ctx, clearances); return; }
 
       // Lit pass: only edges within reach, each at its own alpha. Batching by
       // colour is not possible here, but the count is small by construction.
@@ -144,7 +138,7 @@ export default function MeshField() {
         ctx.lineWidth = 1 + 0.75 * t * t;
         ctx.beginPath();
         ctx.moveTo(cur[i].x, cur[i].y);
-        ctx.lineTo(cur[j].x, cur[j].y);
+        ctx.quadraticCurveTo((cur[i].x+cur[j].x)/2+3, (cur[i].y+cur[j].y)/2+5, cur[j].x, cur[j].y);
         ctx.stroke();
       }
 
@@ -158,6 +152,7 @@ export default function MeshField() {
         ctx.arc(cur[i].x, cur[i].y, 1.4, 0, Math.PI * 2);
         ctx.fill();
       }
+      clearContent(ctx, clearances);
     };
 
     /** Returns true while anything is still moving. */
@@ -225,7 +220,9 @@ export default function MeshField() {
       kick();
     };
 
+    const onScroll = () => { clearances = textClearances(); draw(); };
     const onResize = () => {
+      clearances = textClearances();
       build();
       draw();
       kick();
@@ -250,6 +247,9 @@ export default function MeshField() {
     motionQuery.addEventListener("change", onPreference);
     document.addEventListener("visibilitychange", onPreference);
     window.addEventListener("resize", onResize);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    const contentObserver = new MutationObserver(onScroll);
+    contentObserver.observe(document.getElementById("main")!, { childList:true, subtree:true });
 
     // The palette flips with the theme, and the mesh has to follow.
     const themeObserver = new MutationObserver(() => {
@@ -267,6 +267,8 @@ export default function MeshField() {
       document.removeEventListener("pointerleave", onLeave);
       window.removeEventListener("blur", onLeave);
       window.removeEventListener("resize", onResize);
+      window.removeEventListener("scroll", onScroll);
+      contentObserver.disconnect();
       themeObserver.disconnect();
       motionQuery.removeEventListener("change", onPreference);
       document.removeEventListener("visibilitychange", onPreference);

@@ -56,3 +56,36 @@ test("Project gallery and detail have no serious accessibility violations", asyn
     expect(result.violations.filter(v => v.impact === "serious" || v.impact === "critical").map(v => v.id)).toEqual([]);
   }
 });
+
+test("Stars gather from the viewport and the assembled word yields to the pointer", async ({ page }) => {
+  await page.setViewportSize({width:1440,height:1000});
+  await page.clock.install();
+  await page.goto("/projects/nnlf-halide/");
+  const canvas=page.locator(".project-stars");
+  const banner=await page.locator(".project-banner").boundingBox();
+  expect(banner).not.toBeNull();
+  const center={x:banner!.x+banner!.width/2,y:banner!.y+banner!.height/2};
+  const ink=()=>canvas.evaluate((el:HTMLCanvasElement,p)=>{
+    const scale=el.width/innerWidth;
+    const bytes=el.getContext("2d")!.getImageData(Math.round((p.x-45)*scale),Math.round((p.y-45)*scale),Math.round(90*scale),Math.round(90*scale)).data;
+    let sum=0;for(let i=3;i<bytes.length;i+=4)sum+=bytes[i];return sum;
+  },center);
+  const drifting=await ink();
+  await page.clock.runFor(16000);
+  const assembled=await ink();
+  expect(assembled).toBeGreaterThan(drifting*2);
+  await page.mouse.move(center.x,center.y);
+  await page.clock.runFor(1200);
+  expect(await ink()).toBeLessThan(assembled*.8);
+  // Actual text lines remain clear in both independent background canvases.
+  for(const field of [canvas,page.locator(".site-web")]){
+    expect(await field.evaluate((el:HTMLCanvasElement)=>{
+      const range=document.createRange();range.selectNodeContents(document.querySelector("h1")!);
+      const ctx=el.getContext("2d")!,scale=el.width/innerWidth;
+      return [...range.getClientRects()].every(r=>{
+        const pixels=ctx.getImageData(Math.round(r.left*scale),Math.round(r.top*scale),Math.round(r.width*scale),Math.round(r.height*scale)).data;
+        for(let i=3;i<pixels.length;i+=4)if(pixels[i])return false;return true;
+      });
+    })).toBe(true);
+  }
+});

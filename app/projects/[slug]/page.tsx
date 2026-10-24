@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { projects } from "@/lib/content";
-import ParticleField from "@/components/ParticleField";
+import ProjectStars from "@/components/ProjectStars";
 import MotionControl from "@/components/MotionControl";
 
 export const dynamicParams = false;
@@ -18,7 +18,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   if (!project) notFound();
   return <article className="page-shell detail-page project-detail">
     <Link href="/projects/" className="quiet-link">← All projects</Link>
-    <div className="project-banner" aria-hidden="true"><ParticleField mode="hybrid" label={project.symbol} heading /></div>
+    <div className="project-banner" aria-hidden="true"><ProjectStars label={project.symbol} /></div>
     <div className="project-motion-control"><MotionControl /></div>
     <header className="page-heading"><p className="eyebrow">{project.affiliation}</p><h1 className="display mt-4">{project.title}</h1></header>
     <ul className="project-details">{project.points.map(point => <li key={point}>{point}</li>)}</ul>

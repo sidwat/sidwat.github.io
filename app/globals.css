@@ -11,8 +11,8 @@
   --cr: #b52b4a;
   --on-accent: #ffffff;
   --soft: #eaf2fb;
-  --mesh-base: 0.18;
-  --mesh-lit: 0.65;
+  --mesh-base: 0.065;
+  --mesh-lit: 0.25;
   --font-archivo: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-plex-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 }
@@ -27,8 +27,8 @@
   --cr: #ff8eaa;
   --on-accent: #101820;
   --soft: #1b293c;
-  --mesh-base: 0.28;
-  --mesh-lit: 0.75;
+  --mesh-base: 0.11;
+  --mesh-lit: 0.34;
 }
 @theme inline {
   --color-ink: var(--ink);
@@ -1101,3 +1101,5 @@
 /* One transparent pointer field shared by every route, above the body paint. */
 body { isolation: isolate; }
 .site-web { position: fixed; inset: 0; z-index: -1; pointer-events: none; width: 100%; height: 100%; }
+
+.project-banner .project-stars { position: fixed; inset: 0; width: 100vw; height: 100dvh; z-index: -1; pointer-events: none; }
