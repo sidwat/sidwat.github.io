@@ -5,7 +5,7 @@ export const metadata: Metadata = { title: "Gallery" };
 
 export default function Page() {
   return (
-    <div className="mx-auto max-w-5xl px-6 pb-24 pt-20">
+    <div className="page-shell detail-page">
       <PageHeader
         label="Photographs"
         title="Gallery"

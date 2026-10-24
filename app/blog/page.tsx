@@ -16,7 +16,7 @@ export default async function Page() {
   const posts = await getAllPosts();
 
   return (
-    <div className="mx-auto max-w-5xl px-6 pb-24 pt-20">
+    <div className="page-shell detail-page">
       <PageHeader
         label={t("blog.index.label")}
         title={t("blog.index.title")}

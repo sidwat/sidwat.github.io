@@ -208,10 +208,11 @@ export default function MeshField() {
     };
 
     const kick = () => {
-      if (!raf && !motionQuery.matches) raf = requestAnimationFrame(frame);
+      if (!raf && !motionQuery.matches && !document.hidden && document.documentElement.dataset.motion !== "paused") raf = requestAnimationFrame(frame);
     };
 
     const onMove = (e: PointerEvent) => {
+      if (document.documentElement.dataset.motion === "paused" || motionQuery.matches || !window.matchMedia("(pointer: fine)").matches) return;
       pointer.x = e.clientX;
       pointer.y = e.clientY;
       pointer.on = true;
@@ -235,22 +236,29 @@ export default function MeshField() {
     draw();
 
     // Coarse pointers have no hover, so the field simply stays at rest.
-    const fine = window.matchMedia("(pointer: fine)");
-    if (fine.matches && !motionQuery.matches) {
-      window.addEventListener("pointermove", onMove, { passive: true });
-      document.addEventListener("pointerleave", onLeave);
-      window.addEventListener("blur", onLeave);
-    }
+    window.addEventListener("pointermove", onMove, { passive: true });
+    document.addEventListener("pointerleave", onLeave);
+    window.addEventListener("blur", onLeave);
+    const onPreference = () => {
+      if (raf) cancelAnimationFrame(raf);
+      raf = 0;
+      pointer.on = false;
+      if (motionQuery.matches) { cur = home.map(p => ({...p})); vel = home.map(() => ({x:0,y:0})); }
+      draw();
+      if (!document.hidden) kick();
+    };
+    motionQuery.addEventListener("change", onPreference);
+    document.addEventListener("visibilitychange", onPreference);
     window.addEventListener("resize", onResize);
 
     // The palette flips with the theme, and the mesh has to follow.
     const themeObserver = new MutationObserver(() => {
       readColours();
-      draw();
+      onPreference();
     });
     themeObserver.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ["data-theme"],
+      attributeFilter: ["data-theme", "data-motion"],
     });
 
     return () => {
@@ -260,6 +268,8 @@ export default function MeshField() {
       window.removeEventListener("blur", onLeave);
       window.removeEventListener("resize", onResize);
       themeObserver.disconnect();
+      motionQuery.removeEventListener("change", onPreference);
+      document.removeEventListener("visibilitychange", onPreference);
     };
   }, []);
 

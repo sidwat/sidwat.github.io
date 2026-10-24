@@ -1,0 +1,290 @@
+[
+  {
+    "route": "/",
+    "theme": "light",
+    "device": "desktop",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/experience/",
+    "theme": "light",
+    "device": "desktop",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/publications/",
+    "theme": "light",
+    "device": "desktop",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/projects/",
+    "theme": "light",
+    "device": "desktop",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/teaching/",
+    "theme": "light",
+    "device": "desktop",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/blog/",
+    "theme": "light",
+    "device": "desktop",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/contact/",
+    "theme": "light",
+    "device": "desktop",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/gallery/",
+    "theme": "light",
+    "device": "desktop",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/motion-studies/",
+    "theme": "light",
+    "device": "desktop",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/",
+    "theme": "light",
+    "device": "mobile",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/experience/",
+    "theme": "light",
+    "device": "mobile",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/publications/",
+    "theme": "light",
+    "device": "mobile",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/projects/",
+    "theme": "light",
+    "device": "mobile",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/teaching/",
+    "theme": "light",
+    "device": "mobile",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/blog/",
+    "theme": "light",
+    "device": "mobile",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/contact/",
+    "theme": "light",
+    "device": "mobile",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/gallery/",
+    "theme": "light",
+    "device": "mobile",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/motion-studies/",
+    "theme": "light",
+    "device": "mobile",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/",
+    "theme": "dark",
+    "device": "desktop",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/experience/",
+    "theme": "dark",
+    "device": "desktop",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/publications/",
+    "theme": "dark",
+    "device": "desktop",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/projects/",
+    "theme": "dark",
+    "device": "desktop",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/teaching/",
+    "theme": "dark",
+    "device": "desktop",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/blog/",
+    "theme": "dark",
+    "device": "desktop",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/contact/",
+    "theme": "dark",
+    "device": "desktop",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/gallery/",
+    "theme": "dark",
+    "device": "desktop",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/motion-studies/",
+    "theme": "dark",
+    "device": "desktop",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/",
+    "theme": "dark",
+    "device": "mobile",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/experience/",
+    "theme": "dark",
+    "device": "mobile",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/publications/",
+    "theme": "dark",
+    "device": "mobile",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/projects/",
+    "theme": "dark",
+    "device": "mobile",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/teaching/",
+    "theme": "dark",
+    "device": "mobile",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/blog/",
+    "theme": "dark",
+    "device": "mobile",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/contact/",
+    "theme": "dark",
+    "device": "mobile",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/gallery/",
+    "theme": "dark",
+    "device": "mobile",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  },
+  {
+    "route": "/motion-studies/",
+    "theme": "dark",
+    "device": "mobile",
+    "overflow": false,
+    "broken": 0,
+    "h1": 1
+  }
+]

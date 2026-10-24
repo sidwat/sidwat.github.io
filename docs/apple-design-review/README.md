@@ -1,6 +1,6 @@
 # Portfolio design review
 
-**Status:** visual proposals prepared; awaiting owner design approval. Production code is unchanged.
+**Status:** A approved and implemented with light/dark appearances. See [version 1](implementation/README.md) and the live local preview at http://127.0.0.1:4190/. The original proposal pictures below remain the historical design exploration.
 
 Start with `index.html` for the full review gallery or `comparison.html` for the three directions. `images/comparison.png` is the shareable comparison picture. Every concept includes desktop/mobile full-page PNGs for Home, Experience, Publications, Projects, Teaching, Blog, Article template, Contact, Gallery, 404, Editor entry, and an interaction-state sheet.
 
@@ -38,6 +38,6 @@ Requires the installed Playwright Chromium runtime. The generator reads current 
 
 ## Approval
 
-Choose A, B, C, or a specific combination. Confirm portrait emphasis and the fate of the terminal intro, mesh background, and wave interaction. Paired light/dark tokens and full interaction/accessibility checks follow after approval.
+A was selected. Version 1 preserves source content, adds light/dark modes, linked campus photographs, illustrative project imagery and motion demos. The next feedback decision is which animation treatment to retain.
 
-Base: `origin/master` at `37a59c6`. Branch: `codex/apple-design-review`. Commits in this phase contain only review artifacts. No production implementation or deployment has been authorized by design approval yet.
+Base: `origin/master` at `37a59c6`. Branch: `codex/apple-design-review`. The review commit contains proposals; the following implementation commit contains the approved A version. No merge or live deployment has been performed.

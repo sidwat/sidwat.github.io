@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "build:drafts": "BLOG_INCLUDE_DRAFTS=1 next build && node lib/blog/prune-export.mjs",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "build:webpack": "next build --webpack && node lib/blog/prune-export.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

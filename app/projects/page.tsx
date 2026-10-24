@@ -6,16 +6,16 @@ export const metadata: Metadata = { title: "Projects" };
 
 export default function Page() {
   return (
-    <div className="mx-auto max-w-5xl px-6 pb-24 pt-20">
+    <div className="page-shell detail-page">
       <PageHeader
         label="Selected work"
         title="Projects"
         intro="Codec research at Samsung, and autonomous systems before it."
       />
 
-      <div className="mt-12 border-t border-line">
-        {projects.map((project) => (
-          <section key={project.title} className="border-b border-line py-8">
+      <div className="project-grid mt-12">
+        {projects.map((project, index) => (
+          <section id={`project-${index + 1}`} key={project.title} className="project-panel">
             <h2 className="text-[1.375rem] leading-snug">{project.title}</h2>
             <p className="eyebrow mt-2">{project.affiliation}</p>
 

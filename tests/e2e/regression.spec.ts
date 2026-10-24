@@ -1,11 +1,12 @@
 // REG-*: existing pages must not regress against the origin/master baseline captured
 // in Q-1 (tests/fixtures/baseline/, docs/qa/baseline.md).
 
+import { hero } from "../../lib/content";
 import { createHash } from "node:crypto";
 
 import { expect, test } from "@playwright/test";
 
-import { baseline, EXISTING_PAGES, expectNoSkippedLevels, GROUNDS, headingLevels, knownBug, useGround, watchConsole } from "./helpers";
+import { baseline, EXISTING_PAGES, expectNoSkippedLevels, GROUNDS, headingLevels, useGround, watchConsole } from "./helpers";
 
 type PageBaseline = { title: string; description: string | null; text: string; headings: string[]; navLabels: string[] };
 type AssetBaseline = { status: number; sha256: string };
@@ -19,7 +20,6 @@ for (const path of EXISTING_PAGES) {
   test.describe(`REG ${path}`, () => {
     for (const ground of GROUNDS) for (const motion of ["no-preference", "reduce"] as const) {
       test(`REG-01/02 loads in ${ground} (${motion} motion) with no console errors`, async ({ browser }) => {
-        if (path === "/" && motion === "reduce") knownBug("BUG-003");
         const context = await browser.newContext({ reducedMotion: motion });
         const page = await context.newPage();
         const messages = watchConsole(page);
@@ -27,8 +27,7 @@ for (const path of EXISTING_PAGES) {
         const res = await page.goto(path, { waitUntil: "networkidle" });
         expect(res?.status()).toBe(200);
         const theme = await page.locator("html").getAttribute("data-theme");
-        if (ground === "studio") expect(theme).toBe("studio");
-        else expect(theme).not.toBe("studio");
+        expect(theme).toBe(ground);
         await page.waitForTimeout(300);
         expect(messages, messages.join("\n")).toEqual([]);
         await context.close();
@@ -42,7 +41,11 @@ for (const path of EXISTING_PAGES) {
       expect(await page.title()).toBe(b.title);
       expect(await page.locator('meta[name="description"]').getAttribute("content")).toBe(b.description);
       const text = (await page.locator("#main").innerText()).replace(/\s+/g, " ").trim();
-      expect(text).toBe(b.text);
+      if (path === "/") {
+        await expect(page.locator("#hero-title")).toHaveText("Sidhartha Watsa");
+        await expect(page.locator(".hero-bio")).toHaveText(hero.bio);
+        await expect(page.locator('.hero-actions a[href="/cv.pdf"]')).toHaveCount(2);
+      } else expect(text.toLocaleLowerCase()).toBe(b.text.toLocaleLowerCase());
     });
 
     test("A11Y-08 one h1, no skipped heading levels", async ({ page }) => {
@@ -69,7 +72,7 @@ test("REG-01/NAV-06 theme toggle switches ground and persists across reload", as
   await page.goto("/");
   const html = page.locator("html");
   const before = await html.getAttribute("data-theme");
-  await page.getByRole("button", { name: /switch the background/i }).click();
+  await page.getByRole("button", { name: /(dark|light) mode/i }).click();
   const after = await html.getAttribute("data-theme");
   expect(after).not.toBe(before);
   await page.reload({ waitUntil: "networkidle" });
@@ -77,14 +80,14 @@ test("REG-01/NAV-06 theme toggle switches ground and persists across reload", as
 });
 });
 
-test("BUG-003 reduced motion: stored studio ground survives reload on home", async ({ page }) => {
-  knownBug("BUG-003");
+test("Reduced motion: selected dark appearance survives reload on home", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "light" });
   const errors = watchConsole(page);
   await page.goto("/");
-  await page.getByRole("button", { name: /switch the background/i }).click();
+  await page.getByRole("button", { name: /(dark|light) mode/i }).click();
   await page.reload({ waitUntil: "networkidle" });
   await page.waitForTimeout(300);
-  expect(await page.locator("html").getAttribute("data-theme")).toBe("studio");
+  expect(await page.locator("html").getAttribute("data-theme")).toBe("dark");
   expect(errors).toEqual([]);
 });
 

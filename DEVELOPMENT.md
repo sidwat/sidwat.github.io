@@ -115,7 +115,26 @@ cannot be left out of the sitemap. The sitemap emits the trailing-slash form,
 matching `trailingSlash: true` — the unslashed form would point crawlers at a
 redirect.
 
-## Design system
+## Current design: Clarity
+
+The approved A design now uses system typography, light/dark semantic tokens in
+`app/globals.css`, grouped project/course cards, and a compact mobile menu.
+Original content remains in `lib/content.ts` and `lib/site.ts`. Theme preference
+is applied before first paint, migrates the former ink/studio choices, and is
+stored locally. `/motion-studies/` contains three animation demos; the homepage
+has a subtle margin-particle study and a pause control. Photography attribution
+is at `/image-credits/` and `public/media/ATTRIBUTION.md`.
+
+The implementation and verification report is
+`docs/apple-design-review/implementation/README.md`. Use `pnpm build` normally;
+`pnpm run build:webpack` runs the same export/prune pipeline when an environment
+cannot run Turbopack's worker process. The active design branch is
+`codex/apple-design-review`, based on `master`.
+
+## Original design system (historical)
+
+The following palette/hero notes describe the earlier design, retained for context.
+
 
 Every choice derives from video coding rather than from generic portfolio
 styling. If you change one, change it knowing what it was for.

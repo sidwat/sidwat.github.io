@@ -5,12 +5,12 @@ import { shellCopy, site, socials } from "@/lib/site";
 // a coarse pointer. Below sm the contact column sits under the socials and is
 // left-aligned; from sm it is right-aligned.
 const hit =
-  "flex items-center justify-start min-h-7 pointer-coarse:min-h-11 sm:justify-end";
+  "flex items-center justify-start min-h-11 sm:justify-end";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-line">
-      <div className="mx-auto flex max-w-5xl flex-wrap items-end justify-between gap-8 px-6 py-14">
+    <footer className="site-footer">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-end justify-between gap-8 px-6 py-14">
         <div>
           <p className="eyebrow">{shellCopy["footer.elsewhere"]}</p>
           <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2">
@@ -27,6 +27,7 @@ export default function Footer() {
               </li>
             ))}
           </ul>
+          <Link href="/motion-studies/" className="quiet-link mt-4 text-sm">Motion studies <span aria-hidden="true">↗</span></Link>
         </div>
 
         <div className="text-left sm:text-right">

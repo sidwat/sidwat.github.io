@@ -17,7 +17,7 @@ export const STUB_PATTERN = "https://contact-stub.qa.invalid/**";
 
 /** Pages that exist on origin/master and must not regress (REG-*). */
 export const EXISTING_PAGES = ["/", "/experience/", "/publications/", "/projects/", "/teaching/", "/gallery/"] as const;
-export const GROUNDS = ["ink", "studio"] as const;
+export const GROUNDS = ["light", "dark"] as const;
 export type Ground = (typeof GROUNDS)[number];
 
 function outFile(rel: string): string | undefined {
@@ -52,7 +52,7 @@ export function onlyOn(...builds: string[]) {
 export async function useGround(page: Page, ground: Ground) {
   await page.addInitScript((g) => {
     try {
-      localStorage.setItem("theme", g === "studio" ? "studio" : "plate");
+      localStorage.setItem("theme", g);
     } catch {
       /* storage blocked */
     }
