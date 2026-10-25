@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import MeshField from "@/components/MeshField";
+import CosmicBackground from "@/components/CosmicBackground";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { site } from "@/lib/site";
@@ -40,7 +40,7 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-        <MeshField />
+        <CosmicBackground />
         <Nav />
         <main id="main" tabIndex={-1}>{children}</main>
         <Footer />

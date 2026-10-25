@@ -78,7 +78,7 @@ test("Stars gather from the viewport and the assembled word yields to the pointe
   await page.clock.runFor(1200);
   expect(await ink()).toBeLessThan(assembled*.8);
   // Actual text lines remain clear in both independent background canvases.
-  for(const field of [canvas,page.locator(".site-web")]){
+  for(const field of [canvas,page.locator(".cosmic-background")]){
     expect(await field.evaluate((el:HTMLCanvasElement)=>{
       const range=document.createRange();range.selectNodeContents(document.querySelector("h1")!);
       const ctx=el.getContext("2d")!,scale=el.width/innerWidth;
