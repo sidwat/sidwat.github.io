@@ -116,7 +116,14 @@ export default function ProjectStars({label, name = false, accent = "ice"}:{labe
       mouse.vx=Math.max(-160,Math.min(160,(e.clientX-mouse.x)*5));mouse.vy=Math.max(-160,Math.min(160,(e.clientY-mouse.y)*5));mouse.x=e.clientX;mouse.y=e.clientY;
     }
     function leave(){mouse.x=mouse.y=-9999;mouse.vx=mouse.vy=0;}
-    function scroll(){geometry();if(paused()||reduced.matches)draw(0);}
+    function scroll(){
+      const previous=center;
+      geometry();
+      const dx=center.x-previous.x,dy=center.y-previous.y;
+      // Keep positions in the heading's document space, with no spring lag on scroll.
+      for(const star of stars){star.x+=dx;star.y+=dy;star.homeX+=dx;star.homeY+=dy;}
+      draw(0);
+    }
     if(name) anchor.dataset.particleReady="true";
     makeWord();dark=document.documentElement.dataset.theme==="dark";resize();start();
     const observer=new MutationObserver(preference);observer.observe(document.documentElement,{attributes:true,attributeFilter:["data-theme","data-motion"]});

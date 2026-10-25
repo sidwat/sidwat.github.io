@@ -53,3 +53,28 @@ test("Home name gathers into a semantic heading, with static reduced-motion fall
   await expect(page.locator(".name-stars")).toBeHidden();
   await expect(page.locator(".hero-name-fallback")).toHaveCSS("opacity","1");
 });
+
+
+test("Formed Home name stays anchored to its heading while scrolling",async({page})=>{
+  await page.setViewportSize({width:1440,height:1000});
+  await page.clock.install();
+  await page.goto("/");
+  await page.clock.runFor(11000);
+  const read=()=>page.locator(".name-stars").evaluate((canvas:HTMLCanvasElement)=>{
+    const r=document.querySelector("h1")!.getBoundingClientRect(),scale=canvas.width/innerWidth;
+    const data=canvas.getContext("2d")!.getImageData(Math.round(r.x*scale),Math.round(r.y*scale),Math.round(r.width*scale),Math.round(r.height*scale)).data;
+    let mass=0;for(let i=3;i<data.length;i+=4)mass+=data[i];return {top:r.top,mass};
+  });
+  const before=await read();
+  await page.evaluate(()=>scrollTo(0,150));
+  await expect.poll(async()=>{await page.clock.runFor(16);return (await read()).mass/before.mass;},{intervals:[16,32,50],timeout:1000}).toBeGreaterThan(.9);
+  const after=await read();
+  expect(before.top-after.top).toBe(150);
+  expect(after.mass/before.mass).toBeGreaterThan(.9);
+  expect(after.mass/before.mass).toBeLessThan(1.1);
+  await page.evaluate(()=>scrollTo(0,0));
+  await expect.poll(async()=>{await page.clock.runFor(16);return (await read()).mass/before.mass;},{intervals:[16,32,50],timeout:1000}).toBeGreaterThan(.9);
+  const returned=await read();
+  expect(returned.top).toBe(before.top);
+  expect(returned.mass/before.mass).toBeGreaterThan(.9);
+});
