@@ -80,6 +80,13 @@ export default function CosmicBackground(){
     function draw(dt:number){
       ctx!.clearRect(0,0,width,height);
       ctx!.lineCap="butt";
+      // Haze stays at the outer edges; no animated wash behind the content.
+      for(const [x,y,rgb] of [[-width*.13,height*.28,"68,106,157"],[width*1.13,height*.76,"119,82,143"]] as const){
+        const radius=Math.max(width*.43,220);
+        const haze=ctx!.createRadialGradient(x,y,0,x,y,radius);
+        haze.addColorStop(0,`rgba(${rgb},${dark?.095:.045})`);haze.addColorStop(1,`rgba(${rgb},0)`);
+        ctx!.fillStyle=haze;ctx!.fillRect(0,0,width,height);
+      }
       for(const s of stars){
         if(dt)integrate(s,dt);
         const rgb=dark?(s.tone<.12?"226,207,180":s.tone>.85?"162,195,232":"223,232,244"):"64,88,124";
@@ -128,7 +135,18 @@ export default function CosmicBackground(){
         shade.addColorStop(0,palette[0]);shade.addColorStop(.48,palette[1]);shade.addColorStop(1,palette[2]);
         ctx!.globalAlpha=dark?.65:.42;
         if(p.tone===1){ctx!.strokeStyle=palette[0];ctx!.lineWidth=1.5;ctx!.beginPath();ctx!.ellipse(0,0,p.radius*1.85,p.radius*.35,-.35,0,Math.PI*2);ctx!.stroke();}
-        ctx!.fillStyle=shade;ctx!.beginPath();ctx!.arc(0,0,p.radius,0,Math.PI*2);ctx!.fill();ctx!.restore();
+        ctx!.fillStyle=shade;ctx!.beginPath();ctx!.arc(0,0,p.radius,0,Math.PI*2);ctx!.fill();
+        ctx!.save();ctx!.clip();
+        // Surface marks rotate on a sphere; the night-side marks disappear over the limb.
+        for(let j=0;j<9;j++){
+          const latitude=Math.sin(j*2.4)*.85,longitude=j*2.399+time*.075+p.phase;
+          const depth=Math.cos(latitude)*Math.cos(longitude);
+          if(depth<=0)continue;
+          const x=p.radius*Math.cos(latitude)*Math.sin(longitude),y=p.radius*Math.sin(latitude);
+          ctx!.fillStyle=j%2?"rgba(235,238,247,.12)":"rgba(12,20,34,.16)";
+          ctx!.beginPath();ctx!.ellipse(x,y,p.radius*.16*depth,p.radius*.075,0,0,Math.PI*2);ctx!.fill();
+        }
+        ctx!.restore();ctx!.restore();
       }
       clearContent(ctx!,boxes);
     }

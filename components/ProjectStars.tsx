@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import type { Project } from "@/lib/content";
 import { clearContent, textClearances } from "@/lib/ambient-space";
 
 type Star = { x:number; y:number; homeX:number; homeY:number; vx:number; vy:number; phase:number; size:number; tone:number; target:number };
 const smooth = (v:number) => { const x=Math.max(0,Math.min(1,v)); return x*x*(3-2*x); };
 
 /** A viewport-wide, damped particle simulation. The banner is only its word anchor. */
-export default function ProjectStars({label, name = false}:{label:string; name?:boolean}) {
+export default function ProjectStars({label, name = false, accent = "ice"}:{label:string; name?:boolean; accent?:Project["accent"]}) {
   const ref=useRef<HTMLCanvasElement>(null);
   useEffect(()=>{
     const canvas=ref.current;
@@ -57,6 +58,7 @@ export default function ProjectStars({label, name = false}:{label:string; name?:
       // Drift 0–4s; gather over 8s; hold 7s; release over 5s. No reset or teleport.
       const cycle=time%30;
       const gather=reduced.matches?1:name?smooth((time-.5)/5):smooth((cycle-4)/8)*(1-smooth((cycle-19)/5));
+      const accents={ice:dark?"163,194,232":"56,85,125",teal:dark?"141,214,202":"35,112,105",violet:dark?"192,171,232":"103,76,149",amber:dark?"229,199,149":"135,99,44",rose:dark?"229,169,181":"144,70,89",silver:dark?"203,217,233":"83,101,122"};
       for(let i=0;i<stars.length;i++){
         const s=stars[i],t=targets[s.target]||{x:0,y:0};
         // A small distant population remains in space when the foreground forms the word.
@@ -85,7 +87,8 @@ export default function ProjectStars({label, name = false}:{label:string; name?:
         }
         const twinkle=.82+.18*Math.sin(time*.7+s.phase);
         const alpha=(joins?.25+g*.58:.18)*twinkle;
-        const rgb=dark?(s.tone<.12?"218,203,180":s.tone>.86?"163,194,232":"222,231,242"):(s.tone<.12?"122,100,73":"56,85,125");
+
+        const rgb=s.tone>.55?accents[accent]:dark?(s.tone<.12?"218,203,180":"222,231,242"):(s.tone<.12?"122,100,73":"56,85,125");
         // Rare bright stars have a soft halo and fine diffraction rays; most remain pinpoints.
         if(s.size>1.5){
           const halo=ctx!.createRadialGradient(s.x,s.y,0,s.x,s.y,7);
@@ -120,6 +123,6 @@ export default function ProjectStars({label, name = false}:{label:string; name?:
     window.addEventListener("pointermove",move,{passive:true});window.addEventListener("blur",leave);document.addEventListener("pointerleave",leave);
     window.addEventListener("resize",resize);window.addEventListener("scroll",scroll,{passive:true});document.addEventListener("visibilitychange",preference);reduced.addEventListener("change",preference);
     return()=>{if(name)delete anchor.dataset.particleReady;stop();observer.disconnect();window.removeEventListener("pointermove",move);window.removeEventListener("blur",leave);document.removeEventListener("pointerleave",leave);window.removeEventListener("resize",resize);window.removeEventListener("scroll",scroll);document.removeEventListener("visibilitychange",preference);reduced.removeEventListener("change",preference);};
-  },[label,name]);
-  return <canvas ref={ref} className={name?"name-stars":"project-stars"} data-particle-label={label} aria-hidden="true"/>;
+  },[label,name,accent]);
+  return <canvas ref={ref} className={name?"name-stars":"project-stars"} data-particle-label={label} data-particle-accent={accent} aria-hidden="true"/>;
 }

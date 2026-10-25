@@ -15,6 +15,7 @@ for (const theme of ["light", "dark"]) {
         await expect(page.locator("h1")).toHaveText(project.title);
         await expect(page.locator(".project-details li")).toHaveText(project.points);
         await expect(page.locator(".project-banner canvas")).toHaveAttribute("data-particle-label", project.symbol);
+        await expect(page.locator(".project-banner canvas")).toHaveAttribute("data-particle-accent", project.accent);
         expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
         expect(sitemap).toContain(`/projects/${project.slug}/`);
       }

@@ -17,7 +17,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   if (!project) notFound();
   return <article className="page-shell detail-page project-detail">
     <Link href="/projects/" className="quiet-link">← All projects</Link>
-    <div className="project-banner" aria-hidden="true"><ProjectStars label={project.symbol} /></div>
+    <div className="project-banner" aria-hidden="true"><ProjectStars label={project.symbol} accent={project.accent} /></div>
     <header className="page-heading"><p className="eyebrow">{project.affiliation}</p><h1 className="display mt-4">{project.title}</h1></header>
     <ul className="project-details">{project.points.map(point => <li key={point}>{point}</li>)}</ul>
   </article>;
