@@ -18,20 +18,38 @@ for(const theme of ["light","dark"]){
   });
 }
 
-test("Sky persists through client navigation and respects pause and Reduced Motion",async({page})=>{
+test("Sky persists through client navigation and respects Reduced Motion",async({page})=>{
   await page.goto("/");
   await page.locator(".cosmic-background").evaluate(c=>c.setAttribute("data-instance-check","original"));
   await page.locator('.project-ticket').first().click();
   const sky=page.locator(".cosmic-background");
   await expect(sky).toHaveAttribute("data-instance-check","original");
-  await page.getByRole("button",{name:"Pause background",exact:true}).click();
-  const paused=await sky.evaluate((c:HTMLCanvasElement)=>c.toDataURL());
-  await page.waitForTimeout(150);
-  expect(await sky.evaluate((c:HTMLCanvasElement)=>c.toDataURL())).toBe(paused);
-  await page.getByRole("button",{name:"Play background",exact:true}).click();
+  await expect(page.getByRole("button",{name:"Pause background",exact:true})).toHaveCount(0);
   await page.emulateMedia({reducedMotion:"reduce"});
   await page.waitForTimeout(100);
   const reduced=await sky.evaluate((c:HTMLCanvasElement)=>c.toDataURL());
   await page.mouse.move(600,300);await page.waitForTimeout(150);
   expect(await sky.evaluate((c:HTMLCanvasElement)=>c.toDataURL())).toBe(reduced);
+});
+
+
+test("Home name gathers into a semantic heading, with static reduced-motion fallback",async({page})=>{
+  await page.clock.install();
+  await page.goto("/");
+  await expect(page.locator("h1")).toHaveText("Sidhartha Watsa");
+  await expect(page.locator(".name-stars")).toHaveAttribute("data-particle-label","Sidhartha Watsa");
+  await expect(page.locator("#hero-title")).toHaveAttribute("data-particle-ready","true");
+  const rect=await page.locator("h1").boundingBox();
+  const ink=()=>page.locator(".name-stars").evaluate((c:HTMLCanvasElement,r)=>{
+    const dpr=c.width/innerWidth;
+    const pixels=c.getContext("2d")!.getImageData(Math.round(r!.x*dpr),Math.round(r!.y*dpr),Math.round(r!.width*dpr),Math.round(r!.height*dpr)).data;
+    let sum=0;for(let i=3;i<pixels.length;i+=4)sum+=pixels[i];return sum;
+  },rect);
+  const initial=await ink();
+  await page.clock.runFor(8500);
+  expect(await ink()).toBeGreaterThan(initial*2);
+  await expect(page.getByRole("button",{name:"Pause background",exact:true})).toHaveCount(0);
+  await page.emulateMedia({reducedMotion:"reduce"});
+  await expect(page.locator(".name-stars")).toBeHidden();
+  await expect(page.locator(".hero-name-fallback")).toHaveCSS("opacity","1");
 });

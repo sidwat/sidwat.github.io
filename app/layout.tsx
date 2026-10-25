@@ -31,7 +31,7 @@ export default function RootLayout({
         {/* Apply appearance before first paint; migrate the former ink/studio preference. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){var t;try{if(localStorage.getItem("motion")==="paused")document.documentElement.dataset.motion="paused";t=localStorage.getItem("theme");if(t==="studio")t="light";if(t==="plate"||t==="ink")t="dark";if(t==="light"||t==="dark")localStorage.setItem("theme",t)}catch(e){}document.documentElement.dataset.theme=t==="light"||t==="dark"?t:matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"})()`,
+            __html: `(function(){var t;try{t=localStorage.getItem("theme");if(t==="studio")t="light";if(t==="plate"||t==="ink")t="dark";if(t==="light"||t==="dark")localStorage.setItem("theme",t)}catch(e){}document.documentElement.dataset.theme=t==="light"||t==="dark"?t:matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"})()`,
           }}
         />
         <a

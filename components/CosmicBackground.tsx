@@ -3,6 +3,8 @@
 import { useEffect, useRef } from "react";
 import { clearContent, textClearances } from "@/lib/ambient-space";
 
+type Meteor = {x:number;y:number;vx:number;vy:number;age:number;life:number;trail:{x:number;y:number}[]};
+
 type Body = {x:number;y:number;vx:number;vy:number;homeX:number;homeY:number;phase:number;radius:number;tone:number};
 
 /** Persistent ambient sky. Separate from project-name formation. */
@@ -16,6 +18,7 @@ export default function CosmicBackground(){
     let width=0,height=0,time=0,last=0,raf=0,dark=false;
     let stars:Body[]=[],planets:Body[]=[];
     let boxes=textClearances();
+    let meteors:Meteor[]=[],nextMeteor=3+Math.random()*4;
     const pointer={x:-9999,y:-9999,vx:0,vy:0};
     const paused=()=>document.documentElement.dataset.motion==="paused";
     const free=(x:number,y:number,r:number)=>!boxes.some(b=>x+r>b.x&&x-r<b.x+b.w&&y+r>b.y&&y-r<b.y+b.h);
@@ -76,6 +79,7 @@ export default function CosmicBackground(){
     }
     function draw(dt:number){
       ctx!.clearRect(0,0,width,height);
+      ctx!.lineCap="butt";
       for(const s of stars){
         if(dt)integrate(s,dt);
         const rgb=dark?(s.tone<.12?"226,207,180":s.tone>.85?"162,195,232":"223,232,244"):"64,88,124";
@@ -85,6 +89,33 @@ export default function CosmicBackground(){
           ctx!.fillStyle=glow;ctx!.fillRect(s.x-6,s.y-6,12,12);
         }
         ctx!.fillStyle=`rgba(${rgb},${alpha})`;ctx!.beginPath();ctx!.arc(s.x,s.y,s.radius,0,Math.PI*2);ctx!.fill();
+      }
+      if(dt>0){
+        nextMeteor-=dt;
+        if(nextMeteor<=0){
+          nextMeteor=7+Math.random()*9;
+          const x=width*(.08+Math.random()*.7),y=height*(.05+Math.random()*.22);
+          if(free(x,y,12))meteors.push({x,y,vx:110+Math.random()*100,vy:35+Math.random()*55,age:0,life:2.5+Math.random()*1.5,trail:[]});
+        }
+        for(const m of meteors){
+          m.age+=dt;
+          const dx=m.x-pointer.x,dy=m.y-pointer.y,d=Math.hypot(dx,dy);
+          if(d>0.1&&d<180){const force=(1-d/180)**2*320;m.vx+=dx/d*force*dt;m.vy+=dy/d*force*dt;}
+          m.vy+=12*dt; // Slight gravity curves the descent; pointer forces bend the same trajectory.
+          m.x+=m.vx*dt;m.y+=m.vy*dt;
+          m.trail.push({x:m.x,y:m.y});if(m.trail.length>19)m.trail.shift();
+        }
+        meteors=meteors.filter(m=>m.age<m.life&&m.x<width+100&&m.y<height+100);
+      }
+      for(const m of meteors){
+        const fade=Math.min(1,m.age/.25)*Math.min(1,(m.life-m.age)/.6);
+        const rgb=dark?"208,226,250":"76,107,150";
+        ctx!.lineCap="round";
+        for(let i=1;i<m.trail.length;i++){
+          ctx!.strokeStyle=`rgba(${rgb},${fade*(i/m.trail.length)**2*.5})`;ctx!.lineWidth=.3+i/m.trail.length;
+          ctx!.beginPath();ctx!.moveTo(m.trail[i-1].x,m.trail[i-1].y);ctx!.lineTo(m.trail[i].x,m.trail[i].y);ctx!.stroke();
+        }
+        ctx!.fillStyle=`rgba(${rgb},${fade*.8})`;ctx!.beginPath();ctx!.arc(m.x,m.y,1.25,0,Math.PI*2);ctx!.fill();
       }
       for(const p of planets){
         if(dt)integrate(p,dt,true);

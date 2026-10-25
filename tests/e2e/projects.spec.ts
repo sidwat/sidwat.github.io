@@ -34,13 +34,10 @@ test("Project tickets use individual destinations and one keyboard stop each", a
   await expect(page).toHaveURL(/\/projects\/$/);
 });
 
-test("Particle banner pauses and respects Reduced Motion for long titles", async ({ page }) => {
+test("Particle banner respects Reduced Motion for long titles", async ({ page }) => {
   await page.goto("/projects/robomaster/", { waitUntil: "networkidle" });
   const canvas = page.locator(".project-banner canvas");
-  await page.getByRole("button", { name: "Pause background", exact: true }).click();
-  const paused = await canvas.evaluate((c: HTMLCanvasElement) => c.toDataURL());
-  await page.waitForTimeout(200);
-  expect(await canvas.evaluate((c: HTMLCanvasElement) => c.toDataURL())).toBe(paused);
+  await expect(page.getByRole("button", { name: "Pause background", exact: true })).toHaveCount(0);
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.waitForTimeout(100);
   const reduced = await canvas.evaluate((c: HTMLCanvasElement) => c.toDataURL());

@@ -7,7 +7,7 @@ type Star = { x:number; y:number; homeX:number; homeY:number; vx:number; vy:numb
 const smooth = (v:number) => { const x=Math.max(0,Math.min(1,v)); return x*x*(3-2*x); };
 
 /** A viewport-wide, damped particle simulation. The banner is only its word anchor. */
-export default function ProjectStars({label}:{label:string}) {
+export default function ProjectStars({label, name = false}:{label:string; name?:boolean}) {
   const ref=useRef<HTMLCanvasElement>(null);
   useEffect(()=>{
     const canvas=ref.current;
@@ -20,11 +20,11 @@ export default function ProjectStars({label}:{label:string}) {
     let width=0,height=0,raf=0,last=0,time=0,dark=false;
     let stars:Star[]=[];
     let targets:{x:number;y:number}[]=[];
-    let boxes=textClearances();
+    let boxes=textClearances(name ? "#hero-title" : "");
     let center={x:0,y:0}, wordWidth=0;
     const mouse={x:-9999,y:-9999,vx:0,vy:0};
     function geometry(){
-      boxes=textClearances();
+      boxes=textClearances(name ? "#hero-title" : "");
       const r=anchor!.getBoundingClientRect();
       center={x:r.left+r.width/2,y:r.top+r.height/2};
       wordWidth=Math.min(r.width-32,900);
@@ -48,15 +48,15 @@ export default function ProjectStars({label}:{label:string}) {
       canvas!.width=Math.round(width*dpr);canvas!.height=Math.round(height*dpr);
       ctx!.setTransform(dpr,0,0,dpr,0,0);
       geometry();
-      const count=width<600?480:850;
-      stars=Array.from({length:count},(_,i)=>({x:Math.random()*width,y:Math.random()*height,homeX:Math.random()*width,homeY:Math.random()*height,vx:(Math.random()-.5)*12,vy:(Math.random()-.5)*12,phase:Math.random()*Math.PI*2,size:Math.random()<.025?1.6:.35+Math.random()*.65,tone:Math.random(),target:Math.floor(i/count*targets.length)}));
+      const count=name ? (width<600?1100:2200) : (width<600?480:850);
+      stars=Array.from({length:count},(_,i)=>({x:Math.random()*width,y:Math.random()*height,homeX:Math.random()*width,homeY:Math.random()*height,vx:(Math.random()-.5)*12,vy:(Math.random()-.5)*12,phase:Math.random()*Math.PI*2,size:Math.random()<(name?.005:.025)?1.6:(name?.55:.35)+Math.random()*.65,tone:Math.random(),target:Math.floor(i/count*targets.length)}));
       draw(0);
     }
     function draw(dt:number){
       ctx!.clearRect(0,0,width,height);
       // Drift 0–4s; gather over 8s; hold 7s; release over 5s. No reset or teleport.
       const cycle=time%30;
-      const gather=reduced.matches?1:smooth((cycle-4)/8)*(1-smooth((cycle-19)/5));
+      const gather=reduced.matches?1:name?smooth((time-.5)/5):smooth((cycle-4)/8)*(1-smooth((cycle-19)/5));
       for(let i=0;i<stars.length;i++){
         const s=stars[i],t=targets[s.target]||{x:0,y:0};
         // A small distant population remains in space when the foreground forms the word.
@@ -67,15 +67,15 @@ export default function ProjectStars({label}:{label:string}) {
         else if(dt>0){
           const dx=s.x-mouse.x,dy=s.y-mouse.y;
           const distance=Math.hypot(dx,dy);
-          let ax=(Math.sin(time*.23+s.phase)*2.4+(s.homeX-s.x)*.18)*(1-g)+(tx-s.x)*g*1.8;
-          let ay=(Math.cos(time*.19+s.phase*1.7)*2.4+(s.homeY-s.y)*.18)*(1-g)+(ty-s.y)*g*1.8;
+          let ax=(Math.sin(time*.23+s.phase)*2.4+(s.homeX-s.x)*.18)*(1-g)+(tx-s.x)*g*(name?7:1.8);
+          let ay=(Math.cos(time*.19+s.phase*1.7)*2.4+(s.homeY-s.y)*.18)*(1-g)+(ty-s.y)*g*(name?7:1.8);
           // Soft repulsion plus a small tangential wake, always active, including the word.
           if(distance<150&&distance>.1){
             const force=(1-distance/150)**2;
             ax+=(dx/distance*520-dy/distance*80+mouse.vx*.3)*force;
             ay+=(dy/distance*520+dx/distance*80+mouse.vy*.3)*force;
           }
-          const drag=Math.exp(-(0.22+g*2.8)*dt);
+          const drag=Math.exp(-(0.22+g*(name?5.1:2.8))*dt);
           s.vx=(s.vx+ax*dt)*drag;s.vy=(s.vy+ay*dt)*drag;
           const speed=Math.hypot(s.vx,s.vy);if(speed>180){s.vx*=180/speed;s.vy*=180/speed;}
           s.x+=s.vx*dt;s.y+=s.vy*dt;
@@ -114,11 +114,12 @@ export default function ProjectStars({label}:{label:string}) {
     }
     function leave(){mouse.x=mouse.y=-9999;mouse.vx=mouse.vy=0;}
     function scroll(){geometry();if(paused()||reduced.matches)draw(0);}
+    if(name) anchor.dataset.particleReady="true";
     makeWord();dark=document.documentElement.dataset.theme==="dark";resize();start();
     const observer=new MutationObserver(preference);observer.observe(document.documentElement,{attributes:true,attributeFilter:["data-theme","data-motion"]});
     window.addEventListener("pointermove",move,{passive:true});window.addEventListener("blur",leave);document.addEventListener("pointerleave",leave);
     window.addEventListener("resize",resize);window.addEventListener("scroll",scroll,{passive:true});document.addEventListener("visibilitychange",preference);reduced.addEventListener("change",preference);
-    return()=>{stop();observer.disconnect();window.removeEventListener("pointermove",move);window.removeEventListener("blur",leave);document.removeEventListener("pointerleave",leave);window.removeEventListener("resize",resize);window.removeEventListener("scroll",scroll);document.removeEventListener("visibilitychange",preference);reduced.removeEventListener("change",preference);};
-  },[label]);
-  return <canvas ref={ref} className="project-stars" data-particle-label={label} aria-hidden="true"/>;
+    return()=>{if(name)delete anchor.dataset.particleReady;stop();observer.disconnect();window.removeEventListener("pointermove",move);window.removeEventListener("blur",leave);document.removeEventListener("pointerleave",leave);window.removeEventListener("resize",resize);window.removeEventListener("scroll",scroll);document.removeEventListener("visibilitychange",preference);reduced.removeEventListener("change",preference);};
+  },[label,name]);
+  return <canvas ref={ref} className={name?"name-stars":"project-stars"} data-particle-label={label} aria-hidden="true"/>;
 }

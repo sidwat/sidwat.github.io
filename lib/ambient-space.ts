@@ -1,10 +1,11 @@
 /** Cache actual text line rectangles, rather than blocking entire content columns. */
-export function textClearances() {
+export function textClearances(ignoreSelector = "") {
   const boxes: { x: number; y: number; w: number; h: number }[] = [];
   const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
   while (walker.nextNode()) {
     const node = walker.currentNode;
     if (!node.textContent?.trim() || node.parentElement?.closest('script,style,[aria-hidden="true"]')) continue;
+    if (ignoreSelector && node.parentElement?.closest(ignoreSelector)) continue;
     const range = document.createRange();
     range.selectNodeContents(node);
     for (const r of range.getClientRects()) {
