@@ -80,13 +80,6 @@ export default function CosmicBackground(){
     function draw(dt:number){
       ctx!.clearRect(0,0,width,height);
       ctx!.lineCap="butt";
-      // Haze stays at the outer edges; no animated wash behind the content.
-      for(const [x,y,rgb] of [[-width*.13,height*.28,"68,106,157"],[width*1.13,height*.76,"119,82,143"]] as const){
-        const radius=Math.max(width*.43,220);
-        const haze=ctx!.createRadialGradient(x,y,0,x,y,radius);
-        haze.addColorStop(0,`rgba(${rgb},${dark?.095:.045})`);haze.addColorStop(1,`rgba(${rgb},0)`);
-        ctx!.fillStyle=haze;ctx!.fillRect(0,0,width,height);
-      }
       for(const s of stars){
         if(dt)integrate(s,dt);
         const rgb=dark?(s.tone<.12?"226,207,180":s.tone>.85?"162,195,232":"223,232,244"):"64,88,124";
@@ -149,6 +142,7 @@ export default function CosmicBackground(){
         ctx!.restore();ctx!.restore();
       }
       clearContent(ctx!,boxes);
+
     }
     function frame(now:number){
       raf=0;if(document.hidden||paused()||reduced.matches)return;
@@ -174,5 +168,5 @@ export default function CosmicBackground(){
     window.addEventListener("resize",resize);window.addEventListener("scroll",refresh,{passive:true});document.addEventListener("visibilitychange",preference);reduced.addEventListener("change",preference);
     return()=>{stop();theme.disconnect();content.disconnect();layout.disconnect();window.removeEventListener("pointermove",move);window.removeEventListener("blur",leave);document.removeEventListener("pointerleave",leave);window.removeEventListener("resize",resize);window.removeEventListener("scroll",refresh);document.removeEventListener("visibilitychange",preference);reduced.removeEventListener("change",preference);};
   },[]);
-  return <canvas ref={ref} className="cosmic-background" data-testid="cosmic-background" aria-hidden="true"/>;
+  return <><div className="cosmic-haze" aria-hidden="true"/><canvas ref={ref} className="cosmic-background" data-testid="cosmic-background" aria-hidden="true"/></>;
 }

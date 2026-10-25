@@ -1112,3 +1112,7 @@ body { isolation: isolate; }
 }
 @media (prefers-reduced-motion: reduce) { .name-stars { display: none; } }
 .project-banner + .page-heading { margin-top: 2rem; }
+
+/* Static haze is below the sky so text clearances never leave rectangular seams. */
+.cosmic-haze { position: fixed; inset: 0; z-index: -2; pointer-events: none; background: radial-gradient(circle max(43vw,220px) at -13% 28%,rgba(68,106,157,.045),transparent),radial-gradient(circle max(43vw,220px) at 113% 76%,rgba(119,82,143,.045),transparent); }
+[data-theme="dark"] .cosmic-haze { background: radial-gradient(circle max(43vw,220px) at -13% 28%,rgba(68,106,157,.095),transparent),radial-gradient(circle max(43vw,220px) at 113% 76%,rgba(119,82,143,.095),transparent); }
