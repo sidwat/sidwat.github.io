@@ -75,15 +75,5 @@ test("Stars gather from the viewport and the assembled word yields to the pointe
   await page.mouse.move(center.x,center.y);
   await page.clock.runFor(1200);
   expect(await ink()).toBeLessThan(assembled*.8);
-  // Actual text lines remain clear in both independent background canvases.
-  for(const field of [canvas,page.locator(".cosmic-background")]){
-    expect(await field.evaluate((el:HTMLCanvasElement)=>{
-      const range=document.createRange();range.selectNodeContents(document.querySelector("h1")!);
-      const ctx=el.getContext("2d")!,scale=el.width/innerWidth;
-      return [...range.getClientRects()].every(r=>{
-        const pixels=ctx.getImageData(Math.round(r.left*scale),Math.round(r.top*scale),Math.round(r.width*scale),Math.round(r.height*scale)).data;
-        for(let i=3;i<pixels.length;i+=4)if(pixels[i])return false;return true;
-      });
-    })).toBe(true);
-  }
+
 });

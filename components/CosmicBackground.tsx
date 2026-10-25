@@ -119,8 +119,7 @@ export default function CosmicBackground(){
       }
       for(const p of planets){
         if(dt)integrate(p,dt,true);
-        // Hide a planet while its safe position changes after scrolling/navigation.
-        if(!free(p.x,p.y,p.radius+5))continue;
+        // Steering moves planets toward open space without popping the entire sphere out.
         ctx!.save();ctx!.translate(p.x,p.y);
         const colors=dark?[['#8eafc1','#344f68','#101722'],['#c4b08f','#776751','#201d19'],['#aaa2be','#554d71','#181622']]:[['#adc7d7','#7297ad','#465f76'],['#d8c5a8','#ac9470','#75664f'],['#c7bed9','#9c8cb9','#6f608b']];
         const palette=colors[p.tone];
