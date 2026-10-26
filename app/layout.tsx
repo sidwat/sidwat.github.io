@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import MeshField from "@/components/MeshField";
+import { usesGalacticTheme, visualTheme } from "@/lib/visual-theme";
 import CosmicBackground from "@/components/CosmicBackground";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -25,6 +27,7 @@ export default function RootLayout({
     // markup deliberately does not match. Nothing else on <html> is dynamic.
     <html
       lang="en"
+      data-visual-theme={visualTheme}
       suppressHydrationWarning
     >
       <body className="min-h-dvh bg-ink">
@@ -40,7 +43,7 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-        <CosmicBackground />
+        {usesGalacticTheme() ? <CosmicBackground /> : <MeshField />}
         <Nav />
         <main id="main" tabIndex={-1}>{children}</main>
         <Footer />

@@ -1,4 +1,6 @@
 import { expect, test } from "@playwright/test";
+import { usesGalacticTheme } from "../../lib/visual-theme";
+test.skip(!usesGalacticTheme(), "Galactic preset is saved but inactive");
 
 for(const theme of ["light","dark"]){
   test(`Shared sky in ${theme}: all routes, no web, and no layout overflow`,async({page})=>{

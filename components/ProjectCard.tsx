@@ -12,7 +12,7 @@ export default function ProjectCard({ project, level = 3 }: { project: Project; 
   const Title = level === 2 ? "h2" : "h3";
   const picture = pictures[project.slug];
   return (
-    <Link href={`/projects/${project.slug}/`} className="work-card project-ticket">
+    <Link prefetch={false} href={`/projects/${project.slug}/`} className="work-card project-ticket">
       <div className="project-photo">
         {picture ? <><Image src={picture.src} alt={picture.alt} width={640} height={360} sizes="(max-width: 768px) 100vw, 33vw" /><span>Illustrative image</span></> : <div className="project-word" aria-hidden="true">{project.symbol}</div>}
       </div>

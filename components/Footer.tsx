@@ -27,7 +27,7 @@ export default function Footer() {
               </li>
             ))}
           </ul>
-          <Link href="/motion-studies/" className="quiet-link mt-4 text-sm">Motion studies <span aria-hidden="true">↗</span></Link>
+          <Link prefetch={false} href="/motion-studies/" className="quiet-link mt-4 text-sm">Motion studies <span aria-hidden="true">↗</span></Link>
         </div>
 
         <div className="text-left sm:text-right">
@@ -40,7 +40,7 @@ export default function Footer() {
           >
             {site.email}
           </a>
-          <Link href="/contact/" className={`text-link ${hit} text-[0.9375rem]`}>
+          <Link prefetch={false} href="/contact/" className={`text-link ${hit} text-[0.9375rem]`}>
             {shellCopy["footer.write"]}
             <span aria-hidden="true" className="font-mono">
               {" →"}

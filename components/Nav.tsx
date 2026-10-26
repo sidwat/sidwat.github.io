@@ -19,12 +19,12 @@ export default function Nav() {
   function close() { if (disclosure.current) disclosure.current.open = false; }
   const links = nav.map(item => {
     const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
-    return <Link key={item.href} href={item.href} aria-current={active ? "page" : undefined} onClick={() => requestAnimationFrame(close)}>{item.label}</Link>;
+    return <Link prefetch={false} key={item.href} href={item.href} aria-current={active ? "page" : undefined} onClick={() => requestAnimationFrame(close)}>{item.label}</Link>;
   });
   return (
     <header className="site-header">
       <div className="nav-shell">
-        <Link className="site-brand" href="/" onClick={() => requestAnimationFrame(close)}>{site.name}</Link>
+        <Link prefetch={false} className="site-brand" href="/" onClick={() => requestAnimationFrame(close)}>{site.name}</Link>
         <nav className="desktop-nav" aria-label={shellCopy["nav.aria"]}>{links}</nav>
         <div className="nav-controls">
           <ThemeToggle />

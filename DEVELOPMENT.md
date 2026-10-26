@@ -401,3 +401,9 @@ public/         other static assets at the domain root (cv.pdf goes here)
 _archive/       superseded work, kept for reference; excluded from lint and tsc
 _legacy-jekyll/ the previous Jekyll site, kept for reference
 ```
+
+## Visual presets
+
+Use `pnpm theme:web` or `pnpm theme:galactic`, then rebuild the static export.
+These presets are independent of the Light/Dark appearance toggle. See
+[Visual themes](docs/themes/README.md) for saved snapshots and switching instructions.

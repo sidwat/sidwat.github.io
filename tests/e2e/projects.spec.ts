@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { usesGalacticTheme } from "../../lib/visual-theme";
 import { projects } from "../../lib/content";
 import AxeBuilder from "@axe-core/playwright";
 
@@ -14,8 +15,10 @@ for (const theme of ["light", "dark"]) {
         expect(response?.status()).toBe(200);
         await expect(page.locator("h1")).toHaveText(project.title);
         await expect(page.locator(".project-details li")).toHaveText(project.points);
-        await expect(page.locator(".project-banner canvas")).toHaveAttribute("data-particle-label", project.symbol);
-        await expect(page.locator(".project-banner canvas")).toHaveAttribute("data-particle-accent", project.accent);
+        if (usesGalacticTheme()) {
+          await expect(page.locator(".project-banner canvas")).toHaveAttribute("data-particle-label", project.symbol);
+          await expect(page.locator(".project-banner canvas")).toHaveAttribute("data-particle-accent", project.accent);
+        } else await expect(page.locator(".project-banner")).toHaveCount(0);
         expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
         expect(sitemap).toContain(`/projects/${project.slug}/`);
       }
@@ -36,6 +39,7 @@ test("Project tickets use individual destinations and one keyboard stop each", a
 });
 
 test("Particle banner respects Reduced Motion for long titles", async ({ page }) => {
+  test.skip(!usesGalacticTheme(), "Particle formation belongs to the Galactic preset");
   await page.goto("/projects/robomaster/", { waitUntil: "networkidle" });
   const canvas = page.locator(".project-banner canvas");
   await expect(page.getByRole("button", { name: "Pause background", exact: true })).toHaveCount(0);
@@ -56,6 +60,7 @@ test("Project gallery and detail have no serious accessibility violations", asyn
 });
 
 test("Stars gather from the viewport and the assembled word yields to the pointer", async ({ page }) => {
+  test.skip(!usesGalacticTheme(), "Particle formation belongs to the Galactic preset");
   await page.setViewportSize({width:1440,height:1000});
   await page.clock.install();
   await page.goto("/projects/nnlf-halide/");
