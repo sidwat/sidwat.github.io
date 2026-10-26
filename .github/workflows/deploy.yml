@@ -30,12 +30,22 @@ jobs:
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
-      - run: pnpm build
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Basic release QA (blocks artifact upload on failure)
+        run: pnpm qa:release
         # Repository *variables* (not secrets): both values are public by design and
         # end up in the browser bundle. Never map a real secret to NEXT_PUBLIC_*.
         env:
           NEXT_PUBLIC_CONTACT_ENDPOINT: ${{ vars.CONTACT_ENDPOINT }}
           NEXT_PUBLIC_CONTACT_ACCESS_KEY: ${{ vars.CONTACT_ACCESS_KEY }}
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: release-qa
+          path: node_modules/.cache/release-qa/
+          include-hidden-files: true
+          retention-days: 14
 
       - uses: actions/upload-pages-artifact@v3
         with:

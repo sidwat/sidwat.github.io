@@ -407,3 +407,11 @@ _legacy-jekyll/ the previous Jekyll site, kept for reference
 Use `pnpm theme:web` or `pnpm theme:galactic`, then rebuild the static export.
 These presets are independent of the Light/Dark appearance toggle. See
 [Visual themes](docs/themes/README.md) for saved snapshots and switching instructions.
+
+## Content releases
+
+Use `$website-content-review` for supplied drafts, then an independent
+`$website-release-qa` reviewer before shipping. `pnpm qa:release` produces a fresh
+export and basic functional report; Pages deployment is gated on this command.
+See [Content workflow](docs/content/WORKFLOW.md) and the optional
+[intake template](docs/content/intake-template.md).

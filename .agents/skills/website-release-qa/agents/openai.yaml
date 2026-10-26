@@ -1,0 +1,4 @@
+interface:
+  display_name: "Website Release QA"
+  short_description: "Independent basic checks before website deployment"
+  default_prompt: "Use $website-release-qa to check this website release and report concrete blockers before shipping."

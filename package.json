@@ -11,7 +11,9 @@
     "test:e2e": "playwright test",
     "build:webpack": "next build --webpack && node lib/blog/prune-export.mjs",
     "theme:web": "node scripts/set-visual-theme.mjs web",
-    "theme:galactic": "node scripts/set-visual-theme.mjs galactic"
+    "theme:galactic": "node scripts/set-visual-theme.mjs galactic",
+    "qa:release": "node scripts/release-qa.mjs",
+    "qa:smoke": "node scripts/release-qa.mjs --smoke"
   },
   "dependencies": {
     "clsx": "^2.1.1",
