@@ -1122,3 +1122,12 @@ body { isolation: isolate; }
 [data-visual-theme="web"] { --mesh-base: .11; --mesh-lit: .3; }
 [data-visual-theme="web"][data-theme="dark"] { --mesh-base: .16; --mesh-lit: .36; }
 [data-visual-theme="web"] .project-detail > .page-heading { margin-top: 2rem; }
+
+/* Editorial project media: clear source separation, restrained tool references. */
+.project-editorial-media { margin: 2.5rem 0; }
+.project-editorial-media > img { width: 100%; height: clamp(180px, 32vw, 380px); object-fit: cover; border-radius: 18px; }
+.project-editorial-media figcaption { margin-top: .75rem; font-size: .8rem; color: var(--muted); }
+.project-tools { margin: 3rem 0; }
+.project-tools > div { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; }
+.project-tools a { display: flex; align-items: center; gap: .75rem; padding: .8rem 1rem; border: 1px solid var(--border); border-radius: 12px; }
+.project-tools img { width: 128px; height: auto; background: white; border-radius: 4px; padding: 8px; }

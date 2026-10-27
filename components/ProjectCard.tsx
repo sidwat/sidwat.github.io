@@ -2,11 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Project } from "@/lib/content";
 
-const pictures: Record<string, { src: string; alt: string }> = {
-  "nnlf-halide": { src: "/media/projects/landscape.jpg", alt: "Alpine landscape used as an illustrative image-processing sample" },
-  "neural-loop-filters": { src: "/media/projects/compression.jpg", alt: "Original bird photograph beside a compressed version" },
-  "neural-intra-prediction": { src: "/media/projects/flower.jpeg", alt: "Painting used as an illustrative compression sample" },
-};
+import { projectPictures as pictures } from "@/lib/project-media";
 
 export default function ProjectCard({ project, level = 3 }: { project: Project; level?: 2 | 3 }) {
   const Title = level === 2 ? "h2" : "h3";
