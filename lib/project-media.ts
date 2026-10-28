@@ -1,6 +1,6 @@
-export const projectPictures: Record<string, { src: string; alt: string; caption?: string; transparent?: boolean }> = {
+export const projectPictures: Record<string, { src: string; alt: string; caption?: string; transparent?: boolean; comparison?: boolean }> = {
   "nnlf-halide": { src: "/media/projects/nnlf-inference-transparent.png", alt: "Abstract neural tensor layers flowing into parallel processing lanes and a pixel grid", caption: "Illustrative image", transparent: true },
-  "neural-loop-filters": { src: "/media/projects/compression.jpg", alt: "Bird photograph beside a JPEG-compressed version" },
+  "neural-loop-filters": { src: "/media/projects/loop-filter-comparison.png", alt: "Illustrative bird comparison: severe block compression artefacts on the left and clear feather detail on the right", caption: "Illustrative image", comparison: true },
   "neural-intra-prediction": { src: "/media/projects/flower.jpeg", alt: "Flower painting used as an illustrative compression sample" },
   apv: { src: "/media/projects/professional-camera.jpg", alt: "Professional video camera in use, photographed by Popperipopp" },
 };

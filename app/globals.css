@@ -1136,3 +1136,8 @@ body { isolation: isolate; }
 .project-editorial-media.project-media-transparent > img { object-fit: contain; border-radius: 0; }
 .project-photo.project-media-transparent img { object-fit: contain; }
 [data-theme="dark"] .project-media-transparent > img { filter: brightness(.92) saturate(.9); }
+
+.project-editorial-media { position: relative; }
+.comparison-labels { position: absolute; z-index: 1; top: .75rem; left: .75rem; right: .75rem; display: flex; justify-content: space-between; pointer-events: none; }
+.comparison-labels span { padding: .3rem .55rem; background: rgba(12,16,20,.82); color: #fff; font-size: .6875rem; border-radius: 6px; line-height: 1.5; }
+.project-editorial-media:has(.comparison-labels) > img { height: auto; aspect-ratio: 16 / 9; object-fit: contain; }
