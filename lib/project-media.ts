@@ -1,5 +1,5 @@
-export const projectPictures: Record<string, { src: string; alt: string; caption?: string }> = {
-  "nnlf-halide": { src: "/media/projects/nnlf-inference.png", alt: "Abstract neural tensor layers flowing into parallel processing lanes and a pixel grid", caption: "AI-generated conceptual illustration of neural inference optimisation; not a measured result." },
+export const projectPictures: Record<string, { src: string; alt: string; caption?: string; transparent?: boolean }> = {
+  "nnlf-halide": { src: "/media/projects/nnlf-inference-transparent.png", alt: "Abstract neural tensor layers flowing into parallel processing lanes and a pixel grid", caption: "Illustrative image", transparent: true },
   "neural-loop-filters": { src: "/media/projects/compression.jpg", alt: "Bird photograph beside a JPEG-compressed version" },
   "neural-intra-prediction": { src: "/media/projects/flower.jpeg", alt: "Flower painting used as an illustrative compression sample" },
   apv: { src: "/media/projects/professional-camera.jpg", alt: "Professional video camera in use, photographed by Popperipopp" },

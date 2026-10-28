@@ -1131,3 +1131,8 @@ body { isolation: isolate; }
 .project-tools > div { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; }
 .project-tools a { display: flex; align-items: center; gap: .75rem; padding: .8rem 1rem; border: 1px solid var(--border); border-radius: 12px; }
 .project-tools img { width: 128px; height: auto; background: white; border-radius: 4px; padding: 8px; }
+
+.project-media-transparent { background: transparent; }
+.project-editorial-media.project-media-transparent > img { object-fit: contain; border-radius: 0; }
+.project-photo.project-media-transparent img { object-fit: contain; }
+[data-theme="dark"] .project-media-transparent > img { filter: brightness(.92) saturate(.9); }
