@@ -1,7 +1,8 @@
 // REG-*: existing pages must not regress against the origin/master baseline captured
 // in Q-1 (tests/fixtures/baseline/, docs/qa/baseline.md).
 
-import { hero } from "../../lib/content";
+import { hero, bio, researchInterests, roles, publications, patents, teaching } from "../../lib/content";
+import { site } from "../../lib/site";
 import { createHash } from "node:crypto";
 
 import { expect, test } from "@playwright/test";
@@ -34,17 +35,34 @@ for (const path of EXISTING_PAGES) {
       });
     }
 
-    test("REG-02 title, description and #main text identical to baseline", async ({ page }) => {
+    test("REG-02 metadata and approved content remain intact", async ({ page }) => {
       await page.goto(path, { waitUntil: "networkidle" });
       await page.waitForTimeout(300);
       const b = pages[path];
-      expect(await page.title()).toBe(b.title);
+      expect(await page.title()).toBe(path === "/" ? `${site.name} — ${site.role}` : b.title);
       expect(await page.locator('meta[name="description"]').getAttribute("content")).toBe(b.description);
       const text = (await page.locator("#main").innerText()).replace(/\s+/g, " ").trim();
       if (path === "/") {
         await expect(page.locator("#hero-title")).toHaveText("Sidhartha Watsa");
         await expect(page.locator(".hero-bio")).toHaveText(hero.bio);
         await expect(page.locator('.hero-actions a[href="/cv.pdf"]')).toHaveCount(2);
+        const about = page.locator(".home-content").filter({ has: page.getByRole("heading", { name: "About me", exact: true }) });
+        await expect(about.locator("p")).toHaveText(bio.map(paragraph => paragraph.map(segment => segment.text).join("")));
+        await expect(about.locator("em")).toHaveText("why");
+        await expect(page.locator(".interest-tags span")).toHaveText(researchInterests);
+      } else if (path === "/experience/") {
+        await expect(page.locator(".career-list > li")).toHaveCount(roles.length);
+        for (const role of roles) for (const value of [role.title, role.org, role.period, ...role.points]) expect(text).toContain(value);
+      } else if (path === "/publications/") {
+        for (const paper of publications) {
+          await expect(page.locator(`h2 a[href="${paper.url}"]`)).toHaveText(paper.title);
+          for (const value of [paper.abstract, paper.citation]) expect(text).toContain(value);
+        }
+        await expect(page.locator(".patent-panel")).toHaveCount(patents.length);
+        for (const patent of patents) for (const value of [patent.title, patent.applicationNo, patent.summary]) expect(text).toContain(value);
+      } else if (path === "/teaching/") {
+        await expect(page.locator(".teaching-panel")).toHaveCount(teaching.length);
+        for (const course of teaching) for (const value of [course.title, course.period, ...course.points]) expect(text).toContain(value);
       } else if (path === "/projects/") {
         await expect(page.locator(".project-ticket")).toHaveCount(6);
       } else expect(text.toLocaleLowerCase()).toBe(b.text.toLocaleLowerCase());
