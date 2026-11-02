@@ -1145,3 +1145,8 @@ body { isolation: isolate; }
 .project-editorial-media.project-media-diagram > img { height: auto; aspect-ratio: 16 / 9; object-fit: contain; }
 .project-photo.project-media-diagram img { height: auto; aspect-ratio: 16 / 9; object-fit: contain; }
 .project-photo.project-media-diagram > span { top: .5rem; right: .5rem; bottom: auto; left: auto; }
+
+.project-media-contain { background: #fff; }
+.project-photo.project-media-contain img { object-fit: contain; }
+.project-editorial-media.project-media-contain { background: transparent; }
+.project-editorial-media.project-media-contain > img { object-fit: contain; background: #fff; }

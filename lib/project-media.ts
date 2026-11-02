@@ -1,7 +1,9 @@
-export const projectPictures: Record<string, { src: string; alt: string; caption?: string; transparent?: boolean; comparison?: boolean; diagram?: boolean }> = {
+export const projectPictures: Record<string, { src: string; alt: string; caption?: string; transparent?: boolean; comparison?: boolean; diagram?: boolean; fit?: "contain" }> = {
   "nnlf-halide": { src: "/media/projects/nnlf-inference-transparent.png", alt: "Abstract neural tensor layers flowing into parallel processing lanes and a pixel grid", caption: "Illustrative image", transparent: true },
   "neural-loop-filters": { src: "/media/projects/loop-filter-comparison.png", alt: "Illustrative bird comparison: severe block compression artefacts on the left and clear feather detail on the right", caption: "Illustrative image", comparison: true },
   "neural-intra-prediction": { src: "/media/projects/intra-prediction.svg", alt: "Intra-frame prediction: highlighted decoded pixels above and left of a target block feed a neural predictor that continues the same image pattern", caption: "Illustrative image", diagram: true },
+  robomaster: { src: "/media/projects/robomaster-robot.jpg", alt: "DJI RoboMaster AI Challenge robot with mecanum wheels and a mounted turret", caption: "Reference image · DJI RoboMaster", fit: "contain" },
+  chandrayaan: { src: "/media/projects/chandrayaan-3.png", alt: "ISRO Chandrayaan-3 lander with the rover deployed on its ramp", caption: "Reference image · ISRO / The Planetary Society", fit: "contain" },
   apv: { src: "/media/projects/professional-camera.jpg", alt: "Professional video camera in use, photographed by Popperipopp" },
 };
 export const projectTools: Record<string, { name: string; href: string }[]> = {
