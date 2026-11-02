@@ -16,7 +16,7 @@ export default function Home() {
       </section>
       <div className="page-shell">
         <section className="home-content"><h2>Research interests</h2><div className="interest-tags">{researchInterests.map(item=><span key={item}>{item}</span>)}</div></section>
-        <section className="home-content"><h2>About me</h2><p className="prose-body max-w-4xl">{bio.map((segment,index)=>segment.href?<a key={index} href={segment.href}>{segment.text}</a>:<span key={index}>{segment.text}</span>)}</p></section>
+        <section className="home-content"><h2>About me</h2><div className="max-w-4xl space-y-5">{bio.map((paragraph, paragraphIndex) => <p key={paragraphIndex} className="prose-body">{paragraph.map((segment, index) => segment.href ? <a key={index} href={segment.href}>{segment.text}</a> : segment.emphasis ? <em key={index}>{segment.text}</em> : <span key={index}>{segment.text}</span>)}</p>)}</div></section>
         <section className="home-content"><h2>Education</h2><div className="education-grid">{education.map(item=><article className="institution-card" key={item.degree}>
           <a href={item.href} aria-label={`Visit ${item.institution}`}><Image src={item.institution.includes("San Diego")?"/media/institutions/ucsd.jpg":"/media/institutions/iit-kanpur.jpg"} alt={item.institution.includes("San Diego")?"Geisel Library at UC San Diego":"Campus building at IIT Kanpur"} width={640} height={360} sizes="(max-width: 768px) 100vw, 33vw"/></a>
           <div className="institution-copy"><p className="eyebrow">{item.period}</p><h3><a href={item.href}>{item.institution} <span aria-hidden="true">↗</span></a></h3><p>{item.degree}</p>{item.detail&&<p>{item.detail}</p>}</div>

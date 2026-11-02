@@ -1,7 +1,7 @@
 /** Resume-aligned portfolio draft. New single-page resume takes precedence;
  * older CV retains non-conflicting projects, publications and teaching. */
 
-export type Segment = { text: string; href?: string };
+export type Segment = { text: string; href?: string; emphasis?: boolean };
 
 export type Role = {
   org: string;
@@ -60,45 +60,28 @@ export type Education = {
 
 export const hero = {
   eyebrow: "MS Computer Science · UC San Diego",
-  bio: "I build efficient video systems and autonomous robots. At Samsung Research, I worked on professional video codecs and neural compression; at IISc, I studied learning from imperfect robot demonstrations. I’m now pursuing an MS in Computer Science at UC San Diego.",
+  bio: "I build robotics and vision algorithms with the hardware in mind. At Samsung Research, I developed efficient neural networks for mobile video processing. At IIT Kanpur, I led an autonomous robotics team to third place in the DJI RoboMaster AI Challenge. I’m now pursuing an MS in Computer Science at UC San Diego, focusing on robotics, computer vision, and the connection between intelligent algorithms and the systems that run them.",
 };
 
 export const researchInterests = [
-  "Robotic perception",
-  "3D vision",
+  "Robotics",
+  "Perception",
+  "Vision",
+  "Autonomous Vehicles",
+  "Reinforcement and imitation learning",
   "Efficient and on-device AI",
   "Hardware–software co-design",
-  "Imitation learning",
 ];
 
-export const bio: Segment[] = [
-  {
-    text: "I was born in a small beautiful town, Jamshedpur in India. I pursued a Bachelor of Technology in Mechanical Engineering with a double major in Electrical Engineering from ",
-  },
-  { text: "IIT Kanpur", href: "https://www.iitk.ac.in/" },
-  {
-    text: ". My research interests lie in computer vision, robotics, deep learning, embedded systems and mathematics generally. In college I led ",
-  },
-  { text: "team ERA", href: "https://era.sntiitk.com/" },
-  {
-    text: ", a group focused on real-time autonomous systems. After finishing my coursework I joined the ",
-  },
-  {
-    text: "Robert Bosch Centre for Cyber-Physical Systems",
-    href: "https://cps.iisc.ac.in/",
-  },
-  { text: " at " },
-  { text: "IISc Bangalore", href: "https://iisc.ac.in/" },
-  { text: ", where I worked on imitation learning. I then joined " },
-  {
-    text: "Samsung Research Institute Bangalore",
-    href: "https://research.samsung.com/sri-b",
-  },
-  {
-    text: ", where I spent two years on next-generation video codec standards in the AI Visual Processing Lab. I am now reading for a master’s in computer science at ",
-  },
-  { text: "UC San Diego", href: "https://cse.ucsd.edu/" },
-  { text: "." },
+export const bio: Segment[][] = [
+  [{ text: "I grew up in Jamshedpur, India’s steel city, and left for IIT Kanpur to study Mechanical and Electrical Engineering. That’s where robotics and vision took hold of me." }],
+  [
+    { text: "What pulls me in is the " },
+    { text: "why", emphasis: true },
+    { text: " behind things: what physics makes a phenomenon happen, and how the right piece of mathematics turns a messy physical story into something you can solve. I keep a habit of working through math and physics problems for the pleasure of it, the way some people go for a run to clear their head." },
+  ],
+  [{ text: "I’m now at UC San Diego exploring robotics and vision, and I plan to put the problems I find most interesting on this blog, with the reasoning behind them rather than just the answers." }],
+  [{ text: "Off the screen, you’ll find me on a badminton court. Good, not professional, and fine with that." }],
 ];
 
 export const education: Education[] = [
