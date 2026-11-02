@@ -18,3 +18,9 @@ Requested November 2, 2026. Existing project descriptions unchanged.
 - Context image only: the moon-mapping challenge description is not relabeled as a Chandrayaan-3 mission contribution. The selected image does not establish which mission supplied the project's input data.
 
 Both detail and card use contain fitting. Source credits are on Image credits. No synthesized imagery, recolouring or background removal.
+
+## Transparent cutouts
+
+User requested removal of both pale backgrounds. Edited with the built-in image tool using each original image as the reference. Robot prompt: preserve exact robot hardware, geometry, colours and angle; remove white backdrop and floor shadows, transparent alpha in exterior/gaps, no redesign. Lander prompt: preserve spacecraft, gold foil, panels, ramp and rover; remove pale laboratory backdrop and unrelated support stands, retain landing legs/feet, transparent exterior/gaps, no new elements.
+
+Active assets: public/media/projects/robomaster-robot-transparent.png and public/media/projects/chandrayaan-3-transparent.png. Original downloaded assets retained. This is an edited reference image, not a new project photograph.
