@@ -96,7 +96,7 @@ const B1X = () => ({
       "const line = '" + "y".repeat(200) + "';",
       "```",
       "",
-      "Text that looks like code: <script>window.__qaPwned = 1</script> and <img src=x onerror=\"window.__qaPwned=1\">.",
+      "Text that looks like code: `<script>window.__qaPwned = 1</script>` and `<img src=x onerror=\"window.__qaPwned=1\">`.",
       "",
     ].join("\n"),
   ),

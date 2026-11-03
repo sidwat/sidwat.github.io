@@ -20,7 +20,7 @@ test("SEC-04 script inventory: Next chunks, theme script, JSON-LD only; no third
         expect(new URL(s.src).origin, `${path}: ${s.src}`).toBe(origin);
         expect(new URL(s.src).pathname, `${path}: ${s.src}`).toMatch(/^\/_next\/static\//);
       } else {
-        const ok = s.type === "application/ld+json" || /localStorage\.getItem\("theme"\)/.test(s.text) || /^\(self\.__next_f|self\.__next_f|^\$RC|\$RS|requestAnimationFrame/.test(s.text) || s.text === "";
+        const ok = s.type === "application/ld+json" || /localStorage\.getItem\("theme"\)/.test(s.text) || /^\(self\.__next_f|self\.__next_f|^\$RC|\$RS|requestAnimationFrame/.test(s.text) || /^\(globalThis\["TURBOPACK"\] \|\| \(globalThis\["TURBOPACK"\] = \[\]\)\)\.push\(/.test(s.text) || s.text === "";
         expect(ok, `${path}: unexpected inline script ${JSON.stringify(s.text)}`).toBe(true);
       }
     }

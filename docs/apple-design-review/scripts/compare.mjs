@@ -1,0 +1,14 @@
+import path from 'node:path';
+import {pathToFileURL} from 'node:url';
+import {chromium} from '@playwright/test';
+const root=path.resolve('docs/apple-design-review');
+const b=await chromium.launch({headless:true});
+const p=await b.newPage({viewport:{width:1800,height:1000},deviceScaleFactor:1});
+await p.goto(pathToFileURL(path.join(root,'comparison.html')).href);
+await p.evaluate(()=>Promise.all([...document.images].map(i=>i.decode())));
+await p.screenshot({path:path.join(root,'images/comparison.png'),fullPage:true});
+await p.goto(pathToFileURL(path.join(root,'index.html')).href);
+const broken=await p.evaluate(()=>[...document.querySelectorAll('a')].map(a=>a.getAttribute('href')).filter(x=>!x));
+if(broken.length)throw new Error('Gallery contains empty links');
+await b.close();
+console.log('Rendered comparison picture and checked review-gallery links.');

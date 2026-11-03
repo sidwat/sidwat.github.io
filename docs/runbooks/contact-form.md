@@ -4,7 +4,7 @@ For: the site owner. Last checked: 2026-10-17 (state updated 2026-10-18 UTC).
 
 The form at `/contact/` sends messages through **Web3Forms**, a free form-to-email service. Nothing is stored on the site itself. If the form ever fails, visitors are shown your email address instead, so no message is ever lost silently.
 
-**Current state: half done.** The repository variables `CONTACT_ACCESS_KEY` and `CONTACT_ENDPOINT` exist (created 2026-10-18 UTC; step 3 below done). The deploy workflow passes them into the build (step 5, task I-4, waiting to be merged). The `/contact/` page goes live with the rest of this release. **Still to do after it is live:** the test message in step 6, including the check that Web3Forms accepts `sidwat.github.io` (§4 known risk), and the dashboard checks in §4. Until a build includes the key, the form shows its "couldn't send, email me instead" state with your `mailto:` link. That is the intended fallback.
+**Current state (2026-10-24):** the supplied Web3Forms key and endpoint are configured in the ignored local environment and verified GitHub Actions repository variables. The workflow already passes both into the build. This branch does not deploy automatically; production receives them on the next deployment from `master`. Automated submission checks use a stub, so actual inbox delivery still needs one owner test after deployment. A build without configuration now shows a neutral email fallback, not a false “Message not sent” error.
 
 ---
 
@@ -35,7 +35,8 @@ For local testing, copy `.env.example` to `.env.local` and fill in the same two 
 
   | What happened | What the visitor sees |
   |---|---|
-  | Not set up / bad key / service error | "Couldn't send", their text kept, plus your email link with the message pre-filled |
+  | Not set up | Neutral invitation to email directly; no form or failure message |
+  | Bad key / service error | "Couldn't send", their text kept, plus your email link with the message pre-filled |
   | No connection or timeout (15 s) | "Couldn't reach the service", retry button, plus your email link |
   | Monthly cap or rate limit hit | "Too many messages right now", plus your email link |
   | Looks like a bot (hidden field filled, sent in under 3 s, or a short message with lots of links) | The spam behaviour the designer chose. Nothing is sent |

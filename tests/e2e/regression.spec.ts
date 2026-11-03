@@ -1,11 +1,13 @@
 // REG-*: existing pages must not regress against the origin/master baseline captured
 // in Q-1 (tests/fixtures/baseline/, docs/qa/baseline.md).
 
+import { hero, bio, researchInterests, roles, publications, patents, teaching } from "../../lib/content";
+import { site } from "../../lib/site";
 import { createHash } from "node:crypto";
 
 import { expect, test } from "@playwright/test";
 
-import { baseline, EXISTING_PAGES, expectNoSkippedLevels, GROUNDS, headingLevels, knownBug, useGround, watchConsole } from "./helpers";
+import { baseline, EXISTING_PAGES, expectNoSkippedLevels, GROUNDS, headingLevels, useGround, watchConsole } from "./helpers";
 
 type PageBaseline = { title: string; description: string | null; text: string; headings: string[]; navLabels: string[] };
 type AssetBaseline = { status: number; sha256: string };
@@ -19,7 +21,6 @@ for (const path of EXISTING_PAGES) {
   test.describe(`REG ${path}`, () => {
     for (const ground of GROUNDS) for (const motion of ["no-preference", "reduce"] as const) {
       test(`REG-01/02 loads in ${ground} (${motion} motion) with no console errors`, async ({ browser }) => {
-        if (path === "/" && motion === "reduce") knownBug("BUG-003");
         const context = await browser.newContext({ reducedMotion: motion });
         const page = await context.newPage();
         const messages = watchConsole(page);
@@ -27,22 +28,44 @@ for (const path of EXISTING_PAGES) {
         const res = await page.goto(path, { waitUntil: "networkidle" });
         expect(res?.status()).toBe(200);
         const theme = await page.locator("html").getAttribute("data-theme");
-        if (ground === "studio") expect(theme).toBe("studio");
-        else expect(theme).not.toBe("studio");
+        expect(theme).toBe(ground);
         await page.waitForTimeout(300);
         expect(messages, messages.join("\n")).toEqual([]);
         await context.close();
       });
     }
 
-    test("REG-02 title, description and #main text identical to baseline", async ({ page }) => {
+    test("REG-02 metadata and approved content remain intact", async ({ page }) => {
       await page.goto(path, { waitUntil: "networkidle" });
       await page.waitForTimeout(300);
       const b = pages[path];
-      expect(await page.title()).toBe(b.title);
+      expect(await page.title()).toBe(path === "/" ? `${site.name} — ${site.role}` : b.title);
       expect(await page.locator('meta[name="description"]').getAttribute("content")).toBe(b.description);
       const text = (await page.locator("#main").innerText()).replace(/\s+/g, " ").trim();
-      expect(text).toBe(b.text);
+      if (path === "/") {
+        await expect(page.locator("#hero-title")).toHaveText("Sidhartha Watsa");
+        await expect(page.locator(".hero-bio")).toHaveText(hero.bio);
+        await expect(page.locator('.hero-actions a[href="/cv.pdf"]')).toHaveCount(2);
+        const about = page.locator(".home-content").filter({ has: page.getByRole("heading", { name: "About me", exact: true }) });
+        await expect(about.locator("p")).toHaveText(bio.map(paragraph => paragraph.map(segment => segment.text).join("")));
+        await expect(about.locator("em")).toHaveText("why");
+        await expect(page.locator(".interest-tags span")).toHaveText(researchInterests);
+      } else if (path === "/experience/") {
+        await expect(page.locator(".career-list > li")).toHaveCount(roles.length);
+        for (const role of roles) for (const value of [role.title, role.org, role.period, ...role.points]) expect(text.toLocaleLowerCase()).toContain(value.toLocaleLowerCase());
+      } else if (path === "/publications/") {
+        for (const paper of publications) {
+          await expect(page.locator(`h2 a[href="${paper.url}"]`)).toHaveText(paper.title);
+          for (const value of [paper.abstract, paper.citation]) expect(text.toLocaleLowerCase()).toContain(value.toLocaleLowerCase());
+        }
+        await expect(page.locator(".patent-panel")).toHaveCount(patents.length);
+        for (const patent of patents) for (const value of [patent.title, patent.applicationNo, patent.summary]) expect(text.toLocaleLowerCase()).toContain(value.toLocaleLowerCase());
+      } else if (path === "/teaching/") {
+        await expect(page.locator(".teaching-panel")).toHaveCount(teaching.length);
+        for (const course of teaching) for (const value of [course.title, course.period, ...course.points]) expect(text.toLocaleLowerCase()).toContain(value.toLocaleLowerCase());
+      } else if (path === "/projects/") {
+        await expect(page.locator(".project-ticket")).toHaveCount(6);
+      } else expect(text.toLocaleLowerCase()).toBe(b.text.toLocaleLowerCase());
     });
 
     test("A11Y-08 one h1, no skipped heading levels", async ({ page }) => {
@@ -69,7 +92,7 @@ test("REG-01/NAV-06 theme toggle switches ground and persists across reload", as
   await page.goto("/");
   const html = page.locator("html");
   const before = await html.getAttribute("data-theme");
-  await page.getByRole("button", { name: /switch the background/i }).click();
+  await page.getByRole("button", { name: /(dark|light) mode/i }).click();
   const after = await html.getAttribute("data-theme");
   expect(after).not.toBe(before);
   await page.reload({ waitUntil: "networkidle" });
@@ -77,14 +100,14 @@ test("REG-01/NAV-06 theme toggle switches ground and persists across reload", as
 });
 });
 
-test("BUG-003 reduced motion: stored studio ground survives reload on home", async ({ page }) => {
-  knownBug("BUG-003");
+test("Reduced motion: selected dark appearance survives reload on home", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "light" });
   const errors = watchConsole(page);
   await page.goto("/");
-  await page.getByRole("button", { name: /switch the background/i }).click();
+  await page.getByRole("button", { name: /(dark|light) mode/i }).click();
   await page.reload({ waitUntil: "networkidle" });
   await page.waitForTimeout(300);
-  expect(await page.locator("html").getAttribute("data-theme")).toBe("studio");
+  expect(await page.locator("html").getAttribute("data-theme")).toBe("dark");
   expect(errors).toEqual([]);
 });
 

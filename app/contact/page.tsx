@@ -12,10 +12,10 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <div className="mx-auto max-w-5xl px-6 pb-24 pt-20">
+    <div className="page-shell detail-page">
       <PageHeader label={t("contact.label")} title={t("contact.title")} intro={t("contact.intro")} />
 
-      <div className="mt-12 max-w-[36rem]">
+      <div className="contact-panel mt-12 max-w-[40rem]">
         {/* Without JS the form block is hidden (it could only send a GET to
             this page) and the noscript sentence takes its place. */}
         <noscript>

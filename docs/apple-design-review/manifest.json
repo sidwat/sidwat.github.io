@@ -1,0 +1,77 @@
+{
+  "generated": "2026-10-22",
+  "concepts": [
+    {
+      "id": "a",
+      "name": "Clarity",
+      "subtitle": "Quiet confidence. Research comes first.",
+      "note": "A bright, spacious portfolio with a centered introduction, soft grouped surfaces, and a clear route from research to evidence. Recommended for academic and industry audiences."
+    },
+    {
+      "id": "b",
+      "name": "Focus",
+      "subtitle": "Technical depth, presented with impact.",
+      "note": "A dark, cinematic direction with a large typographic introduction, a restrained signal graphic, and generous project spotlights. Best for a stronger engineering identity."
+    },
+    {
+      "id": "c",
+      "name": "Studio",
+      "subtitle": "A personal home for serious work.",
+      "note": "A warm editorial direction with a persistent desktop navigation rail, a portrait-led introduction, and quieter reading pages. Best for a more personal portfolio."
+    }
+  ],
+  "pages": [
+    [
+      "home",
+      "Home"
+    ],
+    [
+      "experience",
+      "Experience"
+    ],
+    [
+      "publications",
+      "Publications"
+    ],
+    [
+      "projects",
+      "Projects"
+    ],
+    [
+      "teaching",
+      "Teaching"
+    ],
+    [
+      "blog",
+      "Blog"
+    ],
+    [
+      "post",
+      "Article template"
+    ],
+    [
+      "contact",
+      "Contact"
+    ],
+    [
+      "gallery",
+      "Gallery"
+    ],
+    [
+      "404",
+      "Not found"
+    ],
+    [
+      "admin",
+      "Editor entry"
+    ],
+    [
+      "states",
+      "Interaction states"
+    ]
+  ],
+  "widths": {
+    "desktop": 1440,
+    "mobile": 390
+  }
+}

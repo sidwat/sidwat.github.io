@@ -1,0 +1,41 @@
+name: Content release QA
+
+on:
+  pull_request:
+    branches: ["master"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: content-release-qa-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  basic-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Build and check the content candidate
+        run: pnpm qa:release
+        env:
+          # Test-only provider configuration; every browser POST is intercepted.
+          NEXT_PUBLIC_CONTACT_ENDPOINT: https://contact-stub.qa.invalid/submit
+          NEXT_PUBLIC_CONTACT_ACCESS_KEY: qa-not-a-secret
+          NEXT_TELEMETRY_DISABLED: "1"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: content-release-qa
+          path: node_modules/.cache/release-qa/
+          include-hidden-files: true
+          retention-days: 14

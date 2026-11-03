@@ -8,10 +8,10 @@ export default function PageHeader({
   label: string;
 }) {
   return (
-    <header className="border-b border-line pb-10">
+    <header className="page-heading">
       <p className="eyebrow">{label}</p>
-      <h1 className="display mt-4 text-[clamp(2.25rem,6vw,4rem)]">{title}</h1>
-      <p className="prose-body mt-5 max-w-xl">{intro}</p>
+      <h1 className="display mt-4">{title}</h1>
+      <p className="prose-body mt-5 max-w-2xl">{intro}</p>
     </header>
   );
 }

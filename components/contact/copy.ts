@@ -3,6 +3,7 @@
 // `contact.honeypot` is "(none)" on purpose: the honeypot has no visible or accessible text.
 
 export const contactCopy = {
+  "contact.unconfigured": "Please email me directly using the address below.",
   "contact.meta.title": "Contact",
   "contact.meta.description": "Send Sidhartha Watsa a message about anything.",
   "contact.label": "Contact",

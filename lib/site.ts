@@ -1,6 +1,6 @@
 export const site = {
   name: "Sidhartha Watsa",
-  role: "Research Engineer",
+  role: "MS Computer Science · UC San Diego",
   employer: "UC San Diego",
   location: "San Diego",
   email: "swatsa@ucsd.edu",

@@ -1,15 +1,7 @@
-/**
- * Content for the site, synced from `sidhartha_watsa_cv_master-4.pdf`.
- *
- * The CV is the source of truth: where it disagreed with the older Jekyll
- * material, the CV won. Nothing here is invented — copy is condensed from the
- * CV's own wording, not rewritten.
- *
- * Kept as typed data rather than MDX so the pages stay simple, and so a later
- * move to a CMS is a change of source without touching the rendering.
- */
+/** Resume-aligned portfolio draft. New single-page resume takes precedence;
+ * older CV retains non-conflicting projects, publications and teaching. */
 
-export type Segment = { text: string; href?: string };
+export type Segment = { text: string; href?: string; emphasis?: boolean };
 
 export type Role = {
   org: string;
@@ -40,6 +32,9 @@ export type Patent = {
 };
 
 export type Project = {
+  slug: string;
+  symbol: string;
+  accent: "ice" | "teal" | "violet" | "amber" | "rose" | "silver";
   title: string;
   affiliation: string;
   points: string[];
@@ -65,49 +60,28 @@ export type Education = {
 
 export const hero = {
   eyebrow: "MS Computer Science · UC San Diego",
-  bio:
-    "I am interested in robots and vision. I spent two years at Samsung " +
-    "Research on next-generation video codecs — the work of making video " +
-    "smaller. Before that, imitation learning at IISc Bangalore, and " +
-    "mechanical engineering with a double major in electrical at IIT Kanpur.",
+  bio: "I build robotics and vision algorithms with the hardware in mind. At Samsung Research, I developed efficient neural networks for mobile video processing. At IIT Kanpur, I led an autonomous robotics team to third place in the DJI RoboMaster AI Challenge. I’m now pursuing an MS in Computer Science at UC San Diego, focusing on robotics, computer vision, and the connection between intelligent algorithms and the systems that run them.",
 };
 
 export const researchInterests = [
-  "Robotic perception",
-  "3D vision",
+  "Robotics",
+  "Perception",
+  "Vision",
+  "Autonomous Vehicles",
+  "Reinforcement and imitation learning",
   "Efficient and on-device AI",
   "Hardware–software co-design",
-  "Imitation learning",
 ];
 
-export const bio: Segment[] = [
-  {
-    text: "I was born in a small beautiful town, Jamshedpur in India. I pursued a Bachelor of Technology in Mechanical Engineering with a double major in Electrical Engineering from ",
-  },
-  { text: "IIT Kanpur", href: "https://www.iitk.ac.in/" },
-  {
-    text: ". My research interests lie in computer vision, robotics, deep learning, embedded systems and mathematics generally. In college I led ",
-  },
-  { text: "team ERA", href: "https://era.sntiitk.com/" },
-  {
-    text: ", a group focused on real-time autonomous systems. After finishing my coursework I joined the ",
-  },
-  {
-    text: "Robert Bosch Centre for Cyber-Physical Systems",
-    href: "https://cps.iisc.ac.in/",
-  },
-  { text: " at " },
-  { text: "IISc Bangalore", href: "https://iisc.ac.in/" },
-  { text: ", where I worked on imitation learning. I then joined " },
-  {
-    text: "Samsung Research Institute Bangalore",
-    href: "https://research.samsung.com/sri-b",
-  },
-  {
-    text: ", where I spent two years on next-generation video codec standards in the AI Visual Processing Lab. I am now reading for a master’s in computer science at ",
-  },
-  { text: "UC San Diego", href: "https://cse.ucsd.edu/" },
-  { text: "." },
+export const bio: Segment[][] = [
+  [{ text: "I grew up in Jamshedpur, India’s steel city, and left for IIT Kanpur to study Mechanical and Electrical Engineering. That’s where robotics and vision took hold of me." }],
+  [
+    { text: "What pulls me in is the " },
+    { text: "why", emphasis: true },
+    { text: " behind things: what physics makes a phenomenon happen, and how the right piece of mathematics turns a messy physical story into something you can solve. I keep a habit of working through math and physics problems for the pleasure of it, the way some people go for a run to clear their head." },
+  ],
+  [{ text: "I’m now at UC San Diego exploring robotics and vision, and I plan to put the problems I find most interesting on this blog, with the reasoning behind them rather than just the answers." }],
+  [{ text: "Off the screen, you’ll find me on a badminton court. Good, not professional, and fine with that." }],
 ];
 
 export const education: Education[] = [
@@ -116,13 +90,14 @@ export const education: Education[] = [
     institution: "University of California, San Diego",
     location: "San Diego, California",
     period: "Sep 2026 — present",
+    detail: "Expected Jun 2028 · Parallel Computing, Probabilistic AI, Introduction to Robotics",
     href: "https://cse.ucsd.edu/",
   },
   {
     degree: "Double Major, Electrical Engineering",
     institution: "Indian Institute of Technology Kanpur",
     location: "Kanpur, India",
-    period: "Jul 2023 — Jun 2024",
+    period: "Jul 2023 — Dec 2023",
     detail: "CPI 9.5 / 10.0",
     href: "https://www.iitk.ac.in/",
   },
@@ -145,10 +120,10 @@ export const roles: Role[] = [
     start: "2024-08",
     period: "Aug 2024 — Aug 2026",
     points: [
-      "Core AI-based proposals for video codec standards beyond Versatile Video Coding.",
-      "Hardware-friendly neural architectures for AI-based in-loop filters and intra-frame prediction in VVC.",
-      "On-device models optimised for real-time processing and efficient codec integration at the edge.",
-      "Open-source codecs: Advanced Professional Video (APV) and eXtra Essential Video (XEVC), including the intrinsic optimisations behind APV’s adoption in FFmpeg.",
+      "Led India-side APV engineering across SIMD optimisation, FFmpeg integration and professional editing workflows.",
+      "Co-designed neural loop filtering and intra prediction for post-VVC research, and integrated inference and blending into the VVC Test Model.",
+      "Built Halide and AVX2 inference pipelines with cache and threading optimisations, reducing relative decoder time complexity from 6× to 1.3× the baseline.",
+      "Contributed to JVET proposals and cross-review, including JVET-AO0275; maintained Jenkins gates for performance, regression and code quality.",
     ],
   },
   {
@@ -163,17 +138,6 @@ export const roles: Role[] = [
       "Computed feasibility and optimality scores for each state–action pair in suboptimal human demonstrations.",
       "Trained behaviour-cloning and inverse reinforcement learning models on the refined demonstration subsets.",
       "Simulated on a KUKA industrial arm in Gazebo and Gym, then deployed an end-effector trajectory planning pipeline on the physical arm.",
-    ],
-  },
-  {
-    org: "ITC Ltd.",
-    title: "Techno-manager",
-    unit: "Food Business Division",
-    location: "Bangalore, India",
-    start: "2023-05",
-    period: "May 2023",
-    points: [
-      "On the KITES internship: research into cold grinding of wheat and its nutritional advantages over conventionally milled flour.",
     ],
   },
   {
@@ -225,7 +189,7 @@ export const patents: Patent[] = [
       "Hybrid AI Loop Filter for Video Codec with Hardware-Friendly Model Selection",
     applicationNo: "202541087044",
     summary:
-      "Encodes video with a lightweight AI-based in-loop filter (ILF) that selects a handcrafted filter (the ‘secret sauce’) and a downscale level (1×–8×) based on reconstruction error and video content. It then loads the matching pretrained neural-network weights from a lookup table using a signaled index. This keeps AI filtering content-adaptive while keeping the hardware structure fixed; only on/off switches and weight loading change.",
+      "Encodes video with a lightweight AI-based in-loop filter (ILF) that selects a handcrafted filter and a downscale level (1×–8×) based on reconstruction error and video content. It then loads the matching pretrained neural-network weights from a lookup table using a signaled index. This keeps AI filtering content-adaptive while keeping the hardware structure fixed; only on/off switches and weight loading change.",
   },
   {
     title:
@@ -245,56 +209,74 @@ export const patents: Patent[] = [
 
 export const projects: Project[] = [
   {
+    slug: "nnlf-halide",
+    symbol: "NNLF",
+    accent: "ice",
     title: "End-to-end NNLF decoder inference in Halide",
     affiliation: "Samsung Research Bangalore",
     points: [
       "Investigated whether kernel-level optimisation could meet the decoder-side hardware realisability constraint.",
       "Optimised single-core x86 inference of a MAC-bound model using Halide vectorisation, cache locality and scheduling.",
       "Designed modular Halide generators composing every NN operation into a unified float32 and int16 quantised pipeline.",
-      "Delivered 130% decoder complexity against 600% for SADL, down to 115% multicore — ready for the post-VVC call for proposals in 2027.",
+      "Reduced decoder time complexity from 6× to 1.3× the baseline using a custom Halide/AVX2 pipeline. These ratios describe relative decoder cost, not a 6× speedup.",
     ],
   },
   {
+    slug: "neural-loop-filters",
+    symbol: "NNFilter",
+    accent: "teal",
     title: "AI-based in-loop filters",
     affiliation: "Samsung Research Bangalore",
     points: [
       "Designed a low-complexity neural network for suppressing compression and banding artefacts.",
       "Combined handcrafted filters with NNLF, trained on DIV2K, scaled and blended with the deblocking output.",
-      "Delivered state-of-the-art Bjøntegaard Delta Bitrate gains at ultra-low complexity — under 1k MAC/pixel.",
+      "Co-designed a model below 1,000 multiply–accumulate operations per pixel, with approximately 1.5% bitrate savings at equal quality (BD-rate) in the reported evaluation.",
       "Integrated the model into the VVC Test Model, with C++ inference through optimised SADL.",
     ],
   },
   {
+    slug: "neural-intra-prediction",
+    symbol: "NNIntra",
+    accent: "violet",
     title: "AI-based intra-frame prediction",
     affiliation: "Samsung Research Bangalore",
     points: [
       "Examined whether a single neural model could replace seven post-VVC intra predictors across coding unit sizes.",
       "Designed an input preprocessing stage that retains strong inter-pixel correlation in reference regions.",
       "Developed a unified model of multi-scale CNN blocks adaptable to differing spatial resolutions.",
-      "Integrated the NN-based mode alongside classical predictors in post-VVC, with SADL inference.",
+      "Integrated inference into the VVC Test Model; reported approximately 1% BD-rate savings using up to four reference lines.",
     ],
   },
   {
+    slug: "apv",
+    symbol: "APV",
+    accent: "amber",
     title: "Open Advanced Professional Video codec (APV)",
     affiliation: "Samsung Research Bangalore",
     points: [
-      "Contributed core algorithms to APV, an open-source, perceptually lossless professional codec.",
-      "Optimised the DCT transform and quantisation using platform intrinsics — NEON and AVX.",
-      "Brought APV plugins to FFmpeg, ultrasound edge devices and Premiere Pro for NAB demonstrations.",
-      "Integrated the codec end to end on Samsung edge devices for a Samsung Developer Conference demo.",
+      "Led the India-side team working on APV, an open-source professional video codec for perceptually lossless recording and editing.",
+      "Vectorised DCT and quantisation using AVX2 and NEON SIMD for near-real-time encoding and decoding.",
+      "Developed FFmpeg support, including HDR mastering metadata and memory-leak fixes later merged upstream; built an Adobe Premiere Pro plugin for professional editing demonstrations.",
+      "Shipped APV across six platforms for an ultrasound-probe client and supported macOS cross-compilation; demonstrated the workflow at NAB and Samsung Developer Conference.",
     ],
   },
   {
+    slug: "robomaster",
+    symbol: "ROBOMASTER",
+    accent: "rose",
     title: "IEEE DJI RoboMaster AI Challenge",
     affiliation: "IIT Kanpur, with Prof. Laxmidhar Behera",
     points: [
-      "Engineered two autonomous robots for intelligent shooting in a dynamic arena.",
-      "Adapted YOLO-v5 for armour-plate detection at roughly 85% mAP and 90% shooting accuracy.",
-      "Built motion planning and localisation from visual marker detection combined with rf2o laser odometry.",
+      "Led the six-member ERA-IITK team to third place among 83 teams in the 2022 DJI RoboMaster AI Challenge.",
+      "Built YOLO-based armour-plate detection at 60 Hz and 85.7% mAP, with 90% shooting accuracy at 3.5 metres in the reported evaluation.",
+      "Integrated ROS, LiDAR–visual fusion, visual odometry and A*/TEB planning for autonomous arena navigation.",
       "Deployed YOLO-v5 on outpost camera feeds via DarkNet for global robot and opponent localisation.",
     ],
   },
   {
+    slug: "chandrayaan",
+    symbol: "CHANDRAYAAN",
+    accent: "silver",
     title: "ISRO Chandrayaan moon mapping challenge",
     affiliation: "Inter-IIT Tech Meet",
     points: [
@@ -307,7 +289,7 @@ export const projects: Project[] = [
 ];
 
 export const honours: string[] = [
-  "Third globally in the IEEE ICRA DJI RoboMaster AI Challenge 2022, among 40+ teams.",
+  "Third globally in the IEEE ICRA DJI RoboMaster AI Challenge 2022, among 83 teams.",
   "Talent Transformer’s Award, 2025, for contributions to teaching at Samsung Research.",
   "Academic Excellence Award, twice (2020–21 and 2022–23), for standing in the top 10% of the cohort.",
 ];

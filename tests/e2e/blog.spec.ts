@@ -75,7 +75,7 @@ test.describe("post page", () => {
     await page.goto(`/blog/${slug}/`);
     await expect(page.locator("h1")).toHaveCount(1);
     await expect(page.getByTestId("post-title")).toBeVisible();
-    await expect(page.getByTestId("post-date").locator("time[datetime]")).toHaveCount(1);
+    await expect(page.locator('time[data-testid="post-date"][datetime]')).toHaveCount(1);
     await expect(page.getByTestId("post-body")).not.toBeEmpty();
     await expect(page.getByTestId("post-tags")).toBeVisible();
     await expect(page).toHaveTitle(/ — Sidhartha Watsa$/);
@@ -111,10 +111,13 @@ test.describe("post page", () => {
     onlyOn("B2");
     needs("post", "F-2", "hello-world");
     await page.goto("/blog/hello-world/");
-    const img = page.locator("main img, #main img").first();
+    const img = page.locator(".post-cover");
     await expect(img).toHaveAttribute("alt", /.+/);
-    await expect(img).toHaveAttribute("width", /\d+/);
-    await expect(img).toHaveAttribute("height", /\d+/);
+    await expect(img).toBeVisible();
+    await expect(img).toHaveCSS("aspect-ratio", "1200 / 630");
+    expect((await img.boundingBox())!.height).toBeGreaterThan(0);
+    await img.evaluate((image: HTMLImageElement) => image.decode());
+    expect(await img.evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThan(0);
   });
 
   test("BLG-13 body images have width/height and load", async ({ page }) => {
@@ -124,6 +127,8 @@ test.describe("post page", () => {
     for (const img of await page.getByTestId("post-body").locator("img").all()) {
       await expect(img).toHaveAttribute("width", /\d+/);
       await expect(img).toHaveAttribute("height", /\d+/);
+      await img.scrollIntoViewIfNeeded();
+      await img.evaluate((image: HTMLImageElement) => image.decode());
       expect(await img.evaluate((i: HTMLImageElement) => i.naturalWidth)).toBeGreaterThan(0);
     }
   });
@@ -172,7 +177,7 @@ test("BLG-11 date is UTC and identical before and after hydration", async ({ bro
   const messages = watchConsole(page);
   await page.goto("/blog/qa-edge/", { waitUntil: "networkidle" });
   expect(await page.getByTestId("post-date").innerText()).toBe(before);
-  expect(before).toMatch(/1 Nov 2025/);
+  expect(before).toMatch(/1 Nov 2025/i);
   expect(messages.filter((m) => /hydrat/i.test(m))).toEqual([]);
   await ctx2.close();
 });

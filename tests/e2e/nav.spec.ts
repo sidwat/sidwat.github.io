@@ -14,10 +14,11 @@ for (const ground of GROUNDS) {
       await useGround(page, ground);
       await page.setViewportSize({ width, height: 800 });
       await page.goto("/");
-      const nav = page.locator('nav[aria-label="Sections"]');
+      if (width < 1120) await page.locator(".mobile-nav summary").click();
+      const nav = page.locator(width < 1120 ? 'nav[aria-label="Mobile sections"]' : 'nav[aria-label="Sections"]');
       await expect(nav.getByRole("link", { name: "Blog", exact: true })).toBeVisible();
       await expect(nav.getByRole("link", { name: "Contact", exact: true })).toBeVisible();
-      await expect(page.getByRole("button", { name: /switch the background/i })).toBeVisible();
+      await expect(page.getByRole("button", { name: /(dark|light) mode/i })).toBeVisible();
       const boxes = await nav.locator("a").evaluateAll((as) => as.map((a) => a.getBoundingClientRect().toJSON()));
       for (let i = 0; i < boxes.length; i++)
         for (let j = i + 1; j < boxes.length; j++) {
@@ -67,8 +68,8 @@ for (const path of ["/", "/blog/", "/contact/"]) {
   });
 }
 
-test("NAV-06 stored studio ground is applied before first paint", async ({ page }) => {
-  await useGround(page, "studio");
+test("NAV-06 stored dark ground is applied before first paint", async ({ page }) => {
+  await useGround(page, "dark");
   // Read data-theme at DOMContentLoaded, before any client bundle has run.
   await page.addInitScript(() => {
     document.addEventListener("DOMContentLoaded", () => {
@@ -76,21 +77,26 @@ test("NAV-06 stored studio ground is applied before first paint", async ({ page 
     });
   });
   await page.goto("/");
-  expect(await page.evaluate(() => (window as unknown as { __themeAtDcl?: string }).__themeAtDcl)).toBe("studio");
+  expect(await page.evaluate(() => (window as unknown as { __themeAtDcl?: string }).__themeAtDcl)).toBe("dark");
 });
 
 test("NAV-07 client navigation Home -> Blog -> Post -> Contact -> back", async ({ page }) => {
   needs("newNav", "F-4");
   const messages = watchConsole(page);
   await page.goto("/");
-  await page.locator('nav[aria-label="Sections"]').getByRole("link", { name: "Blog", exact: true }).click();
+  async function navigate(label: string) {
+    const mobile = await page.locator(".mobile-nav summary").isVisible();
+    if (mobile) await page.locator(".mobile-nav summary").click();
+    await page.getByRole("navigation", { name: mobile ? "Mobile sections" : "Sections", exact: true }).getByRole("link", { name: label, exact: true }).click();
+  }
+  await navigate("Blog");
   await expect(page).toHaveURL(/\/blog\/$/);
   const firstPost = page.getByTestId("post-row").locator("a").first();
   if (await firstPost.count()) {
     await firstPost.click();
     await expect(page).toHaveURL(/\/blog\/[a-z0-9-]+\/$/);
   }
-  await page.locator('nav[aria-label="Sections"]').getByRole("link", { name: "Contact", exact: true }).click();
+  await navigate("Contact");
   await expect(page).toHaveURL(/\/contact\/$/);
   await page.goBack();
   expect(messages.filter((m) => /hydrat|pageerror/i.test(m)), messages.join("\n")).toEqual([]);

@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "Publications" };
 
 export default function Page() {
   return (
-    <div className="mx-auto max-w-5xl px-6 pb-24 pt-20">
+    <div className="page-shell detail-page">
       <PageHeader
         label="Papers, patents and standards"
         title="Publications"
@@ -46,11 +46,11 @@ export default function Page() {
 
       <h2 className="eyebrow mt-20">Patents filed</h2>
 
-      <ol className="mt-6 border-t border-line">
+      <ol className="patent-list mt-6">
         {patents.map((patent) => (
           <li
             key={patent.applicationNo}
-            className="grid gap-2 border-b border-line py-8 md:grid-cols-[10rem_1fr] md:gap-8"
+            className="patent-panel"
           >
             <p className="eyebrow md:pt-1">{patent.applicationNo}</p>
             <div>

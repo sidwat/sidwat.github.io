@@ -1,26 +1,11 @@
 import type { Metadata } from "next";
-import { Archivo, IBM_Plex_Mono } from "next/font/google";
 import MeshField from "@/components/MeshField";
+import { usesGalacticTheme, visualTheme } from "@/lib/visual-theme";
+import CosmicBackground from "@/components/CosmicBackground";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { site } from "@/lib/site";
 import "./globals.css";
-
-// Archivo carries a width axis, so display and body come from one superfamily
-// and the width does the contrast work.
-const archivo = Archivo({
-  subsets: ["latin"],
-  axes: ["wdth"],
-  variable: "--font-archivo",
-  display: "swap",
-});
-
-const plexMono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-plex-mono",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -42,21 +27,14 @@ export default function RootLayout({
     // markup deliberately does not match. Nothing else on <html> is dynamic.
     <html
       lang="en"
+      data-visual-theme={visualTheme}
       suppressHydrationWarning
-      className={`${archivo.variable} ${plexMono.variable}`}
     >
       <body className="min-h-dvh bg-ink">
-        {/*
-          Sets data-theme while the parser is still inside <body>, before any of
-          the page is painted, so a stored studio choice never flashes through
-          ink. This has to be a literal inline script: next/script's
-          beforeInteractive compiles to a self.__next_s push under static
-          export, which does not run until the Next bundle loads — well after
-          first paint, which is the entire thing being avoided here.
-        */}
+        {/* Apply appearance before first paint; migrate the former ink/studio preference. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{var t=localStorage.getItem("theme");if(t==="studio")document.documentElement.dataset.theme=t}catch(e){}`,
+            __html: `(function(){var t;try{t=localStorage.getItem("theme");if(t==="studio")t="light";if(t==="plate"||t==="ink")t="dark";if(t==="light"||t==="dark")localStorage.setItem("theme",t)}catch(e){}document.documentElement.dataset.theme=t==="light"||t==="dark"?t:matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"})()`,
           }}
         />
         <a
@@ -65,9 +43,9 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-        <MeshField />
+        {usesGalacticTheme() ? <CosmicBackground /> : <MeshField />}
         <Nav />
-        <main id="main">{children}</main>
+        <main id="main" tabIndex={-1}>{children}</main>
         <Footer />
       </body>
     </html>

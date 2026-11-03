@@ -1,0 +1,4 @@
+interface:
+  display_name: "Website Content Reviewer"
+  short_description: "Professor and recruiter review of portfolio content"
+  default_prompt: "Use $website-content-review to review my website draft for research depth, credibility and hiring relevance."

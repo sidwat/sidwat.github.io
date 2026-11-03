@@ -1,5 +1,8 @@
 import Link from "next/link";
+import Image from "next/image";
+import ProjectCard from "@/components/ProjectCard";
 import Hero from "@/components/Hero";
+import { projects, bio, education, researchInterests, honours } from "@/lib/content";
 import { nav } from "@/lib/site";
 
 export default function Home() {
@@ -7,7 +10,21 @@ export default function Home() {
     <>
       <Hero />
 
-      <section className="mx-auto max-w-5xl px-6 py-24">
+      <section className="home-work page-shell" aria-labelledby="selected-work">
+        <div className="section-heading"><h2 id="selected-work">Selected work</h2><Link href="/projects/" className="quiet-link">Projects <span aria-hidden="true">→</span></Link></div>
+        <div className="work-grid">{projects.slice(0, 3).map(project => <ProjectCard key={project.slug} project={project} />)}</div>
+      </section>
+      <div className="page-shell">
+        <section className="home-content"><h2>Research interests</h2><div className="interest-tags">{researchInterests.map(item=><span key={item}>{item}</span>)}</div></section>
+        <section className="home-content"><h2>About me</h2><div className="max-w-4xl space-y-5">{bio.map((paragraph, paragraphIndex) => <p key={paragraphIndex} className="prose-body">{paragraph.map((segment, index) => segment.href ? <a key={index} href={segment.href}>{segment.text}</a> : segment.emphasis ? <em key={index}>{segment.text}</em> : <span key={index}>{segment.text}</span>)}</p>)}</div></section>
+        <section className="home-content"><h2>Education</h2><div className="education-grid">{education.map(item=><article className="institution-card" key={item.degree}>
+          <a href={item.href} aria-label={`Visit ${item.institution}`}><Image src={item.institution.includes("San Diego")?"/media/institutions/ucsd.jpg":"/media/institutions/iit-kanpur.jpg"} alt={item.institution.includes("San Diego")?"Geisel Library at UC San Diego":"Campus building at IIT Kanpur"} width={640} height={360} sizes="(max-width: 768px) 100vw, 33vw"/></a>
+          <div className="institution-copy"><p className="eyebrow">{item.period}</p><h3><a href={item.href}>{item.institution} <span aria-hidden="true">↗</span></a></h3><p>{item.degree}</p>{item.detail&&<p>{item.detail}</p>}</div>
+        </article>)}</div></section>
+        <section className="home-content"><h2>Recognition</h2><ul className="space-y-3">{honours.map(item=><li key={item} className="prose-body">{item}</li>)}</ul></section>
+        <p className="mt-8"><Link className="quiet-link text-xs" href="/image-credits/">Image credits</Link></p>
+      </div>
+      <section className="home-sections page-shell">
         <h2 className="eyebrow">Sections</h2>
         <ul className="mt-8 border-t border-line">
           {nav

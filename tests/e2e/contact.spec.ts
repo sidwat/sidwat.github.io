@@ -5,7 +5,7 @@
 
 import { expect, test, type Page, type Request } from "@playwright/test";
 
-import { BUILD, needs, onlyOn, STUB_PATTERN, watchConsole } from "./helpers";
+import { BUILD, needs, onlyOn, STUB_ENDPOINT, STUB_PATTERN, watchConsole } from "./helpers";
 
 type Stub = { status?: number; body?: string; delayMs?: number; abort?: boolean };
 
@@ -24,7 +24,9 @@ async function stubProvider(page: Page, stub: Stub = {}) {
   });
   // Safety net: no other third-party POST may leave the browser.
   await page.route(/^https?:\/\/(?!127\.0\.0\.1|localhost).*/, (route) =>
-    route.request().method() === "POST" ? (requests.push(route.request()), route.abort()) : route.continue(),
+    new URL(route.request().url()).origin === new URL(STUB_ENDPOINT).origin
+      ? route.fallback() // Let the stub registered above handle its own test origin.
+      : route.request().method() === "POST" ? (requests.push(route.request()), route.abort()) : route.continue(),
   );
   return requests;
 }
@@ -33,7 +35,7 @@ const field = {
   name: (p: Page) => p.getByLabel(/^Name/),
   email: (p: Page) => p.getByLabel(/^Email/),
   subject: (p: Page) => p.getByLabel(/^Subject/),
-  message: (p: Page) => p.getByLabel(/^Message/),
+  message: (p: Page) => p.getByRole("textbox", { name: "Message", exact: true }),
 };
 
 async function fillValid(page: Page, over: Partial<Record<keyof typeof field, string>> = {}) {
@@ -62,7 +64,8 @@ test("CON-01 page, labelled fields, honeypot hidden from users and AT, fallback 
   for (const f of Object.values(field)) await expect(f(page)).toBeVisible();
   const honeypot = page.locator('[name="botcheck"]');
   await expect(honeypot).toHaveCount(1);
-  await expect(honeypot).not.toBeVisible();
+  await expect(honeypot).not.toBeInViewport();
+  await expect(honeypot.locator("..")).toHaveAttribute("aria-hidden", "true");
   expect(await honeypot.getAttribute("tabindex")).toBe("-1");
   const snapshot = await page.locator("form").ariaSnapshot();
   expect(snapshot).not.toMatch(/botcheck/i);
@@ -171,7 +174,7 @@ test("CON-08 slow provider: 'Still sending' at 8 s, timeout at 15 s", async ({ p
 
 test("CON-09 offline: network-error state, no uncaught exception", async ({ page, context }) => {
   const messages = watchConsole(page);
-  await stubProvider(page);
+  await stubProvider(page, { abort: true });
   await openForm(page);
   await fillValid(page);
   await context.setOffline(true);
@@ -221,11 +224,14 @@ test("CON-13 HTML payloads are never rendered as HTML", async ({ page }) => {
   await expect(page.locator("#main b", { hasText: "bold" })).toHaveCount(0);
 });
 
-test("CON-14 B4 (no config): provider-error state with mailto, no crash", async ({ page }) => {
+test("CON-14 B4 (no config): neutral email fallback, no false failure", async ({ page }) => {
   onlyOn("B4");
   const messages = watchConsole(page);
   await openForm(page, false);
-  await expect(page.getByTestId("contact-fallback")).toBeVisible();
+  await expect(page.getByTestId("contact-unconfigured")).toBeVisible();
+  await expect(page.getByText("Message not sent", {exact:true})).toHaveCount(0);
+  await expect(page.getByTestId("contact-form")).toHaveCount(0);
+  await expect(page.locator('#main a[href^="mailto:"]')).toBeVisible();
   expect(messages.filter((m) => m.startsWith("pageerror"))).toEqual([]);
 });
 

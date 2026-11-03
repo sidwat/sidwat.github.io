@@ -6,18 +6,18 @@ export const metadata: Metadata = { title: "Teaching" };
 
 export default function Page() {
   return (
-    <div className="mx-auto max-w-5xl px-6 pb-24 pt-20">
+    <div className="page-shell detail-page">
       <PageHeader
         label="Teaching and invited instruction"
         title="Teaching"
         intro="Courses and workshops I have designed and taught."
       />
 
-      <ol className="mt-12 border-t border-line">
+      <ol className="teaching-grid mt-12">
         {teaching.map((course) => (
           <li
             key={course.title}
-            className="grid gap-2 border-b border-line py-8 md:grid-cols-[10rem_1fr] md:gap-8"
+            className="teaching-panel"
           >
             <p className="eyebrow md:pt-1">{course.period}</p>
 

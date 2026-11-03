@@ -28,10 +28,11 @@ type Values = Record<FieldName, string>;
 type Errors = Partial<Record<FieldName, ContactCopyId>>;
 
 type Status =
+  | { kind: "unconfigured" }
   | { kind: "idle" }
   | { kind: "busy" }
   | { kind: "success" }
-  // `submitted` is false only for the up-front not-configured panel.
+  // A failure is shown only after a real submit attempt.
   | { kind: "failed"; code: ContactErrorCode; submitted: boolean };
 
 const FIELDS: FieldName[] = ["name", "email", "subject", "message"];
@@ -123,7 +124,7 @@ export default function ContactForm() {
     // NEXT_PUBLIC_* is inlined at build, so server and client agree here.
     isContactConfigured()
       ? { kind: "idle" }
-      : { kind: "failed", code: "provider", submitted: false },
+      : { kind: "unconfigured" },
   );
   const [slow, setSlow] = useState(false);
   const [announcement, setAnnouncement] = useState("");
@@ -256,6 +257,10 @@ export default function ContactForm() {
     mountedAt.current = performance.now(); // restarts elapsedMs
     setStatus({ kind: "idle" });
     requestFocus("name");
+  }
+
+  if (status.kind === "unconfigured") {
+    return <p className="prose-body" data-testid="contact-unconfigured">{t("contact.unconfigured")}</p>;
   }
 
   if (status.kind === "success") {
