@@ -85,10 +85,8 @@
   .hero-identity { display: flex; align-items: center; justify-content: center; gap: 1.25rem; text-align: left; padding-top: 2rem; margin-top: 3.5rem; border-top: 1px solid var(--line); }
   .hero-identity p { display: flex; flex-direction: column; gap: .3rem; font-size: .875rem; }
   .hero-identity p span { color: var(--muted); font-size: .8125rem; }
-  .identity-portrait { position: relative; width: 64px; height: 64px; border-radius: 50%; overflow: hidden; flex-shrink: 0; cursor: pointer; }
-  .identity-portrait img,.identity-portrait video { width: 100%; height: 100%; object-fit: cover; }
-  .identity-portrait video { position: absolute; inset: 0; opacity: 0; transition: opacity 200ms; }
-  .identity-portrait video.ready { opacity: 1; }
+  .identity-portrait { width: 200px; aspect-ratio: 4 / 5; border-radius: 24px; overflow: hidden; flex-shrink: 0; border: 1px solid var(--line); box-shadow: 0 10px 32px #0000000c; }
+  .identity-portrait img { display: block; width: 100%; height: 100%; object-fit: cover; }
   .home-work { margin-top: 5rem; }
   .section-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; }
   .section-heading h2,.home-content h2 { font-size: 1.75rem; font-weight: 600; letter-spacing: -.04em; line-height: 1.2; }
@@ -166,6 +164,7 @@
   .hero-bio { font-size: 1.0625rem; }
   .hero-actions,.hero-identity { justify-content: flex-start; }
   .hero-identity { gap: 1rem; margin-top: 2.5rem; }
+  .identity-portrait { width: 144px; border-radius: 20px; }
   .hero-identity p span { font-size: .6875rem; }
   .work-grid,.education-grid,.project-grid,.teaching-grid,.motion-notes { grid-template-columns: 1fr; }
   .home-work { margin-top: 3.5rem; }
