@@ -62,13 +62,14 @@
       if (done) return;
       clearTimeout(slow); clearTimeout(stall); status.hidden = true; fail.hidden = false;
     };
-    document.getElementById("reload").onclick = function (e) { e.preventDefault(); location.reload(); };
+    document.getElementById("reload").addEventListener("click", function (e) { e.preventDefault(); location.reload(); });
+    document.addEventListener("load", function (e) { if (e.target.id === "cms-script") window.cmsLoaded(); }, true);
+    document.addEventListener("error", function (e) { if (e.target.id === "cms-script") window.cmsFailed(); }, true);
   })();
 </script>
-<script async
+<script async id="cms-script"
   src="https://unpkg.com/@sveltia/cms@0.246.1/dist/sveltia-cms.js"
   integrity="sha384-MesywyNCDYtPV/xerXlPq0YXvMWNmWdmHGo1FQ7TotJtZ6QSLe7Nd2quNAdpni4j"
-  crossorigin="anonymous"
-  onload="cmsLoaded()" onerror="cmsFailed()"></script>
+  crossorigin="anonymous"></script>
 </body>
 </html>

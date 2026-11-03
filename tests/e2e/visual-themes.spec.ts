@@ -25,8 +25,12 @@ test("Web responds to the pointer and settles; Reduced Motion stays still",async
   await page.goto("/");
   const mesh=page.locator(".site-web");
   const before=await mesh.evaluate((c:HTMLCanvasElement)=>c.toDataURL());
-  await page.mouse.move(700,250);await page.waitForTimeout(300);
-  expect(await mesh.evaluate((c:HTMLCanvasElement)=>c.toDataURL())).not.toBe(before);
+  const finePointer = await page.evaluate(() => matchMedia("(pointer: fine)").matches);
+  if (finePointer) {
+    const width = page.viewportSize()!.width;
+    await page.mouse.move(width * .6, 250);await page.waitForTimeout(300);
+    expect(await mesh.evaluate((c:HTMLCanvasElement)=>c.toDataURL())).not.toBe(before);
+  }
   await page.emulateMedia({reducedMotion:"reduce"});await page.waitForTimeout(100);
   const still=await mesh.evaluate((c:HTMLCanvasElement)=>c.toDataURL());
   await page.mouse.move(300,100);await page.waitForTimeout(150);

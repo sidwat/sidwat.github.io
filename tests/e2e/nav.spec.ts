@@ -84,14 +84,19 @@ test("NAV-07 client navigation Home -> Blog -> Post -> Contact -> back", async (
   needs("newNav", "F-4");
   const messages = watchConsole(page);
   await page.goto("/");
-  await page.locator('nav[aria-label="Sections"]').getByRole("link", { name: "Blog", exact: true }).click();
+  async function navigate(label: string) {
+    const mobile = await page.locator(".mobile-nav summary").isVisible();
+    if (mobile) await page.locator(".mobile-nav summary").click();
+    await page.getByRole("navigation", { name: mobile ? "Mobile sections" : "Sections", exact: true }).getByRole("link", { name: label, exact: true }).click();
+  }
+  await navigate("Blog");
   await expect(page).toHaveURL(/\/blog\/$/);
   const firstPost = page.getByTestId("post-row").locator("a").first();
   if (await firstPost.count()) {
     await firstPost.click();
     await expect(page).toHaveURL(/\/blog\/[a-z0-9-]+\/$/);
   }
-  await page.locator('nav[aria-label="Sections"]').getByRole("link", { name: "Contact", exact: true }).click();
+  await navigate("Contact");
   await expect(page).toHaveURL(/\/contact\/$/);
   await page.goBack();
   expect(messages.filter((m) => /hydrat|pageerror/i.test(m)), messages.join("\n")).toEqual([]);

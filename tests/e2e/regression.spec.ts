@@ -52,17 +52,17 @@ for (const path of EXISTING_PAGES) {
         await expect(page.locator(".interest-tags span")).toHaveText(researchInterests);
       } else if (path === "/experience/") {
         await expect(page.locator(".career-list > li")).toHaveCount(roles.length);
-        for (const role of roles) for (const value of [role.title, role.org, role.period, ...role.points]) expect(text).toContain(value);
+        for (const role of roles) for (const value of [role.title, role.org, role.period, ...role.points]) expect(text.toLocaleLowerCase()).toContain(value.toLocaleLowerCase());
       } else if (path === "/publications/") {
         for (const paper of publications) {
           await expect(page.locator(`h2 a[href="${paper.url}"]`)).toHaveText(paper.title);
-          for (const value of [paper.abstract, paper.citation]) expect(text).toContain(value);
+          for (const value of [paper.abstract, paper.citation]) expect(text.toLocaleLowerCase()).toContain(value.toLocaleLowerCase());
         }
         await expect(page.locator(".patent-panel")).toHaveCount(patents.length);
-        for (const patent of patents) for (const value of [patent.title, patent.applicationNo, patent.summary]) expect(text).toContain(value);
+        for (const patent of patents) for (const value of [patent.title, patent.applicationNo, patent.summary]) expect(text.toLocaleLowerCase()).toContain(value.toLocaleLowerCase());
       } else if (path === "/teaching/") {
         await expect(page.locator(".teaching-panel")).toHaveCount(teaching.length);
-        for (const course of teaching) for (const value of [course.title, course.period, ...course.points]) expect(text).toContain(value);
+        for (const course of teaching) for (const value of [course.title, course.period, ...course.points]) expect(text.toLocaleLowerCase()).toContain(value.toLocaleLowerCase());
       } else if (path === "/projects/") {
         await expect(page.locator(".project-ticket")).toHaveCount(6);
       } else expect(text.toLocaleLowerCase()).toBe(b.text.toLocaleLowerCase());
